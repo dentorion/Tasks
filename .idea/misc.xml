@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/done_background.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_add_task_btn.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_search.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_sort.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_task_message_text_field.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_welcome.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/important_background.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/splash.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/splash_screen.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout-land/fragment_all_tasks.xml" value="0.33" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout-land/fragment_all_tasks_landscape.xml" value="0.5177083333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout-land/fragment_edit_task.xml" value="0.25" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/activity_main.xml" value="0.33489583333333334" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_add_task.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_all_tasks.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_edit_task.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/item.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/menu/bar_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/menu/nav_graph.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3651041666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

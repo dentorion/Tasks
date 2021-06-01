@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#080115</color>
+    <color name="white">#F7F0FF</color>
+
+    <color name="main_color">#9D3CD1</color>
+    <color name="main_color_dark">#842DB3</color>
+    <color name="main_color_light">#B75AEA</color>
+    <color name="main_color_light_super">#CEA6FF</color>
+    <color name="main_color_light_super_extra">#E7D4FF</color>
+    <color name="text_color">#3F138C</color>
+
+    <color name="error">#D50E33</color>
+    <color name="gray">#4A4A4A</color>
+    <color name="soft_error">#F8A3B3</color>
+
+</resources>

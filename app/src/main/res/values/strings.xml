@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tasks</string>
+    <string name="notes_are_absent">Notes are absent</string>
+    <string name="description_add_button">Add button</string>
+    <string name="description_notes_are_absent">notes are absent</string>
+    <string name="done_checkbox">Done</string>
+    <string name="important_checkbox">Important</string>
+    <string name="title_addedit_field">Title</string>
+    <string name="description_addedit_field">Description</string>
+    <string name="ok_button_addedit_field">OK</string>
+    <string name="title_item">Title</string>
+    <string name="quote_addedit_field">Work that you like ceases to be work</string>
+    <string name="description_item">short description</string>
+    <string name="empty_task_title_forbidden">title can\'t be empty</string>
+    <string name="search">Search</string>
+    <string name="sort_by_title">Sort by title</string>
+    <string name="sort_by_date">Sort by date</string>
+    <string name="only_important">Sort by important</string>
+    <string name="hide_finished">Hide finished</string>
+    <string name="clear_finished_tasks">Clear finished tasks</string>
+    <string name="undo_deleted">UNDO</string>
+    <string name="task_edit">EDIT TASK</string>
+    <string name="task_new">NEW TASK</string>
+    <string name="tasks_all">ALL TASKS</string>
+    <string name="delete_sure">Sure?</string>
+    <string name="delete_message">Clear all finished tasks?</string>
+    <string name="delete_no">NO</string>
+    <string name="delete_yes">YES</string>
+    <string name="change_language">Change language</string>
+    <string name="all_finished_tasks_cleared">all finished tasks cleared</string>
+    <string name="sort">Sort</string>
+    <string name="message_task_new">New task added</string>
+    <string name="message_task_edit">Task changed</string>
+    <string name="message_task_del">Task deleted</string>
+    <string name="choose_language">Choose language</string>
+    <string name="language_was_changed">Language changed</string>
+    <string name="language_change_no">CANCEL</string>
+    <string name="language_change_yes">OK</string>
+</resources>
