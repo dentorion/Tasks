@@ -80,6 +80,9 @@ dependencies {
     // Kirill Rozov - ViewBinding delegate [With REFLECTION]
     implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.4.6'
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.7'
+
     // Leakcanary - DELETE AFTER FINISH
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 

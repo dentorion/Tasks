@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/all_tasks_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/all_tasks_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_main_tasks_landscape"
-    tools:context=".presentation.ui.main.fragment.AllTasksFragment">
+    android:background="@drawable/background_main_new"
+    tools:context=".presentation.fragment.main.fragment.AllTasksFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,14 +27,14 @@
             android:id="@+id/ic_welcome"
             android:layout_width="170dp"
             android:layout_height="182dp"
-            android:src="@drawable/ic_welcome"
+            android:contentDescription="@string/description_notes_are_absent"
+            android:src="@drawable/ic_empty"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.22000003"
-            android:contentDescription="@string/description_notes_are_absent" />
+            app:layout_constraintVertical_bias="0.22000003" />
 
         <TextView
             android:id="@+id/text_welcome"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/notes_are_absent"
-            android:textColor="@color/main_color_light"
+            android:textColor="@color/white"
             android:textSize="10pt"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/ic_welcome"
@@ -53,14 +53,17 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        style="@style/FloatBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:contentDescription="@string/description_add_button"
         android:isScrollContainer="false"
-        app:backgroundTint="@color/main_color_light"
-        app:srcCompat="@drawable/ic_welcome"
-        app:useCompatPadding="false"
-        android:contentDescription="@string/description_add_button" />
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/_01_button"
+        app:useCompatPadding="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

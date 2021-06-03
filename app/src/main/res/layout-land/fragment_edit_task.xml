@@ -5,8 +5,8 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_main_tasks_landscape"
-    tools:context=".presentation.ui.addedit.fragment.EditTaskFragment">
+    android:background="@drawable/background_main_new"
+    tools:context=".presentation.fragment.addedit.fragment.EditTaskFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,14 +16,15 @@
             android:id="@+id/add_new_task_finished_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="24dp"
             android:background="@drawable/done_background"
-            android:buttonTint="#311B92"
-            android:minHeight="48dp"
+            android:buttonTint="@color/color_text"
+            android:minHeight="38dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/done_checkbox"
-            android:textColor="#311B92"
+
+            android:textColor="@color/color_text"
             app:layout_constraintBottom_toBottomOf="@+id/add_new_task_important_checkbox"
             app:layout_constraintStart_toEndOf="@+id/add_new_task_important_checkbox"
             app:layout_constraintTop_toTopOf="@+id/add_new_task_important_checkbox" />
@@ -35,7 +36,7 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/important_background"
             android:buttonTint="#B71C1C"
-            android:minHeight="48dp"
+            android:minHeight="38dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/important_checkbox"
@@ -49,20 +50,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/title_addedit_field"
-            android:textColorHint="@color/text_color"
-            app:boxBackgroundColor="#F8F3FF"
-            app:boxStrokeColor="@color/text_color"
-            app:boxStrokeErrorColor="@color/error"
+            android:textColorHint="@color/color_text"
+            app:boxBackgroundColor="@color/color_main_light_extra"
+            app:boxStrokeColor="@color/color_text"
+            app:boxStrokeErrorColor="@color/color_important"
             app:counterEnabled="true"
             app:counterMaxLength="25"
-            app:counterTextColor="@color/text_color"
+            app:counterTextColor="@color/color_text"
             app:endIconMode="clear_text"
-            app:endIconTint="@color/text_color"
-            app:errorTextColor="@color/error"
-            app:helperTextTextColor="@color/text_color"
+            app:endIconTint="@color/color_text"
+            app:errorTextColor="@color/color_important"
+            app:helperTextTextColor="@color/color_text"
+            app:hintTextColor="@color/color_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,9 +77,8 @@
                 android:inputType="text"
                 android:maxLength="25"
                 android:maxLines="1"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/color_text" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_new_task_message_layout"
@@ -89,17 +90,18 @@
             android:layout_marginEnd="24dp"
             android:hint="@string/description_addedit_field"
             android:inputType="text"
-            android:textColorHint="@color/text_color"
-            app:boxBackgroundColor="#F8F3FF"
-            app:boxStrokeColor="@color/text_color"
-            app:boxStrokeErrorColor="@color/error"
+            android:textColorHint="@color/color_text"
+            app:boxBackgroundColor="@color/color_main_light_extra"
+            app:boxStrokeColor="@color/color_text"
+            app:boxStrokeErrorColor="@color/color_important"
             app:counterEnabled="true"
-            app:counterMaxLength="50"
-            app:counterTextColor="@color/text_color"
+            app:counterMaxLength="100"
+            app:counterTextColor="@color/color_text"
             app:endIconMode="clear_text"
-            app:endIconTint="@color/text_color"
-            app:errorTextColor="@color/error"
-            app:helperTextTextColor="@color/text_color"
+            app:endIconTint="@color/color_text"
+            app:errorTextColor="@color/color_important"
+            app:helperTextTextColor="@color/color_text"
+            app:hintTextColor="@color/color_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -109,34 +111,35 @@
                 android:id="@+id/add_new_task_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="100"
                 android:ems="4"
+                android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:lines="8"
-                android:gravity="start|top"
-                android:textColor="@color/text_color" />
+                android:maxLength="100"
+                android:textColor="@color/color_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <RadioGroup
             android:id="@+id/add_new_task_radiogroup_icons"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
             android:checkedButton="@+id/radio_nothing"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_finished_checkbox"
-            app:layout_constraintEnd_toStartOf="@+id/add_new_task_ok_button"
-            app:layout_constraintStart_toEndOf="@+id/add_new_task_finished_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_new_task_finished_checkbox">
+            app:layout_constraintEnd_toEndOf="@+id/add_new_task_title_layout"
+            app:layout_constraintStart_toStartOf="@+id/add_new_task_title_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_new_task_message_layout">
 
             <RadioButton
                 android:id="@+id/radio_nothing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
                 android:minWidth="0dp"
                 android:minHeight="0dp" />
+
             <ImageView
                 android:id="@+id/ic_group_nothing"
                 android:layout_width="30dp"
@@ -148,9 +151,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
                 android:minWidth="0dp"
                 android:minHeight="0dp" />
+
             <ImageView
                 android:id="@+id/ic_group_work"
                 android:layout_width="30dp"
@@ -162,9 +165,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
                 android:minWidth="0dp"
                 android:minHeight="0dp" />
+
             <ImageView
                 android:id="@+id/ic_group_rest"
                 android:layout_width="30dp"
@@ -178,6 +181,7 @@
                 android:layout_gravity="center"
                 android:minWidth="0dp"
                 android:minHeight="0dp" />
+
             <ImageView
                 android:id="@+id/ic_group_food"
                 android:layout_width="30dp"
@@ -189,9 +193,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
                 android:minWidth="0dp"
                 android:minHeight="0dp" />
+
             <ImageView
                 android:id="@+id/ic_group_home"
                 android:layout_width="30dp"
@@ -199,30 +203,32 @@
                 android:src="@drawable/ic_home" />
         </RadioGroup>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_new_task_ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/color_main"
+            android:text="@string/ok_button_addedit_field"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_finished_checkbox"
+            app:layout_constraintEnd_toEndOf="@+id/add_new_task_title_layout"
+            app:layout_constraintTop_toTopOf="@+id/add_new_task_finished_checkbox" />
+
         <TextView
             android:id="@+id/add_new_task_label_smart"
-            android:layout_width="683dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:text="@string/quote_addedit_field"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="#4A148C"
             android:textSize="5pt"
             app:layout_constraintEnd_toEndOf="@+id/add_new_task_message_layout"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/add_new_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_new_task_radiogroup_icons"
             tools:ignore="TouchTargetSizeCheck" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_task_ok_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok_button_addedit_field"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_finished_checkbox"
-            app:layout_constraintEnd_toEndOf="@+id/add_new_task_title_layout"
-            app:layout_constraintTop_toTopOf="@+id/add_new_task_finished_checkbox" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

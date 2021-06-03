@@ -6,45 +6,53 @@
     app:startDestination="@id/allTasksFragment">
     <fragment
         android:id="@+id/allTasksFragment"
-        android:name="com.example.tasksexample.presentation.ui.main.fragment.AllTasksFragment"
+        android:name="com.example.tasksexample.presentation.fragment.main.fragment.AllTasksFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_all_tasks">
         <action
             android:id="@+id/action_allTasksFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
             app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_allTasksFragment_self"
-            app:destination="@id/allTasksFragment"
-            app:popUpTo="@id/allTasksFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
-        android:name="com.example.tasksexample.presentation.ui.addedit.fragment.EditTaskFragment"
+        android:name="com.example.tasksexample.presentation.fragment.addedit.fragment.EditTaskFragment"
         android:label="{label}"
-        tools:layout="@layout/fragment_edit_task" >
+        tools:layout="@layout/fragment_edit_task">
         <action
             android:id="@+id/action_editTaskFragment_to_allTasksFragment"
             app:destination="@id/allTasksFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
             app:popUpTo="@id/allTasksFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <argument
             android:name="task"
+            android:defaultValue="@null"
             app:argType="com.example.tasksexample.domain.entity.Task"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="label"
             app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/deleteFinishedDialog"
-        android:name="com.example.tasksexample.presentation.ui.delete.fragment.DeleteFinishedDialog"
-        android:label="DeleteFinishedDialog" /><action android:id="@+id/action_global_deleteFinishedDialog" app:destination="@id/deleteFinishedDialog"/>
+        android:name="com.example.tasksexample.presentation.fragment.delete.fragment.DeleteFinishedDialog"
+        android:label="DeleteFinishedDialog" />
+    <action
+        android:id="@+id/action_global_deleteFinishedDialog"
+        app:destination="@id/deleteFinishedDialog" />
     <dialog
         android:id="@+id/changeLanguageDialog"
-        android:name="com.example.tasksexample.presentation.ui.language.fragment.ChangeLanguageDialog"
+        android:name="com.example.tasksexample.presentation.fragment.language.fragment.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
-    <action android:id="@+id/action_global_changeLanguageDialog" app:destination="@id/changeLanguageDialog" />
+    <action
+        android:id="@+id/action_global_changeLanguageDialog"
+        app:destination="@id/changeLanguageDialog" />
 </navigation>

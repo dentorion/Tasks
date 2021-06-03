@@ -1,49 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
-    <style name="Theme.Tasks" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.Tasks" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryVariant">@color/main_color_dark</item>
+        <item name="colorPrimary">@color/color_main_light_extra</item>
         <!-- Secondary brand color. -->
         <item name="colorOnSecondary">@color/white</item>
-
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/main_color_dark</item>
-
+        <item name="android:statusBarColor" tools:targetApi="l">@color/color_main_light_extra</item>
         <!-- Action Bar -->
-        <!-- Background color -->
-        <item name="colorSurface">@color/white</item>
-        <!--  Text color -->
-        <item name="android:textColorPrimary">@color/white</item>
-
+        <item name="colorSurface">@color/color_main_light_extra</item>
+        <item name="android:textColorPrimary">@color/color_main</item>
         <!-- SnackBar -->
-        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
-        <item name="snackbarButtonStyle">@style/Widget.App.SnackbarButton</item>
-
+        <item name="colorOnSurface">@color/color_main</item>
+        <item name="android:textColor">@color/black</item>
         <!-- Radio Button -->
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
     </style>
 
-    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
-        <item name="subMenuArrow">@color/error</item>
-    </style>
-
-    <style name="Widget.App.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
+    <!-- RADIO BUTTON -->
     <style name="Widget.App.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.RadioButton</item>
     </style>
 
     <style name="ThemeOverlay.App.RadioButton" parent="">
-        <item name="colorOnSurface">@color/main_color_light_super</item>
-        <item name="colorSecondary">@color/text_color</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorSecondary">@color/color_main</item>
     </style>
 
-    <style name="ThemeOverlay.App.Snackbar" parent="">
-        <item name="colorOnSurface">@color/text_color</item>
+    <!-- FLOATING BUTTON -->
+    <style name="FloatBtn">
+        <item name="backgroundTint">@color/color_main</item>
+        <item name="rippleColor">@color/white</item>
     </style>
 
     <!-- SPLASH SCREEN Theme-->

@@ -4,7 +4,7 @@
     <corners android:radius="6dp" />
     <stroke
         android:width="1dp"
-        android:color="#2F311B92" />
-    <solid android:color="#1B311B92" />
+        android:color="@color/color_stroke_checkbox" />
+    <solid android:color="@color/color_main_light_extra" />
     
 </shape>

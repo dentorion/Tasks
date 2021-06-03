@@ -6,5 +6,6 @@ object AppConstants {
 
     val LANGUAGES = arrayOf("English", "Russian", "Polish")
     val LANGUAGES_COUNTRY = arrayOf("en", "ru", "pl")
-    val LANGUAGES_REGION = arrayOf("US", "UA", "PL")
+    const val LANGUAGES_DEFAULT = 2
+    const val LANGUAGES_KEY = "language"
 }
