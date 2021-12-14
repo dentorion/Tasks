@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        android:title="@string/search"
+        android:title="@string/action_bar_item_title_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 
     <item
         android:icon="@drawable/ic_sort"
-        android:title="@string/sort"
-        app:showAsAction="always">
+        android:title="@string/action_bar_item_title_sort"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
 
         <menu>
 
@@ -26,7 +28,11 @@
 
             <item
                 android:id="@+id/action_sort_by_important"
-                android:title="@string/only_important" />
+                android:title="@string/sort_by_important" />
+
+            <item
+                android:id="@+id/action_sort_by_manual"
+                android:title="@string/sort_by_manual" />
 
         </menu>
 
@@ -35,17 +41,17 @@
     <item
         android:id="@+id/action_sort_by_finished"
         android:checkable="true"
-        android:title="@string/hide_finished"
+        android:title="@string/options_hide_finished"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_change_language"
-        android:title="@string/change_language"
+        android:title="@string/options_change_language"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete_all_tasks"
-        android:title="@string/clear_finished_tasks"
+        android:title="@string/options_clear_finished"
         app:showAsAction="never" />
 
 </menu>

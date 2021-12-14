@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#101010</color>
+    <color name="gray">#595959</color>
     <color name="white">#FAF6F6</color>
 
     <color name="color_main">#922A85</color>
-    <color name="color_floating_btn">#FF5722</color>
     <color name="color_main_light_extra">#f6d3f2</color>
+    <color name="color_stroke_checkbox">#EFB3E9</color>
+
+    <color name="color_floating_btn">#FF5722</color>
     <color name="color_text">@color/color_main</color>
     <color name="color_important">#F40733</color>
-    <color name="color_stroke_checkbox">#EFB3E9</color>
+
+    <color name="quote">#4A148C</color>
+
+    <color name="color_important_text_new_edit_fragment">#B71C1C</color>
+    <color name="color_important_background_new_edit_fragment">#14B71C1C</color>
+    <color name="color_important_stroke_new_edit_fragment">#1E9E1414</color>
 </resources>

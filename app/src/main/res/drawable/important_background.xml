@@ -2,6 +2,8 @@
     android:shape="rectangle">
 
     <corners android:radius="6dp" />
-    <stroke android:color="#1E9E1414" android:width="1dp" />
-    <solid android:color="#14B71C1C" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/color_important_stroke_new_edit_fragment" />
+    <solid android:color="@color/color_important_background_new_edit_fragment" />
 </shape>

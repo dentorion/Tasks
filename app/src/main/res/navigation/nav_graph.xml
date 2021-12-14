@@ -6,7 +6,7 @@
     app:startDestination="@id/allTasksFragment">
     <fragment
         android:id="@+id/allTasksFragment"
-        android:name="com.example.tasksexample.presentation.fragment.main.fragment.AllTasksFragment"
+        android:name="com.entin.lighttasks.presentation.ui.main.fragment.AllTasksFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_all_tasks">
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
-        android:name="com.example.tasksexample.presentation.fragment.addedit.fragment.EditTaskFragment"
+        android:name="com.entin.lighttasks.presentation.ui.addedit.fragment.EditTaskFragment"
         android:label="{label}"
         tools:layout="@layout/fragment_edit_task">
         <action
@@ -34,25 +34,43 @@
             app:popUpToInclusive="false" />
         <argument
             android:name="task"
-            android:defaultValue="@null"
-            app:argType="com.example.tasksexample.domain.entity.Task"
-            app:nullable="true" />
+            app:argType="com.entin.lighttasks.domain.entity.Task"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="label"
             app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/deleteFinishedDialog"
-        android:name="com.example.tasksexample.presentation.fragment.delete.fragment.DeleteFinishedDialog"
+        android:name="com.entin.lighttasks.presentation.ui.deleteall.fragment.DeleteFinishedDialog"
         android:label="DeleteFinishedDialog" />
     <action
         android:id="@+id/action_global_deleteFinishedDialog"
-        app:destination="@id/deleteFinishedDialog" />
+        app:destination="@id/deleteFinishedDialog"
+        app:enterAnim="@anim/slide_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/slide_out" />
     <dialog
         android:id="@+id/changeLanguageDialog"
-        android:name="com.example.tasksexample.presentation.fragment.language.fragment.ChangeLanguageDialog"
+        android:name="com.entin.lighttasks.presentation.ui.language.fragment.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
     <action
         android:id="@+id/action_global_changeLanguageDialog"
         app:destination="@id/changeLanguageDialog" />
+    <dialog
+        android:id="@+id/deleteTaskDialog"
+        android:name="com.entin.lighttasks.presentation.ui.deletetask.fragment.DeleteTask"
+        android:label="DeleteTaskDialog" >
+        <argument
+            android:name="task"
+            app:argType="com.entin.lighttasks.domain.entity.Task"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_deleteTaskDialog"
+        app:destination="@id/deleteTaskDialog"
+        app:popUpToInclusive="false" />
 </navigation>

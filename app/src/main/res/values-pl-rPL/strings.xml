@@ -2,39 +2,48 @@
 <resources>
     <string name="app_name">Zadania</string>
     <string name="notes_are_absent">Brak zadań</string>
-    <string name="description_add_button">Przycisk Dodaj</string>
-    <string name="description_notes_are_absent">Nie ma zadań</string>
-    <string name="done_checkbox">Wykonano</string>
-    <string name="important_checkbox">Ważne</string>
-    <string name="title_addedit_field">Tytuł</string>
-    <string name="description_addedit_field">Opis</string>
-    <string name="ok_button_addedit_field">ОК</string>
-    <string name="title_item">Tytuł</string>
-    <string name="quote_addedit_field">Praca, która się podoba, przestaje być pracą</string>
-    <string name="description_item">krótki opis</string>
-    <string name="empty_task_title_forbidden">Tytuł nie może być pusty</string>
-    <string name="search">Wyszukiwanie</string>
+
+    <string name="new_edit_fragment_task_new">NOWE ZADANIE</string>
+    <string name="new_edit_fragment_task_edit">EDYTUJ ZADANIE</string>
+    <string name="new_edit_fragment_done_checkbox_title">Wykonano</string>
+    <string name="new_edit_fragment_important_checkbox">Ważne</string>
+    <string name="new_edit_fragment_field_title">Tytuł</string>
+    <string name="new_edit_fragment_field_message">Opis</string>
+    <string name="new_edit_fragment_btn_ok">OK</string>
+
+    <string name="snack_bar_empty_task_title_forbidden">tytuł nie może być pusty</string>
+    <string name="snack_bar_all_finished_tasks_cleared">Ukończone zadania wyczyszczone</string>
+    <string name="snack_bar_btn_undo_deleted">ANULOWAĆ</string>
+    <string name="snack_bar_message_task_new">Zadanie dodano</string>
+    <string name="snack_bar_message_task_edit">Zadanie zmienione</string>
+    <string name="snack_bar_message_task_del">Zadanie usunięte</string>
+
     <string name="sort_by_title">Sortuj wg nazwy</string>
     <string name="sort_by_date">Sortuj wg daty utworzenia</string>
-    <string name="only_important">Ważne w TOP</string>
-    <string name="hide_finished">Ukryj wykonane</string>
-    <string name="clear_finished_tasks">Usuń wykonane</string>
-    <string name="undo_deleted">ODWOŁANIE</string>
-    <string name="task_edit">Redagowanie</string>
-    <string name="task_new">Nowe zadanie</string>
-    <string name="tasks_all">Wszystkie zadania</string>
-    <string name="delete_sure">Poprawnie?</string>
-    <string name="delete_message">Usunąć wszystkie ukończone zadania?</string>
-    <string name="delete_no">NIE</string>
-    <string name="delete_yes">TAK</string>
-    <string name="change_language">Zmień język</string>
-    <string name="all_finished_tasks_cleared">Ukończone zadania wyczyszczone</string>
-    <string name="sort">Sortowanie</string>
-    <string name="message_task_new">Zadanie dodano</string>
-    <string name="message_task_edit">Zadanie zmienione</string>
-    <string name="message_task_del">Zadanie usunięte</string>
-    <string name="choose_language">Wybierz język</string>
-    <string name="language_was_changed">Język zmieniony</string>
-    <string name="language_change_no">Anuluj</string>
-    <string name="language_change_yes">OK</string>
+    <string name="sort_by_important">Ważne w TOP</string>
+
+    <string name="options_hide_finished">Ukryj wykonane</string>
+    <string name="options_clear_finished">Usuń wykonane zadania</string>
+    <string name="options_change_language">Zmień język</string>
+
+    <string name="description_add_button">przycisk dodaj</string>
+    <string name="description_notes_are_absent">brak zadań</string>
+    <string name="description_item">krótki opis</string>
+
+    <string name="dialog_delete_message">Usunąć wszystkie ukończone zadania?</string>
+    <string name="dialog_delete_no">NIE</string>
+    <string name="dialog_delete_yes">TAK</string>
+    <string name="dialog_delete_task">Wykasować zadanie?</string>
+
+    <string name="dialog_choose_language">Wybierz język</string>
+
+    <string name="action_bar_item_title_sort">Sortowanie</string>
+    <string name="action_bar_item_title_search">Wyszukiwanie</string>
+
+    <string name="quote">Praca, która się podoba, przestaje być pracą</string>
+    <string name="sort_by_manual">Sortowanie ręczne</string>
+    <string name="manual_order_accepted">Zaakceptowano</string>
+    <string name="english_language">Język angielski</string>
+    <string name="polish_language">Język polski</string>
+    <string name="russian_language">Język rosyjski</string>
 </resources>

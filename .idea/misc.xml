@@ -3,14 +3,60 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/checkbox_light_solid_background.xml" value="0.185" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/custom_btn_radio.xml" value="0.1645" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/empty_btn_radio.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/empty_radio_state_checked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/empty_radio_state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/float_plus_button.xml" value="0.148" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/food_btn_radio.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/food_radio_state_checked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/food_radio_state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/home_btn_radio.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/home_radio_state_checked.xml" value="0.185" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/home_radio_state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/ic_empty.xml" value="0.159" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/ic_nothing.xml" value="0.1" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/ic_trash.xml" value="0.148" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/rest_btn_radio.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/rest_radio_state_checked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/rest_radio_state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/splash.xml" value="0.185" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/state_checked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_btn_radio.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_radio_state_checked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_radio_state_unchecked.xml" value="0.2055" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/fragment_all_tasks.xml" value="0.16" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/fragment_edit_task.xml" value="0.12135416666666667" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/activity_main.xml" value="0.3489583333333333" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/clear_finished.xml" value="0.25" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/delete_task.xml" value="0.2518518518518518" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_all_tasks.xml" value="0.1" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_edit_task.xml" value="0.3277777777777778" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/item.xml" value="0.22870370370370371" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/language.xml" value="0.33" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/menu/bar_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.196" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/_01_button.xml" value="0.17314814814814813" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/circle.xml" value="0.3828125" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/done_background.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic__01_mic.xml" value="0.3828125" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_add_task_btn.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_empty.xml" value="0.17314814814814813" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_food.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_home.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_nothing.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_poland.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_rest.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_russia.xml" value="0.3828125" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_search.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_sort.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_task_message_text_field.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_trash.xml" value="0.3828125" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_united_kingdom.xml" value="0.3828125" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/ic_welcome.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/important_background.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/drawable/splash.xml" value="0.3651041666666667" />
@@ -19,10 +65,13 @@
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout-land/fragment_all_tasks_landscape.xml" value="0.5177083333333333" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout-land/fragment_edit_task.xml" value="0.3724867724867725" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/clear_finished.xml" value="0.30985915492957744" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/delete_task.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_add_task.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_all_tasks.xml" value="0.33" />
-        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_edit_task.xml" value="0.3453703703703704" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_all_tasks.xml" value="0.3472222222222222" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/fragment_edit_task.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/item.xml" value="0.5" />
+        <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/layout/language.xml" value="0.33240740740740743" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/menu/bar_menu.xml" value="0.1" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/menu/nav_graph.xml" value="0.3489583333333333" />
         <entry key="..\:/Users/Denys/AndroidStudioProjects/TasksExample/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3651041666666667" />

@@ -2,20 +2,35 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Tasks" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Primary brand color. -->
         <item name="colorPrimary">@color/color_main_light_extra</item>
-        <!-- Secondary brand color. -->
         <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/color_main_light_extra</item>
-        <!-- Action Bar -->
-        <item name="colorSurface">@color/color_main_light_extra</item>
-        <item name="android:textColorPrimary">@color/color_main</item>
-        <!-- SnackBar -->
         <item name="colorOnSurface">@color/color_main</item>
         <item name="android:textColor">@color/black</item>
-        <!-- Radio Button -->
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
+        <item name="snackbarStyle">@style/MySnackBarStyle</item>
+    </style>
+
+    <!-- MENU ITEMS ACTION BAR -->
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorSurface">@color/color_main_light_extra</item>
+        <item name="checkboxStyle">@style/HideFinishedTasks</item>
+    </style>
+
+    <style name="HideFinishedTasks" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/color_main</item>
+    </style>
+
+    <!-- ACTION BAR -->
+
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="colorPrimary">@color/color_main_light_extra</item>
+        <item name="colorOnPrimary">@color/color_main</item>
     </style>
 
     <!-- RADIO BUTTON -->
@@ -23,9 +38,15 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.RadioButton</item>
     </style>
 
-    <style name="ThemeOverlay.App.RadioButton" parent="">
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorSecondary">@color/color_main</item>
+    <style name="ThemeOverlay.App.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="colorControlActivated">@color/color_stroke_checkbox</item>
+        <item name="colorOnSurface">@color/color_stroke_checkbox</item>
+    </style>
+
+    <!-- SNACK BAR -->
+
+    <style name="MySnackBarStyle" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:backgroundTint">@color/color_main</item>
     </style>
 
     <!-- FLOATING BUTTON -->
@@ -34,10 +55,11 @@
         <item name="rippleColor">@color/white</item>
     </style>
 
-    <!-- SPLASH SCREEN Theme-->
+    <!-- SPLASH SCREEN -->
 
-    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/color_main_light_extra</item>
     </style>
 
 </resources>

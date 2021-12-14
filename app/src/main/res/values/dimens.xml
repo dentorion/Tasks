@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <dimen name="common_dialog_elevation_constraint">0dp</dimen>
+    <dimen name="common_dialog_padding_constraint">36dp</dimen>
+    <dimen name="common_zero_width_height_constraint">0dp</dimen>
+
+    <!-- Activity -->
+    <dimen name="actionbar_elevation">0dp</dimen>
+    <dimen name="fragment_container_view_height">0dp</dimen>
+
+    <!-- Clear Finished Dialog -->
+    <dimen name="trash_basket_icon_width_clear">100dp</dimen>
+    <dimen name="trash_basket_icon_height_clear">100dp</dimen>
+    <dimen name="trash_basket_opacity_clear">0.72</dimen>
+    <dimen name="circle_size_clear">90dp</dimen>
+    <dimen name="text_size_clear">16sp</dimen>
+    <dimen name="text_label_width_clear">120dp</dimen>
+
+    <!-- Delete Task Dialog -->
+    <dimen name="trash_basket_icon_width_delete">100dp</dimen>
+    <dimen name="trash_basket_icon_height_delete">100dp</dimen>
+    <dimen name="trash_basket_opacity_delete">0.72</dimen>
+    <dimen name="circle_size_delete">90dp</dimen>
+    <dimen name="text_size_delete">16sp</dimen>
+    <dimen name="text_label_width_delete">120dp</dimen>
+
+    <!-- All Tasks Fragment Portrait -->
+    <dimen name="icon_welcome_empty_width_all_tasks">170dp</dimen>
+    <dimen name="icon_welcome_empty_height_all_tasks">182dp</dimen>
+    <dimen name="text_size_welcome_all_tasks">22sp</dimen>
+    <dimen name="float_button_border_width_all_tasks">0dp</dimen>
+    <dimen name="float_button_border_elevation_all_tasks">0dp</dimen>
+
+    <!-- Item in RecyclerView -->
+    <dimen name="height_item">100dp</dimen>
+    <dimen name="margin_bottom_item">1dp</dimen>
+    <dimen name="margin_end_task_message_item">16dp</dimen>
+    <dimen name="text_size_task_title_item">16sp</dimen>
+    <dimen name="margin_start_task_title_item">11dp</dimen>
+    <dimen name="text_size_task_message_item">11sp</dimen>
+    <dimen name="checkbox_margin_start_item">16dp</dimen>
+    <dimen name="important_label_width_item">2.5dp</dimen>
+    <dimen name="small_icon_size_item">27dp</dimen>
+    <dimen name="small_icon_margin_end_size_item">24dp</dimen>
+    <dimen name="small_icon_opacity_size_item">0.72</dimen>
+
+    <!-- Edit Task Fragment -->
+    <dimen name="checkbox_done_margin_start_add_edit">24dp</dimen>
+    <dimen name="checkbox_done_min_height_add_edit">38dp</dimen>
+    <dimen name="checkbox_done_padding_start_add_edit">10dp</dimen>
+    <dimen name="checkbox_done_padding_end_add_edit">10dp</dimen>
+
+    <dimen name="checkbox_important_margin_top_add_edit">24dp</dimen>
+    <dimen name="checkbox_important_min_height_add_edit">38dp</dimen>
+    <dimen name="checkbox_important_padding_start_add_edit">10dp</dimen>
+    <dimen name="checkbox_important_padding_end_add_edit">10dp</dimen>
+
+    <dimen name="title_margin_start_add_edit">24dp</dimen>
+    <dimen name="title_margin_top_add_edit">24dp</dimen>
+    <dimen name="title_margin_end_add_edit">24dp</dimen>
+
+    <dimen name="description_margin_start_add_edit">24dp</dimen>
+    <dimen name="description_margin_top_add_edit">8dp</dimen>
+    <dimen name="description_margin_end_add_edit">24dp</dimen>
+
+    <dimen name="landscape_radio_btn_margin_end_add_edit">20dp</dimen>
+    <dimen name="radio_btn_margin_end_add_edit">10dp</dimen>
+    <dimen name="quote_text_size_add_edit">10sp</dimen>
+
+    <!-- Language Dialog -->
+    <dimen name="text_size_language">16sp</dimen>
+    <dimen name="icon_circle_size_language">52dp</dimen>
+    <dimen name="icon_size_language">40dp</dimen>
+    <dimen name="icon_opacity_language">0.72</dimen>
+    <dimen name="icon_padding_bottom_language">32dp</dimen>
+
+</resources>

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_main_new"
-    tools:context=".presentation.fragment.main.fragment.AllTasksFragment">
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    tools:context=".presentation.ui.main.fragment.AllTasksFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,8 +15,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tasks_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/common_zero_width_height_constraint"
+            android:layout_height="@dimen/common_zero_width_height_constraint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +26,8 @@
 
         <ImageView
             android:id="@+id/ic_welcome"
-            android:layout_width="170dp"
-            android:layout_height="182dp"
+            android:layout_width="@dimen/icon_welcome_empty_width_all_tasks"
+            android:layout_height="@dimen/icon_welcome_empty_height_all_tasks"
             android:contentDescription="@string/description_notes_are_absent"
             android:src="@drawable/ic_empty"
             android:visibility="invisible"
@@ -34,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.22000003" />
+            app:layout_constraintVertical_bias="0.22" />
 
         <TextView
             android:id="@+id/text_welcome"
@@ -43,7 +44,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/notes_are_absent"
             android:textColor="@color/white"
-            android:textSize="10pt"
+            android:textSize="@dimen/text_size_welcome_all_tasks"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/ic_welcome"
             app:layout_constraintStart_toStartOf="@+id/ic_welcome"
@@ -60,10 +61,10 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/description_add_button"
         android:isScrollContainer="false"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
+        app:borderWidth="@dimen/float_button_border_width_all_tasks"
+        app:elevation="@dimen/float_button_border_elevation_all_tasks"
         app:fabSize="normal"
-        app:srcCompat="@drawable/_01_button"
+        app:srcCompat="@drawable/float_plus_button"
         app:useCompatPadding="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

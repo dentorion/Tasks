@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_new"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:padding="@dimen/common_dialog_padding_constraint">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/english_language"
+        app:layout_constraintBottom_toBottomOf="@+id/english"
+        app:layout_constraintEnd_toEndOf="@+id/english"
+        app:layout_constraintStart_toStartOf="@+id/english"
+        app:layout_constraintTop_toTopOf="@+id/english"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/polish_language"
+        app:layout_constraintBottom_toBottomOf="@+id/polish"
+        app:layout_constraintEnd_toEndOf="@+id/polish"
+        app:layout_constraintStart_toStartOf="@+id/polish"
+        app:layout_constraintTop_toTopOf="@+id/polish"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageView
+        android:id="@+id/trash_basket"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/russian_language"
+        app:layout_constraintBottom_toBottomOf="@+id/russian"
+        app:layout_constraintEnd_toEndOf="@+id/russian"
+        app:layout_constraintStart_toStartOf="@+id/russian"
+        app:layout_constraintTop_toTopOf="@+id/russian"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageButton
+        android:id="@+id/english"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:layout_marginTop="@dimen/icon_padding_bottom_language"
+        android:background="@drawable/ic_united_kingdom"
+        android:contentDescription="@string/english_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/russian"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageButton
+        android:id="@+id/polish"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:layout_marginTop="@dimen/icon_padding_bottom_language"
+        android:background="@drawable/ic_poland"
+        android:contentDescription="@string/polish_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/russian" />
+
+    <ImageButton
+        android:id="@+id/russian"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:layout_marginTop="@dimen/icon_padding_bottom_language"
+        android:background="@drawable/ic_russia"
+        android:contentDescription="@string/russian_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/polish"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/english" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_choose_language"
+        android:textAllCaps="true"
+        android:textColor="@color/color_main"
+        android:textSize="@dimen/text_size_language"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/english"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

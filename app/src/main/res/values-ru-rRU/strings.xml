@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Задачи</string>
+    <string name="notes_are_absent">Задачи отсутствуют</string>
+
+    <string name="new_edit_fragment_task_new">Новая задача</string>
+    <string name="new_edit_fragment_task_edit">Редактирование</string>
+    <string name="new_edit_fragment_done_checkbox_title">Выполнено</string>
+    <string name="new_edit_fragment_important_checkbox">Важно</string>
+    <string name="new_edit_fragment_field_title">Заголовок</string>
+    <string name="new_edit_fragment_field_message">Описание</string>
+    <string name="new_edit_fragment_btn_ok">OK</string>
+
+    <string name="snack_bar_empty_task_title_forbidden">заголовок не может быть пустым</string>
+    <string name="snack_bar_all_finished_tasks_cleared">завершенные задачи очищены</string>
+    <string name="snack_bar_btn_undo_deleted">"ОТМЕНИТЬ "</string>
+    <string name="snack_bar_message_task_new">Задача добавлена</string>
+    <string name="snack_bar_message_task_edit">Задача изменена</string>
+    <string name="snack_bar_message_task_del">Задача удалена</string>
+
+    <string name="sort_by_title">Сортировать по названию</string>
+    <string name="sort_by_date">Сортировать по дате</string>
+    <string name="sort_by_important">Важные задачи в топ</string>
+
+    <string name="options_hide_finished">Скрыть выполненные</string>
+    <string name="options_clear_finished">Удалить выполненные</string>
+    <string name="options_change_language">Изменить язык</string>
+
+    <string name="description_add_button">кнопка добавить</string>
+    <string name="description_notes_are_absent">задачи отсутствуют</string>
+    <string name="description_item">краткое описание</string>
+
+    <string name="dialog_delete_message">Удалить все завершенные задачи?</string>
+    <string name="dialog_delete_no">НЕТ</string>
+    <string name="dialog_delete_yes">ДА</string>
+    <string name="dialog_delete_task">Удалить задачу?</string>
+
+    <string name="dialog_choose_language">Выберите язык</string>
+
+    <string name="action_bar_item_title_sort">Сортировка</string>
+    <string name="action_bar_item_title_search">Поиск</string>
+
+    <string name="quote">Труд, который нравится, перестает быть трудом</string>
+    <string name="sort_by_manual">Ручная сортировка</string>
+    <string name="manual_order_accepted">Изменения сохранены</string>
+    <string name="english_language">Английский язык</string>
+    <string name="polish_language">Польский язык</string>
+    <string name="russian_language">Русский язык</string>
+</resources>
