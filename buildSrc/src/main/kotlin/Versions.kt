@@ -68,6 +68,16 @@ object Versions {
     const val androidCoroutines = "1.5.2"
 
     /**
+     * Data Store
+     */
+    const val dataStore = "1.0.0"
+
+    /**
+     * RecyclerView
+     */
+    const val recycler = "1.2.1"
+
+    /**
      * Timber
      */
     const val timber = "5.0.1"

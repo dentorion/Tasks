@@ -12,6 +12,7 @@ android {
     buildToolsVersion = Android.buildTools
 
     defaultConfig {
+        applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
         versionCode = 1
@@ -31,10 +32,6 @@ android {
         viewBinding = true
     }
 
-    defaultConfig {
-        applicationId = "com.entin.lighttasks"
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -50,10 +47,10 @@ dependencies {
 
     // Main dependencies of project
     Dependencies.base.apply {
-        implementation (coreKtx)
-        implementation (appcompat)
-        implementation (material)
-        implementation (constraintlayout)
+        implementation(coreKtx)
+        implementation(appcompat)
+        implementation(material)
+        implementation(constraintlayout)
     }
 
     // Hilt
@@ -64,9 +61,9 @@ dependencies {
 
     // ROOM
     Dependencies.room.apply {
-        implementation (runtime)
-        kapt (compiler)
-        implementation (ktx)
+        implementation(runtime)
+        kapt(compiler)
+        implementation(ktx)
     }
 
     // NAVIGATION COMPONENT
@@ -89,14 +86,18 @@ dependencies {
 
     // Gson
     Dependencies.gson.apply {
-        implementation (gson)
+        implementation(gson)
     }
 
     // DATA STORE
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    Dependencies.dataStore.apply {
+        implementation(dataStore)
+    }
 
     // Recyclerview
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    Dependencies.recyclerview.apply {
+        implementation(recyclerview)
+    }
 }
 
 kapt {

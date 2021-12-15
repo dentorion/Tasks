@@ -11,6 +11,8 @@ object Dependencies {
     val gson = Gson
     val room = Room
     val coroutines = Coroutines
+    val dataStore = DataStore
+    val recyclerview = RecyclerView
 
     val workManager = WorkManager
     val retrofit = Retrofit
