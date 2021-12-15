@@ -68,9 +68,9 @@ class AllTasksAdapter(private val listener: OnClickOnEmpty) :
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem == newItem
+            oldItem.id == newItem.id && oldItem.position == newItem.position
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.id == newItem.id && oldItem.position == newItem.position
+            oldItem == newItem
     }
 }
