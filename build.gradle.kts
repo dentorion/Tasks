@@ -1,4 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
         google()
@@ -6,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.1.0-beta05")
+        classpath("com.android.tools.build:gradle:${Android.gradleVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Android.kotlinVersion}")
 
         // HILT
@@ -14,6 +13,10 @@ buildscript {
 
         // Safe Args
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Android.navigation}")
+
+        // Firebase
+        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
+        classpath("com.google.gms:google-services:4.3.10")
     }
 }
 

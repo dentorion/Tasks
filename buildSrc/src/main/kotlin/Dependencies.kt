@@ -13,6 +13,7 @@ object Dependencies {
     val coroutines = Coroutines
     val dataStore = DataStore
     val recyclerview = RecyclerView
+    val firebase = Firebase
 
     val workManager = WorkManager
     val retrofit = Retrofit

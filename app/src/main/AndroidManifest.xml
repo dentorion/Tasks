@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.entin.lighttasks">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.entin.lighttasks.presentation.application.App"
         android:allowBackup="true"
@@ -12,8 +14,8 @@
         android:theme="@style/SplashTheme">
         <activity
             android:name="com.entin.lighttasks.presentation.activity.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

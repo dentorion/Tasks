@@ -5,6 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -15,8 +18,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "3"
     }
 
     compileOptions {
@@ -34,7 +37,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -97,6 +100,13 @@ dependencies {
     // Recyclerview
     Dependencies.recyclerview.apply {
         implementation(recyclerview)
+    }
+
+    // Firebase
+    Dependencies.firebase.apply {
+        implementation(platform(bom))
+        implementation(crashlytics)
+        implementation(analytics)
     }
 }
 
