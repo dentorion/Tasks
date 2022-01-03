@@ -9,6 +9,7 @@
         <item name="android:textColor">@color/black</item>
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
         <item name="snackbarStyle">@style/MySnackBarStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
     </style>
 
     <!-- MENU ITEMS ACTION BAR -->
@@ -44,7 +45,6 @@
     </style>
 
     <!-- SNACK BAR -->
-
     <style name="MySnackBarStyle" parent="Widget.MaterialComponents.Snackbar">
         <item name="android:backgroundTint">@color/color_main</item>
     </style>
@@ -53,6 +53,11 @@
     <style name="FloatBtn">
         <item name="backgroundTint">@color/color_main</item>
         <item name="rippleColor">@color/white</item>
+    </style>
+
+    <!-- ALERT DIALOG BUTTON -->
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/color_main</item>
     </style>
 
     <!-- SPLASH SCREEN -->

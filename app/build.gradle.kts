@@ -18,8 +18,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 3
-        versionName = "3"
+        versionCode = 4
+        versionName = "4"
     }
 
     compileOptions {
@@ -36,8 +36,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -54,6 +63,7 @@ dependencies {
         implementation(appcompat)
         implementation(material)
         implementation(constraintlayout)
+        implementation(fragment)
     }
 
     // Hilt
@@ -83,9 +93,9 @@ dependencies {
     }
 
     // ViewBinding delegate [No REFLECTION] - Kirill Rozov
-    Dependencies.viewBindingDelegate.apply {
-        implementation(main)
-    }
+//    Dependencies.viewBindingDelegate.apply {
+//        implementation(main)
+//    }
 
     // Gson
     Dependencies.gson.apply {
@@ -107,6 +117,15 @@ dependencies {
         implementation(platform(bom))
         implementation(crashlytics)
         implementation(analytics)
+        implementation(auth)
+        implementation(playServicesAuth)
+        implementation(firestore)
+        implementation(coroutinesPlayServices)
+    }
+
+    // Timber
+    Dependencies.timber.apply {
+        implementation(timber)
     }
 }
 

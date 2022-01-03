@@ -10,6 +10,7 @@ object Base {
 
     const val constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.constraint}"
     const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
+    const val fragment = "androidx.fragment:fragment-ktx:${Versions.fragment}"
     const val swipe = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swipe}"
 
     const val jUnit = "junit:junit:${Versions.jUnit}"

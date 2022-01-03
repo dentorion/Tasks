@@ -63,7 +63,8 @@ class ItemTouchHelperCallback(
 
     private fun onSwipedImpl(viewHolder: RecyclerView.ViewHolder) {
         val task = tasksAdapterList.currentList[viewHolder.absoluteAdapterPosition]
-        val action = AllTasksFragmentDirections.actionGlobalDeleteTaskDialog(task)
+        val action =
+            AllTasksFragmentDirections.actionGlobalDeleteTaskDialog(task = task, remote = false)
         navController.navigate(action)
         // To prevent empty place of task in recyclerview
         tasksAdapterList.notifyItemChanged(viewHolder.absoluteAdapterPosition)

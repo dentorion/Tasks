@@ -20,15 +20,10 @@ class MainActivity :
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Change Theme
-        setTheme(R.style.Theme_Tasks)
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
         setupNavigationAndActionBar()
-
-        setContentView(view)
+        setContentView(binding.root)
     }
 
     private fun setupNavigationAndActionBar() {
@@ -42,9 +37,8 @@ class MainActivity :
         setupActionBarWithNavController(navController)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
+    override fun onSupportNavigateUp(): Boolean =
+        navController.navigateUp() || super.onSupportNavigateUp()
 
     // Navigation Change Listener for hiding opened keyboard
 

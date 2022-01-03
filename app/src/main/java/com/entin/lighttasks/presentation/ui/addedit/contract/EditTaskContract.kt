@@ -8,5 +8,6 @@ package com.entin.lighttasks.presentation.ui.addedit.contract
 
 sealed class EditTaskEvent {
     object ShowErrorBlankTitleText : EditTaskEvent()
-    data class NavBackWithResult(val typeNewOrEdit: Int) : EditTaskEvent()
+    data class SaveTaskToRemoteSuccess(val result: Boolean): EditTaskEvent()
+    data class NavBackWithResult(val typeNewOrEditorExist: Int) : EditTaskEvent()
 }

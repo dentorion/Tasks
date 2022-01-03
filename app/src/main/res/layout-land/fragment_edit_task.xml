@@ -19,7 +19,7 @@
             android:layout_marginStart="@dimen/checkbox_done_margin_start_add_edit"
             android:background="@drawable/checkbox_light_solid_background"
             android:buttonTint="@color/color_text"
-            android:minHeight="@dimen/checkbox_done_min_height_add_edit"
+            android:minHeight="48dp"
             android:paddingStart="@dimen/checkbox_done_padding_start_add_edit"
             android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
             android:text="@string/new_edit_fragment_done_checkbox_title"
@@ -35,7 +35,7 @@
             android:layout_marginTop="@dimen/checkbox_important_margin_top_add_edit"
             android:background="@drawable/important_background"
             android:buttonTint="@color/color_important_text_new_edit_fragment"
-            android:minHeight="@dimen/checkbox_important_min_height_add_edit"
+            android:minHeight="48dp"
             android:paddingStart="@dimen/checkbox_important_padding_start_add_edit"
             android:paddingEnd="@dimen/checkbox_important_padding_end_add_edit"
             android:text="@string/new_edit_fragment_important_checkbox"
@@ -193,6 +193,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </RadioGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_task_to_remote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/color_main"
+            android:text="@string/new_edit_fragment_btn_cloud"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_ok_button"
+            app:layout_constraintEnd_toStartOf="@+id/add_new_task_ok_button"
+            app:layout_constraintTop_toTopOf="@+id/add_new_task_ok_button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_new_task_ok_button"
