@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,8 +20,7 @@ import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.ui.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.ui.main.adapter.OnClickOnEmpty
-import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage.EDIT
-import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage.NEW
+import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage.*
 import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
 import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
@@ -29,10 +28,11 @@ import com.entin.lighttasks.presentation.util.onSearchTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
@@ -56,7 +56,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -106,7 +106,6 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         ).attachToRecyclerView(binding.tasksRecyclerView)
     }
 
-    @ExperimentalCoroutinesApi
     private fun allTasksObserver() {
         viewModel.tasks.observe(viewLifecycleOwner) { listTask ->
             showWelcome(listTask.isEmpty())
@@ -135,69 +134,84 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     }
 
     private fun stateObserver() {
-        viewModel.tasksEvent
-            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { event ->
-                when (event) {
-                    is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
-                        getSnackBar(
-                            resources.getString(R.string.snack_bar_message_task_del),
-                            requireView()
-                        ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
-                            viewModel.onUndoDeleteClick(event.task)
-                        }.show()
-                    }
-
-                    is AllTasksEvent.NavToEditTask -> {
-                        val action =
-                            AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                                event.task,
-                                resources.getString(R.string.new_edit_fragment_task_edit)
-                            )
-                        findNavController().navigate(action)
-                    }
-
-                    is AllTasksEvent.NavToNewTask -> {
-                        val action =
-                            AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                                null,
-                                resources.getString(R.string.new_edit_fragment_task_new)
-                            )
-                        findNavController().navigate(action)
-                    }
-
-                    is AllTasksEvent.ShowAddEditTaskMessage -> {
-                        when (event.type) {
-                            EDIT -> getSnackBar(
-                                resources.getString(R.string.snack_bar_message_task_edit),
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksEvent.collect { event ->
+                    when (event) {
+                        is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
+                            getSnackBar(
+                                resources.getString(R.string.snack_bar_message_task_del),
                                 requireView()
-                            ).show()
-                            NEW -> getSnackBar(
-                                resources.getString(R.string.snack_bar_message_task_new),
+                            ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
+                                viewModel.onUndoDeleteClick(event.task)
+                            }.show()
+                        }
+                        is AllTasksEvent.NavToEditTask -> {
+                            val action =
+                                AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                    event.task,
+                                    resources.getString(R.string.new_edit_fragment_task_edit)
+                                )
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.NavToNewTask -> {
+                            val action =
+                                AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                    null,
+                                    resources.getString(R.string.new_edit_fragment_task_new)
+                                )
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.ShowAddEditTaskMessage -> {
+                            when (event.type) {
+                                EDIT -> getSnackBar(
+                                    resources.getString(R.string.snack_bar_message_task_edit),
+                                    requireView()
+                                ).show()
+                                NEW -> getSnackBar(
+                                    resources.getString(R.string.snack_bar_message_task_new),
+                                    requireView()
+                                ).show()
+                                EXIST -> getSnackBar(
+                                    resources.getString(R.string.snack_bar_message_task_exist),
+                                    requireView()
+                                ).show()
+                            }
+                        }
+                        is AllTasksEvent.NavToDellFinishedTasks -> {
+                            val action =
+                                AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.ShowDellFinishedTasks -> {
+                            getSnackBar(
+                                resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
                                 requireView()
                             ).show()
                         }
-                    }
-
-                    is AllTasksEvent.NavToDellFinishedTasks -> {
-                        val action = AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
-                        findNavController().navigate(action)
-                    }
-
-                    is AllTasksEvent.ShowDellFinishedTasks -> {
-                        getSnackBar(
-                            resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
+                        is AllTasksEvent.NavToChangeLanguage -> {
+                            val action =
+                                AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.NavToAuth -> {
+                            val action =
+                                AllTasksFragmentDirections.actionAllTasksFragmentToAuthFragment()
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.NavToRemoteTasks -> {
+                            val action =
+                                AllTasksFragmentDirections.actionAllTasksFragmentToRemoteFragment()
+                            findNavController().navigate(action)
+                        }
+                        is AllTasksEvent.Smile -> getSnackBar(
+                            getString(R.string.snack_bar_message_smile),
                             requireView()
-                        )
-                            .show()
-                    }
-
-                    is AllTasksEvent.NavToChangeLanguage -> {
-                        val action = AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
-                        findNavController().navigate(action)
+                        ).show()
                     }
                 }
-            }.launchIn(lifecycleScope)
+            }
+        }
     }
 
     // Interface implementation for Adapter
@@ -285,6 +299,10 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             }
             R.id.action_change_language -> {
                 viewModel.navToChangeLanguage()
+                true
+            }
+            R.id.action_cloud_tasks -> {
+                viewModel.navToCloudTasks()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -18,7 +18,7 @@ interface TasksRepository {
 
     fun getMaxPosition(): Flow<Int>
 
-    suspend fun newTask(task: Task)
+    suspend fun newTask(task: Task): Flow<Boolean>
 
     suspend fun updateTask(task: Task)
 

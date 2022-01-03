@@ -4,8 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.entin.lighttasks.data.db.AppDataBase
 import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.data.repositoryImpl.RemoteTasksRepositoryImpl
 import com.entin.lighttasks.data.repositoryImpl.TasksRepositoryImpl
+import com.entin.lighttasks.domain.repository.RemoteTasksRepository
+import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.TASKS
+import com.google.firebase.firestore.CollectionReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +25,7 @@ import javax.inject.Singleton
  * - DataBase
  * - DAO
  * - Repository
+ * - Remote Repository
  * - Scope using in AllTasksViewModel for deleting task from Dialog
  *   to be sure operation will be finished after dialog closing.
  */
@@ -48,6 +53,15 @@ object AppModule {
     @Provides
     fun provideRepository(dao: TaskDao): TasksRepository {
         return TasksRepositoryImpl(dao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRemoteRepository(
+        dao: TaskDao,
+        @Named(TASKS) fireBaseDb: CollectionReference,
+    ): RemoteTasksRepository {
+        return RemoteTasksRepositoryImpl(dao, fireBaseDb)
     }
 
     @Singleton

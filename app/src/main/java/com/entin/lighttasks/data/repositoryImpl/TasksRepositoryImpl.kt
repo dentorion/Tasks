@@ -1,12 +1,14 @@
 package com.entin.lighttasks.data.repositoryImpl
 
-import com.entin.lighttasks.domain.entity.OrderSort
+import android.util.Log
 import com.entin.lighttasks.data.db.TaskDao
+import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,9 +16,8 @@ import javax.inject.Singleton
  * Repository Implementation of [TasksRepository] interface
  */
 
-@Singleton
 class TasksRepositoryImpl @Inject constructor(
-    private val tasksDao: TaskDao
+    private val tasksDao: TaskDao,
 ) : TasksRepository {
 
     /**
@@ -36,10 +37,24 @@ class TasksRepositoryImpl @Inject constructor(
 
     /**
      * Create new Task
+     * but first looking for the same Task in Room DB by next fields.
+     * Remote Task fields should be equal to Room Db Task to return false.
+     * - title
+     * - message
+     * - created
+     * - finished
+     * - important
      */
-    override suspend fun newTask(task: Task) {
-        tasksDao.newTask(task)
-    }
+    override suspend fun newTask(task: Task) = flow {
+        if (isAllowToSave(task)) {
+            Log.i("Eska", "REPOSITORY. newTask(). check: TRUE")
+            tasksDao.newTask(task)
+            emit(true)
+        } else {
+            Log.i("Eska", "REPOSITORY. newTask(). check: FALSE")
+            emit(false)
+        }
+    }.flowOn(Dispatchers.IO)
 
     /**
      * Updating queries
@@ -68,5 +83,20 @@ class TasksRepositoryImpl @Inject constructor(
      */
     override fun getMaxPosition(): Flow<Int> = flow {
         emit(tasksDao.getLastId())
+    }
+
+    // PRIVATE FUNCTIONS
+
+    /**
+     * Looking for the same Task in Room DB be some fields.
+     */
+    private fun isAllowToSave(task: Task): Boolean {
+        return tasksDao.isTaskExist(
+            title = task.title,
+            message = task.message,
+//            important = task.important,
+//            finished = task.finished,
+//            created = task.date
+        ).not()
     }
 }

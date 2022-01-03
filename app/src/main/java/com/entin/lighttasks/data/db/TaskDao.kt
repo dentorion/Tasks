@@ -1,6 +1,7 @@
 package com.entin.lighttasks.data.db
 
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import com.entin.lighttasks.domain.entity.Task
 import kotlinx.coroutines.flow.Flow
 
@@ -31,15 +32,15 @@ interface TaskDao {
 
     // Insert new Task with replace
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = REPLACE)
     suspend fun newTask(task: Task)
 
     // Update task or list of tasks
 
-    @Update
+    @Update(onConflict = REPLACE)
     suspend fun updateTask(task: Task)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = REPLACE)
     suspend fun updateAllTasks(list: List<Task>)
 
     // Deleting queries
@@ -54,4 +55,11 @@ interface TaskDao {
 
     @Query("SELECT MAX(task_position) FROM tasks")
     fun getLastId(): Int
+
+    @Query("SELECT * FROM tasks WHERE task_title == :title AND task_message == :message")
+    fun isTaskExist(title: String, message: String): Boolean
+
+    // Get All Tasks
+    @Query("SELECT * FROM tasks")
+    fun getAllTasks(): Flow<List<Task>>
 }

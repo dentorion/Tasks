@@ -8,7 +8,10 @@ import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage
 import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
 import com.entin.lighttasks.presentation.util.TASK_EDIT
+import com.entin.lighttasks.presentation.util.TASK_EXIST
 import com.entin.lighttasks.presentation.util.TASK_NEW
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,12 +24,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class AllTasksViewModel @Inject constructor(
     state: SavedStateHandle,
     private val repository: TasksRepository,
     private val preferences: Preferences,
-    @Named("AppScopeDI") private val diAppScope: CoroutineScope
+    @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
 
     val searchValue = state.getLiveData("searchValue", "")
@@ -37,7 +41,6 @@ class AllTasksViewModel @Inject constructor(
 
     var isManualSorting: Boolean = false
 
-    @ExperimentalCoroutinesApi
     private val searchFlow = combine(
         searchValue.asFlow(),
         flowSortingPreferences
@@ -51,7 +54,6 @@ class AllTasksViewModel @Inject constructor(
         )
     }
 
-    @ExperimentalCoroutinesApi
     val tasks = searchFlow.asLiveData()
 
     init {
@@ -88,7 +90,9 @@ class AllTasksViewModel @Inject constructor(
     }
 
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
-        repository.newTask(task)
+        repository.newTask(task).collect { result ->
+            if (result) _tasksEvent.send(AllTasksEvent.Smile)
+        }
     }
 
     // Navigate to
@@ -101,12 +105,29 @@ class AllTasksViewModel @Inject constructor(
         _tasksEvent.send(AllTasksEvent.NavToNewTask)
     }
 
+    fun navToCloudTasks() {
+        if(Firebase.auth.currentUser != null) {
+            navToRemoteTasks()
+        } else {
+            navToAuth()
+        }
+    }
+
+    private fun navToAuth() = viewModelScope.launch {
+        _tasksEvent.send(AllTasksEvent.NavToAuth)
+    }
+
+    private fun navToRemoteTasks() = viewModelScope.launch {
+        _tasksEvent.send(AllTasksEvent.NavToRemoteTasks)
+    }
+
     // Messages
 
     fun onEditResultShow(result: Int) = viewModelScope.launch {
         when (result) {
             TASK_NEW -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.NEW))
             TASK_EDIT -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.EDIT))
+            TASK_EXIST -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.EXIST))
         }
     }
 
@@ -117,14 +138,14 @@ class AllTasksViewModel @Inject constructor(
     }
 
     // Language
-
     fun navToChangeLanguage() = viewModelScope.launch {
         _tasksEvent.send(AllTasksEvent.NavToChangeLanguage)
     }
 
     // Update list after manual changing position of Task
-
     fun updateAllTasks(list: List<Task>) = viewModelScope.launch {
         repository.updateAllTasks(list)
     }
+
+
 }

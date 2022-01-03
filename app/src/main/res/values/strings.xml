@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tasks</string>
-    <string name="notes_are_absent">Notes are absent</string>
+    <string name="notes_are_absent">Empty task list</string>
 
     <string name="new_edit_fragment_task_new">NEW TASK</string>
     <string name="new_edit_fragment_task_edit">EDIT TASK</string>
@@ -9,29 +9,38 @@
     <string name="new_edit_fragment_important_checkbox">Important</string>
     <string name="new_edit_fragment_field_title">Title</string>
     <string name="new_edit_fragment_field_message">Description</string>
+    <string name="new_edit_fragment_btn_cloud">SAVE TASK TO CLOUD</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
     <string name="snack_bar_empty_task_title_forbidden">title can\'t be empty</string>
-    <string name="snack_bar_all_finished_tasks_cleared">all finished tasks cleared</string>
+    <string name="snack_bar_all_finished_tasks_cleared">All finished tasks cleared</string>
     <string name="snack_bar_btn_undo_deleted">UNDO</string>
     <string name="snack_bar_message_task_new">New task added</string>
+    <string name="snack_bar_message_tasks_new">New tasks added</string>
     <string name="snack_bar_message_task_edit">Task changed</string>
     <string name="snack_bar_message_task_del">Task deleted</string>
+    <string name="snack_bar_message_task_exist">Task already exists</string>
+    <string name="snack_bar_message_get_remote_tasks_failure">Failure getting cloud tasks</string>
+    <string name="snack_bar_message_tasks_exist">Tasks already exists</string>
+    <string name="snack_bar_message_smile">OK :)</string>
+    <string name="snack_bar_message_task_saved_to_remote_success">Task saved to cloud successfully</string>
+    <string name="snack_bar_message_task_saved_to_remote_failure">Cloud saving failure</string>
 
     <string name="sort_by_title">Sort by title</string>
     <string name="sort_by_date">Sort by date</string>
     <string name="sort_by_important">Sort by important</string>
     <string name="sort_by_manual">Manual sorting</string>
 
-    <string name="options_hide_finished">Hide finished</string>
-    <string name="options_clear_finished">Clear finished tasks</string>
+    <string name="options_hide_finished">Hide finished tasks</string>
+    <string name="options_clear_finished">Delete finished tasks</string>
     <string name="options_change_language">Change language</string>
+    <string name="options_cloud_tasks">Cloud tasks</string>
 
     <string name="description_add_button">Add button</string>
-    <string name="description_notes_are_absent">notes are absent</string>
-    <string name="description_item">short description</string>
+    <string name="description_notes_are_absent">Empty list</string>
+    <string name="description_item">Short description</string>
 
-    <string name="dialog_delete_message">Clear all finished tasks?</string>
+    <string name="dialog_delete_message">Delete all finished tasks?</string>
     <string name="dialog_delete_no">NO</string>
     <string name="dialog_delete_yes">YES</string>
     <string name="dialog_delete_task">Delete Task?</string>
@@ -47,4 +56,14 @@
     <string name="english_language">English language</string>
     <string name="polish_language">Polish language</string>
     <string name="russian_language">Russian language</string>
+
+    <string name="auth_label">Authentication</string>
+    <string name="auth_error">Authentication error</string>
+    <string name="remote_label_name_anonymous">Anonymous</string>
+    <string name="remote_save_to_firebase_success">Saved successfully</string>
+    <string name="remote_save_to_firebase_failur">Saving failure</string>
+    <string name="remote_del_from_firebase_success">Deletion successfully</string>
+    <string name="remote_del_from_firebase_failure">Deletion failure</string>
+    <string name="remote_btn_save_local_tasks">UPLOAD LOCAL TASKS</string>
+    <string name="remote_btn_load_all_tasks">Download</string>
 </resources>

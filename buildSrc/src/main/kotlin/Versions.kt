@@ -9,6 +9,7 @@ object Versions {
 
     const val constraint = "2.1.2"
     const val recyclerView = "1.2.1"
+    const val fragment = "1.4.0"
     const val swipe = "1.1.0"
 
     const val jUnit = "4.13.2"

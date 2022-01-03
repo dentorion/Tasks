@@ -11,8 +11,9 @@ import com.entin.lighttasks.databinding.ItemBinding
 
 import com.entin.lighttasks.domain.entity.Task
 
-class AllTasksAdapter(private val listener: OnClickOnEmpty) :
-    ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
+class AllTasksAdapter(
+    private val listener: OnClickOnEmpty,
+) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

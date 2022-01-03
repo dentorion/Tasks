@@ -1,25 +1,29 @@
 package com.entin.lighttasks.presentation.ui.addedit.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.presentation.ui.addedit.contract.EditTaskEvent
 import com.entin.lighttasks.presentation.ui.addedit.viewmodel.AddEditTaskViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Fragment for adding new task or editing existing task
@@ -27,41 +31,73 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
-
-    private val binding by viewBinding(FragmentEditTaskBinding::bind)
+    private var _binding: FragmentEditTaskBinding? = null
+    private val binding get() = _binding!!
 
     private val vm: AddEditTaskViewModel by viewModels()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupEventObserver()
-
         setupFields()
     }
 
-    private fun setupEventObserver() = vm.editTaskChannel
-        .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-        .onEach { event ->
-            when (event) {
-                /**
-                 * Navigation back
-                 */
-                is EditTaskEvent.NavBackWithResult -> {
-                    eventNavBackWithResult(event)
-                }
-                /**
-                 * Error show
-                 */
-                is EditTaskEvent.ShowErrorBlankTitleText -> {
-                    getSnackBar(
-                        resources.getString(R.string.snack_bar_empty_task_title_forbidden),
-                        requireView()
-                    ).show()
+    /**
+     * Event observer
+     */
+    private fun setupEventObserver() =
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.editTaskChannel.collect { event ->
+                    when (event) {
+                        /**
+                         * Navigation back
+                         */
+                        is EditTaskEvent.NavBackWithResult -> {
+                            eventNavBackWithResult(event.typeNewOrEditorExist)
+                        }
+                        /**
+                         * Error show
+                         */
+                        is EditTaskEvent.ShowErrorBlankTitleText -> {
+                            getSnackBar(
+                                resources.getString(R.string.snack_bar_empty_task_title_forbidden),
+                                requireView()
+                            ).show()
+                        }
+                        /**
+                         * Remote saving
+                         */
+                        is EditTaskEvent.SaveTaskToRemoteSuccess -> {
+                            if (event.result) {
+                                getSnackBar(
+                                    getString(R.string.snack_bar_message_task_saved_to_remote_success),
+                                    requireView()
+                                ).show()
+                            } else {
+                                getSnackBar(
+                                    getString(R.string.snack_bar_message_task_saved_to_remote_failure),
+                                    requireView()
+                                ).show()
+                            }
+                        }
+                    }
                 }
             }
-        }.launchIn(lifecycleScope)
+        }
 
+    /**
+     * Setup fields value
+     */
     private fun setupFields() = with(binding) {
         addNewTaskTitle.setText(vm.taskTitle)
         addNewTaskMessage.setText(vm.taskMessage)
@@ -95,6 +131,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             vm.taskImportant = isCheck
         }
 
+        // Save to Remote
+
+        if (Firebase.auth.currentUser != null) {
+            btnAddTaskToRemote.apply {
+                isVisible = true
+                setOnClickListener {
+                    vm.saveTaskToRemote()
+                }
+            }
+        } else {
+            btnAddTaskToRemote.apply {
+                isVisible = false
+            }
+        }
+
         // OK Button
 
         addNewTaskOkButton.setOnClickListener {
@@ -103,12 +154,17 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     // Event: navigate to AllTasksFragment with result
-    private fun eventNavBackWithResult(event: EditTaskEvent.NavBackWithResult) {
+    private fun eventNavBackWithResult(event: Int) {
         binding.addNewTaskTitle.clearFocus()
         setFragmentResult(
             "operationMode",
-            bundleOf("mode" to event.typeNewOrEdit)
+            bundleOf("mode" to event)
         )
         findNavController().popBackStack()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

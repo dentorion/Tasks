@@ -8,6 +8,15 @@ const val TASK_NEW: Int = 1
 
 const val TASK_EDIT: Int = 2
 
+const val TASK_EXIST: Int = 3
+
+/**
+ * Firebase DI
+ */
+const val TASKS = "tasks"
+
+const val ERROR_NAME_HILT = "errors"
+
 /**
  * Language block
  */

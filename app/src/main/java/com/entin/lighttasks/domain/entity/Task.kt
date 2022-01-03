@@ -1,12 +1,19 @@
 package com.entin.lighttasks.domain.entity
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
-import java.text.DateFormat
 
+/**
+ * Domain model Task
+ * - represents item that user creates and use
+ * - need to bee @keep to not be shrinks by Proguard
+ */
+
+@Keep
 @Entity(tableName = "tasks")
 @Parcelize
 data class Task(
@@ -18,9 +25,4 @@ data class Task(
     @ColumnInfo(name = "date_created") val date: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "task_group") val group: Int,
     @ColumnInfo(name = "task_position") var position: Int = Int.MAX_VALUE,
-) : Parcelable {
-
-    val dateFormat: String
-        get() = DateFormat.getDateTimeInstance().format(date)
-}
-
+) : Parcelable
