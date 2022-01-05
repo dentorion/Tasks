@@ -14,8 +14,10 @@ object Android {
      * Build.Gradle.kts Project
      */
     const val kotlinVersion = "1.6.0"
-    const val gradleVersion = "7.1.0-beta05"
+    const val gradleVersion = "7.1.0-rc01"
     const val hiltVersion = "2.40"
     const val navigation = "2.3.5"
     const val serialization = "1.5.10"
+    const val firebaseCrashlyticsGradle = "2.8.1"
+    const val googleServices = "4.3.10"
 }

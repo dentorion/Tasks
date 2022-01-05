@@ -92,11 +92,6 @@ dependencies {
         implementation(viewModel)
     }
 
-    // ViewBinding delegate [No REFLECTION] - Kirill Rozov
-//    Dependencies.viewBindingDelegate.apply {
-//        implementation(main)
-//    }
-
     // Gson
     Dependencies.gson.apply {
         implementation(gson)
