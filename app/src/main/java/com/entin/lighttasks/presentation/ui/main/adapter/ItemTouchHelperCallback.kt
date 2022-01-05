@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.main.fragment.AllTasksFragmentDirections
 import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
@@ -23,6 +24,7 @@ import kotlinx.coroutines.delay
  *                else -> item can't be moved UP DOWN
  */
 
+@ExperimentalCoroutinesApi
 class ItemTouchHelperCallback(
     private val tasksAdapterList: AllTasksAdapter,
     private val viewModel: AllTasksViewModel,
@@ -70,6 +72,7 @@ class ItemTouchHelperCallback(
         tasksAdapterList.notifyItemChanged(viewHolder.absoluteAdapterPosition)
     }
 
+    @ExperimentalCoroutinesApi
     private fun onMoveImpl(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
@@ -113,15 +116,19 @@ class ItemTouchHelperCallback(
             firstTouchedElement?.let { touched ->
                 if (touched.position < taskTo.position) {
                     incrementPositions(taskTo)
-                    allTasks.find { task -> task.position == touched.position }
-                        .also { task -> task?.position = taskTo.position + 1 }
+                    allTasks.find { task ->
+                        task.position == touched.position
+                    }.also { task ->
+                        task?.position = taskTo.position + 1
+                    }
                 } else {
                     incrementPositions(taskTo)
-                    allTasks.find { task -> task.position == touched.position }
-                        .also { task ->
-                            task?.position = taskTo.position
-                            taskTo.position += 1
-                        }
+                    allTasks.find { task ->
+                        task.position == touched.position
+                    }.also { task ->
+                        task?.position = taskTo.position
+                        taskTo.position += 1
+                    }
                 }
                 /**
                  * Insert into Adapter new List<Task> not to repeat animation

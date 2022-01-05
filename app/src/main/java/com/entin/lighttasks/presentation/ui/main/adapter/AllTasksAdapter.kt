@@ -16,7 +16,8 @@ class AllTasksAdapter(
 ) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemBinding.inflate(inflater, parent, false)
         return TaskViewHolder(binding)
     }
 
@@ -24,9 +25,9 @@ class AllTasksAdapter(
         viewHolder.bind(getItem(position))
     }
 
-    inner class TaskViewHolder(private val view: ItemBinding) : RecyclerView.ViewHolder(view.root) {
+    inner class TaskViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            view.apply {
+            binding.apply {
                 root.setOnClickListener {
                     val position = absoluteAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
@@ -45,7 +46,7 @@ class AllTasksAdapter(
         }
 
         fun bind(task: Task) {
-            view.apply {
+            binding.apply {
                 taskTitle.text = task.title
                 taskMessage.text = task.message
                 taskFinished.isChecked = task.finished

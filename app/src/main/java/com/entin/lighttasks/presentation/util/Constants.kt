@@ -13,24 +13,10 @@ const val TASK_EXIST: Int = 3
 /**
  * Firebase DI
  */
+
 const val TASKS = "tasks"
 
 const val ERROR_NAME_HILT = "errors"
-
-/**
- * Language block
- */
-
-const val LANGUAGES_KEY = "language"
-
-const val LANGUAGE_ENGLISH = "English"
-const val LANGUAGE_RUSSIAN = "Russian"
-const val LANGUAGE_POLISH = "Polish"
-
-val LANGUAGES = mapOf(LANGUAGE_ENGLISH to 0, LANGUAGE_RUSSIAN to 1, LANGUAGE_POLISH to 2)
-val LANGUAGES_COUNTRY = arrayOf("en", "ru", "pl")
-
-const val LANGUAGES_DEFAULT = 2
 
 /**
  * Fields name for AddEditTaskViewModel

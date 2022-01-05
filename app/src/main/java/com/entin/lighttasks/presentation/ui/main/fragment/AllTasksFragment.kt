@@ -59,19 +59,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
-
         setupRecyclerItemTouchListener()
-
         setupFabCircleButton()
-
         allTasksObserver()
-
         setupResultListener()
-
         stateObserver()
-
         setHasOptionsMenu(true)
     }
 
