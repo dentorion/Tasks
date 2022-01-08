@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "668599027577-vgoo3ridj4vipbr76uggnq4o29lm85rs.apps.googleusercontent.com",
+          "client_id": "668599027577-8296h5jsug2m866q0bq8n9bf6o5ttrr8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.entin.lighttasks",
+            "certificate_hash": "4bae1e73574ca68c41c5d314b66466c74ce298db"
+          }
+        },
+        {
+          "client_id": "668599027577-d7jk7pjl0grofp8orpcf1281qnmjo65o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.entin.lighttasks",
