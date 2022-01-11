@@ -66,4 +66,8 @@
     <string name="remote_del_from_firebase_failure">Nie udało się usunąć</string>
     <string name="remote_btn_save_local_tasks">Zapisz lokalne zadania</string>
     <string name="remote_btn_load_all_tasks">Ściągać</string>
+
+    <string name="no_network_connection">Brak połączenia sieciowego</string>
+    <string name="no_network_connection_settings">Ustawienia</string>
+    <string name="no_network_connection_airplane">Włączyłeś tryb samolotowy!</string>
 </resources>

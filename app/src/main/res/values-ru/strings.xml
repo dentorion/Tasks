@@ -66,4 +66,8 @@
     <string name="remote_del_from_firebase_failure">Удаление не удалось</string>
     <string name="remote_btn_save_local_tasks">Сохранить в облако</string>
     <string name="remote_btn_load_all_tasks">Загрузить</string>
+
+    <string name="no_network_connection">Отсутствует интернет-соединение</string>
+    <string name="no_network_connection_settings">Настройки</string>
+    <string name="no_network_connection_airplane">Включен авиа-режим!</string>
 </resources>

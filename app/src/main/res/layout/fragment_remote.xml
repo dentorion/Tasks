@@ -28,10 +28,10 @@
         android:letterSpacing="0.072"
         android:textColor="@color/color_main"
         android:textStyle="bold"
-        tools:text="Name Surname"
         app:layout_constraintBottom_toBottomOf="@+id/label_hello"
         app:layout_constraintStart_toEndOf="@+id/label_hello"
-        app:layout_constraintTop_toTopOf="@+id/label_hello" />
+        app:layout_constraintTop_toTopOf="@+id/label_hello"
+        tools:text="Name Surname" />
 
     <Button
         android:id="@+id/btn_load_all_tasks"
@@ -91,9 +91,10 @@
         android:id="@+id/ic_exit_account"
         android:layout_width="35dp"
         android:layout_height="38dp"
+        android:layout_marginEnd="1dp"
         android:src="@drawable/ic_exit_account"
         app:layout_constraintBottom_toBottomOf="@+id/label_hello"
-        app:layout_constraintEnd_toEndOf="@+id/btn_save_local_tasks_to_remote"
+        app:layout_constraintEnd_toEndOf="@+id/swipe_refresh"
         app:layout_constraintTop_toTopOf="@+id/label_hello" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

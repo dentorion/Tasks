@@ -13,7 +13,9 @@ import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
 import com.entin.lighttasks.presentation.ui.remote.viewmodel.RemoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DeleteTask : DialogFragment() {
     private val args: DeleteTaskArgs by navArgs()

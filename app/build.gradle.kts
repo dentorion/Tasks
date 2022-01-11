@@ -18,8 +18,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 4
-        versionName = "4"
+        versionCode = 5
+        versionName = "5 Logs & Connection"
     }
 
     compileOptions {
@@ -121,6 +121,11 @@ dependencies {
     // Timber
     Dependencies.timber.apply {
         implementation(timber)
+    }
+
+    // No INTERNET Connection
+    Dependencies.connection.apply {
+        implementation(oops)
     }
 }
 

@@ -66,4 +66,8 @@
     <string name="remote_del_from_firebase_failure">Deletion failure</string>
     <string name="remote_btn_save_local_tasks">UPLOAD LOCAL TASKS</string>
     <string name="remote_btn_load_all_tasks">Download</string>
+
+    <string name="no_network_connection">No Internet connection</string>
+    <string name="no_network_connection_settings">Settings</string>
+    <string name="no_network_connection_airplane">You have turned on the airplane mode!</string>
 </resources>

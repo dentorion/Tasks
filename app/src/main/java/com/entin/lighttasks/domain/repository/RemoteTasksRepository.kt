@@ -4,7 +4,7 @@ import com.entin.lighttasks.domain.entity.Task
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Interface of Repository
+ * Interface of TasksRepository
  */
 
 interface RemoteTasksRepository {

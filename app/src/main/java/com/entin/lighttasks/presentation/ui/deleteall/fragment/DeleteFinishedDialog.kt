@@ -10,7 +10,9 @@ import androidx.fragment.app.activityViewModels
 import com.entin.lighttasks.R
 import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DeleteFinishedDialog : DialogFragment() {
 
@@ -35,5 +37,4 @@ class DeleteFinishedDialog : DialogFragment() {
 
         return rootView
     }
-
 }

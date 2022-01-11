@@ -7,7 +7,7 @@ import com.google.firebase.ktx.Firebase
  * Get userUid
  */
 fun getUserUid(): String =
-    Firebase.auth.currentUser?.uid ?: ""
+    Firebase.auth.currentUser?.uid ?: "0"
 
 /**
  * Check the user is logged in

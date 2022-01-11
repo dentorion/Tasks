@@ -14,9 +14,10 @@ object Dependencies {
     val dataStore = DataStore
     val recyclerview = RecyclerView
     val firebase = Firebase
+    val timber = Timber
+    val connection = Connection
 
     val workManager = WorkManager
     val retrofit = Retrofit
-    val timber = Timber
     val glide = Glide
 }

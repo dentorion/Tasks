@@ -7,10 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.MainThread
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentAuthBinding
+import com.entin.lighttasks.presentation.base.fragment.InternetDependable
+import com.entin.lighttasks.presentation.base.fragment.initialInternetConnectionChecking
+import com.entin.lighttasks.presentation.ui.auth.viewmodel.AuthViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,19 +29,24 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 /**
  * Fragment for auth by Google
  */
 
 @AndroidEntryPoint
-class AuthFragment : Fragment(R.layout.fragment_auth) {
+class AuthFragment : Fragment(R.layout.fragment_auth), InternetDependable {
     private var _binding: FragmentAuthBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AuthViewModel by viewModels()
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
     private var currentUser: FirebaseUser? = null
+
+    private val liveConnection = MutableLiveData<Boolean>()
 
     /**
      * On Activity Result
@@ -50,7 +62,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     val account = task.getResult(ApiException::class.java)!!
                     firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
-                    // Google Sign In failed, update UI appropriately
+                    Timber.log(0, e)
                 }
             }
         }
@@ -61,6 +73,9 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAuthBinding.inflate(inflater, container, false)
+
+        observeInternetConnectionChecking()
+
         return binding.root
     }
 
@@ -91,6 +106,21 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
         binding.signInButton.setOnClickListener {
             signIn()
+            it.isVisible = false
+        }
+    }
+
+    /**
+     * Internet connection checking and observing
+     */
+
+    private fun observeInternetConnectionChecking() {
+        initialInternetConnectionChecking(
+            binding = binding.root,
+            liveConnection = liveConnection
+        )
+        liveConnection.observe(viewLifecycleOwner) {
+            connectionReaction(it)
         }
     }
 
@@ -102,15 +132,18 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         auth.signInWithCredential(credential).addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
                 currentUser = auth.currentUser
-
+                // Log
+                viewModel.logSuccessAuth()
                 // Navigate to Remote Tasks
                 navigateToRemoteTasks()
             } else {
+                // Log
+                viewModel.logFailureAuth(task.exception)
+                binding.signInButton.isVisible = true
                 getSnackBar(getString(R.string.auth_error), requireView()).show()
             }
         }
     }
-
 
     /**
      * Button auth clicked
@@ -125,6 +158,18 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
      */
     private fun navigateToRemoteTasks() {
         findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToRemoteFragment())
+    }
+
+    /**
+     * No Internet reaction
+     */
+    @MainThread
+    override fun connectionReaction(value: Boolean) {
+        if (value) {
+            binding.signInButton.visibility = View.VISIBLE
+        } else {
+            binding.signInButton.visibility = View.INVISIBLE
+        }
     }
 
     override fun onDestroyView() {

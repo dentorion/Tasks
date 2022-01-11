@@ -82,4 +82,9 @@ object Versions {
      * Timber
      */
     const val timber = "5.0.1"
+
+    /**
+     * Connection
+     */
+    const val oops = "2.0.0"
 }

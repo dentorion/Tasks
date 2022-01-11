@@ -16,7 +16,7 @@ const val TASK_EXIST: Int = 3
 
 const val TASKS = "tasks"
 
-const val ERROR_NAME_HILT = "errors"
+const val LOGS_NAME_HILT = "logs"
 
 /**
  * Fields name for AddEditTaskViewModel

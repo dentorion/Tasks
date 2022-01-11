@@ -1,6 +1,5 @@
 package com.entin.lighttasks.data.repositoryImpl
 
-import android.util.Log
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository Implementation of [TasksRepository] interface
@@ -47,11 +45,9 @@ class TasksRepositoryImpl @Inject constructor(
      */
     override suspend fun newTask(task: Task) = flow {
         if (isAllowToSave(task)) {
-            Log.i("Eska", "REPOSITORY. newTask(). check: TRUE")
             tasksDao.newTask(task)
             emit(true)
         } else {
-            Log.i("Eska", "REPOSITORY. newTask(). check: FALSE")
             emit(false)
         }
     }.flowOn(Dispatchers.IO)

@@ -35,7 +35,7 @@ class ChangeLanguageDialog : DialogFragment() {
     }
 
     // Language changing
-
+    @Suppress("DEPRECATION")
     private fun setAppLocale(context: Context, language: String) {
         val locale = Locale(language)
         Locale.setDefault(locale)

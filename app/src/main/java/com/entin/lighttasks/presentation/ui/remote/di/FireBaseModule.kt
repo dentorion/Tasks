@@ -1,6 +1,6 @@
 package com.entin.lighttasks.presentation.ui.remote.di
 
-import com.entin.lighttasks.presentation.util.ERROR_NAME_HILT
+import com.entin.lighttasks.presentation.util.LOGS_NAME_HILT
 import com.entin.lighttasks.presentation.util.TASKS
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -32,9 +32,9 @@ object FireBaseModule {
     /**
      * Errors collection
      */
-    @Named(ERROR_NAME_HILT)
+    @Named(LOGS_NAME_HILT)
     @Provides
     @Singleton
     fun provideFirebaseErrors(): CollectionReference =
-        Firebase.firestore.collection(ERROR_NAME_HILT)
+        Firebase.firestore.collection(LOGS_NAME_HILT)
 }

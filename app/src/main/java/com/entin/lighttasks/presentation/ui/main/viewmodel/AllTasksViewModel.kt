@@ -146,6 +146,4 @@ class AllTasksViewModel @Inject constructor(
     fun updateAllTasks(list: List<Task>) = viewModelScope.launch {
         repository.updateAllTasks(list)
     }
-
-
 }

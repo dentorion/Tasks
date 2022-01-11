@@ -21,8 +21,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="204dp"
-        android:layout_height="269dp"
+        android:layout_width="104dp"
+        android:layout_height="169dp"
         android:alpha="0.72"
         android:src="@drawable/auth_main"
         app:layout_constraintBottom_toBottomOf="parent"

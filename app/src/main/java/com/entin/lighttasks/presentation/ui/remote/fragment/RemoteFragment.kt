@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentRemoteBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.base.fragment.InternetDependable
+import com.entin.lighttasks.presentation.base.fragment.initialInternetConnectionChecking
 import com.entin.lighttasks.presentation.ui.remote.adapter.RemoteAllTasksAdapter
 import com.entin.lighttasks.presentation.ui.remote.adapter.RemoteItemTouchHelperCallback
 import com.entin.lighttasks.presentation.ui.remote.contract.RemoteViewState
@@ -24,8 +27,6 @@ import com.entin.lighttasks.presentation.ui.remote.viewmodel.RemoteViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.getUserName
 import com.entin.lighttasks.presentation.util.isUserLoggedIn
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -37,9 +38,11 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class RemoteFragment : Fragment(R.layout.fragment_remote) {
+class RemoteFragment : Fragment(R.layout.fragment_remote), InternetDependable {
     private var _binding: FragmentRemoteBinding? = null
     private val binding get() = _binding!!
+
+    private val liveConnection = MutableLiveData<Boolean>()
 
     private val vm: RemoteViewModel by activityViewModels()
     private val tasksAdapterList: RemoteAllTasksAdapter =
@@ -51,11 +54,8 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRemoteBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        observeInternetConnectionChecking()
         if (isUserLoggedIn()) {
             setupWelcomeMessage()
             setupButtons()
@@ -64,9 +64,9 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
             initLoadRemoteTasks()
             observeViewState()
             initSwipeGuest()
-        } else {
-//            navigateToAuth()
         }
+
+        return binding.root
     }
 
     /**
@@ -94,7 +94,7 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
 
             // Log out account
             icExitAccount.setOnClickListener {
-                Firebase.auth.signOut()
+                vm.logLogout()
                 navigateToMain()
             }
         }
@@ -134,7 +134,7 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
      * Initial load all remote tasks
      */
     private fun initLoadRemoteTasks() {
-        vm.loadFromRemoteTasks(false)
+        vm.getFromRemoteTasks(true)
     }
 
     /**
@@ -158,10 +158,24 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
             swipeRefresh.apply {
                 setColorSchemeResources(R.color.color_main)
                 setOnRefreshListener {
-                    vm.loadFromRemoteTasks(isLoadShow = false)
+                    vm.getFromRemoteTasks(isLoadShow = false)
                     isRefreshing = false
                 }
             }
+        }
+    }
+
+    /**
+     * Internet connection checking and observing
+     */
+
+    private fun observeInternetConnectionChecking() {
+        initialInternetConnectionChecking(
+            binding = binding.root,
+            liveConnection = liveConnection
+        )
+        liveConnection.observe(viewLifecycleOwner) {
+            connectionReaction(it)
         }
     }
 
@@ -208,7 +222,7 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
                         snackBar(getString(R.string.snack_bar_message_get_remote_tasks_failure))
                     }
                     /**
-                     * INFORM. TASK SINGLE LOADED SUCCESS
+                     * INFORM. TASK LIST LOADED SUCCESS
                      */
                     is RemoteViewState.Inform.LoadListOfRemoteTasks -> {
                         if (viewState.value) {
@@ -217,6 +231,9 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
                             snackBar(getString(R.string.snack_bar_message_tasks_exist))
                         }
                     }
+                    /**
+                     * INFORM. TASK SINGLE LOADED SUCCESS
+                     */
                     is RemoteViewState.Inform.LoadRemoteTask -> {
                         if (viewState.value) {
                             snackBar(getString(R.string.snack_bar_message_task_new))
@@ -238,14 +255,8 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
             /**
              * LOADING
              */
-            is RemoteViewState.Loading -> {
-                // Load state
-                showLoadingState(true)
-            }
-            else -> {
-                // Load state
-                showLoadingState(false)
-            }
+            is RemoteViewState.Loading -> showLoadingState(true)
+            else -> showLoadingState(false)
         }
     }
 
@@ -308,6 +319,16 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
             .setPositiveButton("OK") { dialog, _ -> dialog?.cancel() }
             .setIcon(R.drawable.auth_main)
             .show()
+    }
+
+    /**
+     * No Internet reaction
+     */
+    override fun connectionReaction(value: Boolean) {
+        binding.apply {
+            btnLoadAllTasks.isVisible = value
+            btnSaveLocalTasksToRemote.isVisible = value
+        }
     }
 
     override fun onDestroyView() {
