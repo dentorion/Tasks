@@ -56,7 +56,6 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()

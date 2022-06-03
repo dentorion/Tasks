@@ -20,8 +20,8 @@ fun Fragment.initialInternetConnectionChecking(
                     liveConnection.postValue(hasActiveConnection)
                 }
             }
-            // Optional All
 
+            // Optional All
             duration = Snackbar.LENGTH_INDEFINITE
             noInternetConnectionMessage = resources.getString(R.string.no_network_connection)
             onAirplaneModeMessage = resources.getString(R.string.no_network_connection_airplane)

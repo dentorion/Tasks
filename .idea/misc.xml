@@ -42,7 +42,9 @@
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_btn_radio.xml" value="0.2055" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_radio_state_checked.xml" value="0.2055" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/drawable/work_radio_state_unchecked.xml" value="0.3195" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/delete_task.xml" value="0.40677083333333336" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/fragment_all_tasks.xml" value="0.16" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/fragment_auth.xml" value="0.40677083333333336" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout-land/fragment_edit_task.xml" value="0.33" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/clear_finished.xml" value="0.25" />
@@ -50,7 +52,7 @@
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/delete_task.xml" value="0.2518518518518518" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_all_remote_tasks.xml" value="0.3489583333333333" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_all_tasks.xml" value="0.29444444444444445" />
-        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_auth.xml" value="0.3489583333333333" />
+        <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_auth.xml" value="0.25" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_edit_task.xml" value="0.25" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_remote.xml" value="0.3489583333333333" />
         <entry key="..\:/ANDROID PROJECTS/TasksExample/app/src/main/res/layout/fragment_save_all_remote_tasks.xml" value="0.3489583333333333" />

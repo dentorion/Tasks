@@ -12,9 +12,7 @@ import com.entin.lighttasks.presentation.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity :
-    AppCompatActivity(),
-    NavController.OnDestinationChangedListener {
+class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

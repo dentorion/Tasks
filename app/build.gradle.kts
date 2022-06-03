@@ -18,8 +18,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 5
-        versionName = "5 Logs & Connection"
+        versionCode = 6
+        versionName = "6"
     }
 
     compileOptions {
