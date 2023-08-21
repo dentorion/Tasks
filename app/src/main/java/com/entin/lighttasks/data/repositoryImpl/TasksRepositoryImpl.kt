@@ -37,8 +37,8 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Create new Task
      */
-    override suspend fun newTask(task: Task) {
-        tasksDao.newTask(task)
+    override fun newTask(task: Task): Flow<Boolean> = flow {
+        emit(tasksDao.newTask(task) > 0)
     }
 
     /**

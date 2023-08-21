@@ -17,12 +17,6 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out"
             app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_allTasksFragment_to_RemoteFragment"
-            app:destination="@id/RemoteFragment" />
-        <action
-            android:id="@+id/action_allTasksFragment_to_authFragment"
-            app:destination="@id/authFragment" />
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
@@ -41,67 +35,28 @@
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="label"
             app:argType="string" />
     </fragment>
     <dialog
+        android:id="@+id/deleteTask"
+        android:name="com.entin.lighttasks.presentation.ui.deletetask.fragment.DeleteTask"
+        android:label="DeleteTask" >
+        <argument
+            android:name="task"
+            app:argType="com.entin.lighttasks.domain.entity.Task" />
+    </dialog>
+    <action android:id="@+id/action_global_deleteTask" app:destination="@id/deleteTask" />
+    <dialog
         android:id="@+id/deleteFinishedDialog"
         android:name="com.entin.lighttasks.presentation.ui.deleteall.fragment.DeleteFinishedDialog"
         android:label="DeleteFinishedDialog" />
-    <action
-        android:id="@+id/action_global_deleteFinishedDialog"
-        app:destination="@id/deleteFinishedDialog"
-        app:enterAnim="@anim/slide_in"
-        app:exitAnim="@anim/fade_out"
-        app:popEnterAnim="@anim/fade_in"
-        app:popExitAnim="@anim/slide_out" />
     <dialog
         android:id="@+id/changeLanguageDialog"
         android:name="com.entin.lighttasks.presentation.ui.language.fragment.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
-    <action
-        android:id="@+id/action_global_changeLanguageDialog"
-        app:destination="@id/changeLanguageDialog" />
-    <dialog
-        android:id="@+id/deleteTaskDialog"
-        android:name="com.entin.lighttasks.presentation.ui.deletetask.fragment.DeleteTask"
-        android:label="DeleteTaskDialog" >
-        <argument
-            android:name="task"
-            app:argType="com.entin.lighttasks.domain.entity.Task"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="remote"
-            app:argType="boolean"
-            android:defaultValue="false" />
-    </dialog>
-    <action
-        android:id="@+id/action_global_deleteTaskDialog"
-        app:destination="@id/deleteTaskDialog"
-        app:popUpToInclusive="false" />
-    <fragment
-        android:id="@+id/authFragment"
-        android:name="com.entin.lighttasks.presentation.ui.auth.fragment.AuthFragment"
-        android:label="@string/auth_label"
-        tools:layout="@layout/fragment_auth">
-        <action
-            android:id="@+id/action_authFragment_to_RemoteFragment"
-            app:destination="@id/RemoteFragment"
-            app:popUpTo="@id/allTasksFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/RemoteFragment"
-        android:name="com.entin.lighttasks.presentation.ui.remote.fragment.RemoteFragment"
-        android:label="@string/options_cloud_tasks"
-        tools:layout="@layout/fragment_remote" >
-        <action
-            android:id="@+id/action_RemoteFragment_to_allTasksFragment"
-            app:destination="@id/allTasksFragment"
-            app:popUpTo="@id/allTasksFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+    <action android:id="@+id/action_global_deleteFinishedDialog" app:destination="@id/deleteFinishedDialog" />
+    <action android:id="@+id/action_global_changeLanguageDialog" app:destination="@id/changeLanguageDialog" />
 </navigation>

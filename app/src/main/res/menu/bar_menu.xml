@@ -54,9 +54,4 @@
         android:title="@string/options_clear_finished"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_cloud_tasks"
-        android:title="@string/options_cloud_tasks"
-        app:showAsAction="never" />
-
 </menu>

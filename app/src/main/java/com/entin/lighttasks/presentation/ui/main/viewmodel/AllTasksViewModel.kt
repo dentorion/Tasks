@@ -8,16 +8,12 @@ import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage
 import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
 import com.entin.lighttasks.presentation.util.TASK_EDIT
-import com.entin.lighttasks.presentation.util.TASK_EXIST
 import com.entin.lighttasks.presentation.util.TASK_NEW
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -85,7 +81,7 @@ class AllTasksViewModel @Inject constructor(
         repository.updateTask(task.copy(finished = isChecked))
     }
 
-    fun onTaskSwipedDelete(task: Task) = diAppScope.launch(Dispatchers.IO) {
+    fun onTaskSwipedDelete(task: Task) = diAppScope.launch {
         repository.deleteTask(task)
         _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
     }
@@ -106,33 +102,16 @@ class AllTasksViewModel @Inject constructor(
         _tasksEvent.send(AllTasksEvent.NavToNewTask)
     }
 
-    fun navToCloudTasks() {
-        if(Firebase.auth.currentUser != null) {
-            navToRemoteTasks()
-        } else {
-            navToAuth()
-        }
-    }
-
-    private fun navToAuth() = viewModelScope.launch {
-        _tasksEvent.send(AllTasksEvent.NavToAuth)
-    }
-
-    private fun navToRemoteTasks() = viewModelScope.launch {
-        _tasksEvent.send(AllTasksEvent.NavToRemoteTasks)
-    }
-
     // Messages
 
     fun onEditResultShow(result: Int) = viewModelScope.launch {
         when (result) {
             TASK_NEW -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.NEW))
             TASK_EDIT -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.EDIT))
-            TASK_EXIST -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.EXIST))
         }
     }
 
-    fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch {
         repository.deleteFinishedTasks()
         callBackDismiss()
         _tasksEvent.send(AllTasksEvent.ShowDellFinishedTasks)

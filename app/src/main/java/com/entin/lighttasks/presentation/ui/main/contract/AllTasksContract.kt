@@ -23,12 +23,6 @@ sealed class AllTasksEvent {
     // Navigate to Dialog change language
     object NavToChangeLanguage : AllTasksEvent()
 
-    // Navigate to Auth page
-    object NavToAuth : AllTasksEvent()
-
-    // Navigate to Remote tasks page
-    object NavToRemoteTasks : AllTasksEvent()
-
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
 
@@ -47,5 +41,4 @@ sealed class AllTasksEvent {
 enum class AddEditTaskMessage {
     EDIT,
     NEW,
-    EXIST,
 }

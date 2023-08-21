@@ -32,7 +32,7 @@ interface TaskDao {
     // Insert new Task with replace
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun newTask(task: Task)
+    fun newTask(task: Task): Long
 
     // Update task or list of tasks
 

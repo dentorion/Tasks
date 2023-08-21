@@ -9,22 +9,14 @@
     <string name="new_edit_fragment_important_checkbox">Ważne</string>
     <string name="new_edit_fragment_field_title">Tytuł</string>
     <string name="new_edit_fragment_field_message">Opis</string>
-    <string name="new_edit_fragment_btn_cloud">ZAPISZ ZADANIE W CHMURZE</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
     <string name="snack_bar_empty_task_title_forbidden">Tytuł nie może być pusty</string>
     <string name="snack_bar_all_finished_tasks_cleared">Ukończone zadania wyczyszczone</string>
     <string name="snack_bar_btn_undo_deleted">ANULUJ</string>
     <string name="snack_bar_message_task_new">Zadanie zostało dodane</string>
-    <string name="snack_bar_message_tasks_new">Zadania zostali dodane</string>
     <string name="snack_bar_message_task_edit">Zadanie zostało zmienione</string>
     <string name="snack_bar_message_task_del">Zadanie usunięte</string>
-    <string name="snack_bar_message_task_exist">Zadanie już istnieje</string>
-    <string name="snack_bar_message_get_remote_tasks_failure">Nie udało się pobrać zadania</string>
-    <string name="snack_bar_message_tasks_exist">Zadania już istnieją</string>
-    <string name="snack_bar_message_smile">OK :)</string>
-    <string name="snack_bar_message_task_saved_to_remote_success">Zadanie zostało pomyślnie zapisane w chmurze</string>
-    <string name="snack_bar_message_task_saved_to_remote_failure">Zadanie nie zostało zapisane</string>
 
     <string name="sort_by_title">Sortuj według tytułu</string>
     <string name="sort_by_date">Sortowanie według daty</string>
@@ -34,7 +26,6 @@
     <string name="options_hide_finished">Ukryj zakończone</string>
     <string name="options_clear_finished">Usunąć ukończone zadania</string>
     <string name="options_change_language">Zmienić język</string>
-    <string name="options_cloud_tasks">Zadania w chmurze</string>
 
     <string name="description_add_button">Przycisk dodawania</string>
     <string name="description_notes_are_absent">brak zadań</string>
@@ -55,19 +46,5 @@
 
     <string name="english_language">Język angielski</string>
     <string name="polish_language">Język polski</string>
-    <string name="russian_language">Język rosyjski</string>
-
-    <string name="auth_label">Autoryzacja</string>
-    <string name="auth_error">Błąd autoryzacji</string>
-    <string name="remote_label_name_anonymous">Anonimowy</string>
-    <string name="remote_save_to_firebase_success">Zapisane w chmurze</string>
-    <string name="remote_save_to_firebase_failur">Zapisywanie nie powiodło się</string>
-    <string name="remote_del_from_firebase_success">Usunięto z chmury</string>
-    <string name="remote_del_from_firebase_failure">Nie udało się usunąć</string>
-    <string name="remote_btn_save_local_tasks">Zapisz lokalne zadania</string>
-    <string name="remote_btn_load_all_tasks">Ściągać</string>
-
-    <string name="no_network_connection">Brak połączenia sieciowego</string>
-    <string name="no_network_connection_settings">Ustawienia</string>
-    <string name="no_network_connection_airplane">Włączyłeś tryb samolotowy!</string>
+    <string name="spanish_language">Język hiszpański</string>
 </resources>

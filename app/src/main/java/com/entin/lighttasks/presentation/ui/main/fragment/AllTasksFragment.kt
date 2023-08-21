@@ -138,7 +138,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     private fun stateObserver() {
         viewModel.tasksEvent
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { event ->
+            .onEach { event: AllTasksEvent ->
                 when (event) {
                     is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
                         getSnackBar(
@@ -152,8 +152,8 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                     is AllTasksEvent.NavToEditTask -> {
                         val action =
                             AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                                task = event.task,
-                                label = resources.getString(R.string.new_edit_fragment_task_edit)
+                                event.task,
+                                resources.getString(R.string.new_edit_fragment_task_edit)
                             )
                         findNavController().navigate(action)
                     }
@@ -161,8 +161,8 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                     is AllTasksEvent.NavToNewTask -> {
                         val action =
                             AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                                task = null,
-                                label = resources.getString(R.string.new_edit_fragment_task_new)
+                                null,
+                                resources.getString(R.string.new_edit_fragment_task_new)
                             )
                         findNavController().navigate(action)
                     }
@@ -189,13 +189,16 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
                             requireView()
-                        )
-                            .show()
+                        ).show()
                     }
 
                     is AllTasksEvent.NavToChangeLanguage -> {
                         val action = AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
                         findNavController().navigate(action)
+                    }
+
+                    is AllTasksEvent.Smile -> {
+
                     }
                 }
             }.launchIn(lifecycleScope)

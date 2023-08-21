@@ -19,10 +19,7 @@ import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.presentation.ui.addedit.contract.EditTaskEvent
 import com.entin.lighttasks.presentation.ui.addedit.viewmodel.AddEditTaskViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -57,7 +54,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun setupEventObserver() =
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.editTaskChannel.collect { event ->
+                vm.editTaskChannel.collect { event: EditTaskEvent ->
                     when (event) {
                         /**
                          * Navigation back
@@ -73,22 +70,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                                 resources.getString(R.string.snack_bar_empty_task_title_forbidden),
                                 requireView()
                             ).show()
-                        }
-                        /**
-                         * Remote saving
-                         */
-                        is EditTaskEvent.SaveTaskToRemoteSuccess -> {
-                            if (event.result) {
-                                getSnackBar(
-                                    getString(R.string.snack_bar_message_task_saved_to_remote_success),
-                                    requireView()
-                                ).show()
-                            } else {
-                                getSnackBar(
-                                    getString(R.string.snack_bar_message_task_saved_to_remote_failure),
-                                    requireView()
-                                ).show()
-                            }
                         }
                     }
                 }
@@ -129,21 +110,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
         addNewTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
             vm.taskImportant = isCheck
-        }
-
-        // Save to Remote
-
-        if (Firebase.auth.currentUser != null) {
-            btnAddTaskToRemote.apply {
-                isVisible = true
-                setOnClickListener {
-                    vm.saveTaskToRemote()
-                }
-            }
-        } else {
-            btnAddTaskToRemote.apply {
-                isVisible = false
-            }
         }
 
         // OK Button

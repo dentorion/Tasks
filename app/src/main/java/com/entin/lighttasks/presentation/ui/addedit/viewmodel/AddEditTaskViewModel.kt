@@ -7,6 +7,7 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.ui.addedit.contract.EditTaskEvent
+import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
 import com.entin.lighttasks.presentation.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -115,8 +116,13 @@ class AddEditTaskViewModel @Inject constructor(
         _editTaskChannel.send(EditTaskEvent.NavBackWithResult(TASK_EDIT))
     }
 
-    private fun saveNewTask(sTask: Task) = viewModelScope.launch {
-        repository.newTask(sTask)
-        _editTaskChannel.send(EditTaskEvent.NavBackWithResult(TASK_NEW))
+    private fun saveNewTask(sTask: Task) = viewModelScope.launch(Dispatchers.IO) {
+        repository.newTask(sTask).collect { result ->
+            if (result) {
+                _editTaskChannel.send(EditTaskEvent.NavBackWithResult(TASK_NEW))
+            } else {
+                _editTaskChannel.send(EditTaskEvent.ShowErrorBlankTitleText)
+            }
+        }
     }
 }

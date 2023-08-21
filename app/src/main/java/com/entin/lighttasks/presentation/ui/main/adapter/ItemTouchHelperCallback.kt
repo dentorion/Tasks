@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ItemTouchHelper.DOWN
+import androidx.recyclerview.widget.ItemTouchHelper.END
+import androidx.recyclerview.widget.ItemTouchHelper.START
+import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.main.fragment.AllTasksFragmentDirections
@@ -65,8 +68,7 @@ class ItemTouchHelperCallback(
 
     private fun onSwipedImpl(viewHolder: RecyclerView.ViewHolder) {
         val task = tasksAdapterList.currentList[viewHolder.absoluteAdapterPosition]
-        val action =
-            AllTasksFragmentDirections.actionGlobalDeleteTaskDialog(task = task, remote = false)
+        val action = AllTasksFragmentDirections.actionGlobalDeleteTask(task)
         navController.navigate(action)
         // To prevent empty place of task in recyclerview
         tasksAdapterList.notifyItemChanged(viewHolder.absoluteAdapterPosition)

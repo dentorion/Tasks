@@ -15,11 +15,14 @@ const val TASK_EDIT: Int = 2
 const val LANGUAGES_KEY = "language"
 
 const val LANGUAGE_ENGLISH = "English"
+const val LANGUAGE_ENGLISH_SHOT = "en"
 const val LANGUAGE_SPANISH = "Spanish"
+const val LANGUAGE_SPANISH_SHOT = "es"
 const val LANGUAGE_POLISH = "Polish"
+const val LANGUAGE_POLISH_SHOT = "pl"
 
 val LANGUAGES = mapOf(LANGUAGE_ENGLISH to 0, LANGUAGE_SPANISH to 1, LANGUAGE_POLISH to 2)
-val LANGUAGES_COUNTRY = arrayOf("en", "es", "pl")
+val LANGUAGES_COUNTRY = arrayOf(LANGUAGE_ENGLISH_SHOT, LANGUAGE_SPANISH_SHOT, LANGUAGE_POLISH_SHOT)
 
 const val LANGUAGES_DEFAULT = 2
 
