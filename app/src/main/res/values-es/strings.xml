@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tareas</string>
+    <string name="notes_are_absent">Las notas están ausentes</string>
+
+    <string name="new_edit_fragment_task_new">NUEVA TAREA</string>
+    <string name="new_edit_fragment_task_edit">EDITAR TAREA</string>
+    <string name="new_edit_fragment_done_checkbox_title">Hecho</string>
+    <string name="new_edit_fragment_important_checkbox">Importante</string>
+    <string name="new_edit_fragment_field_title">Título</string>
+    <string name="new_edit_fragment_field_message">Descripción</string>
+    <string name="new_edit_fragment_btn_ok">OK</string>
+
+    <string name="snack_bar_empty_task_title_forbidden">El título no puede estar vacía</string>
+    <string name="snack_bar_all_finished_tasks_cleared">todas las tareas terminadas borradas</string>
+    <string name="snack_bar_btn_undo_deleted">DESHACER</string>
+    <string name="snack_bar_message_task_new">Nueva tarea añadida</string>
+    <string name="snack_bar_message_task_edit">Tarea cambiada</string>
+    <string name="snack_bar_message_task_del">Tarea eliminada</string>
+
+    <string name="sort_by_title">Ordenar por título</string>
+    <string name="sort_by_date">Ordenar por fecha</string>
+    <string name="sort_by_important">Ordenar por importante</string>
+
+    <string name="options_hide_finished">Ocultar terminada</string>
+    <string name="options_clear_finished">Borrar tareas terminadas</string>
+
+    <string name="options_change_language">Cambiar idioma</string>
+
+    <string name="description_add_button">Agregar botón</string>
+    <string name="description_notes_are_absent">faltan notas</string>
+    <string name="description_item">Breve descripción</string>
+
+    <string name="dialog_delete_message">¿Borrar todas las tareas terminadas?</string>
+    <string name="dialog_delete_no">NO</string>
+    <string name="dialog_delete_yes">SÍ</string>
+    <string name="dialog_delete_task">¿Eliminar tarea?</string>
+
+    <string name="dialog_choose_language">Elige lengua</string>
+
+    <string name="action_bar_item_title_sort">Clasificar</string>
+    <string name="action_bar_item_title_search">Buscar</string>
+
+    <string name="quote">El trabajo que te gusta deja de ser trabajo</string>
+    <string name="sort_by_manual">Clasificación manual</string>
+    <string name="manual_order_accepted">Cambios guardados</string>
+
+    <string name="english_language">Idioma en Inglés</string>
+    <string name="polish_language">Idioma polaco</string>
+    <string name="spanish_language">Lengua española</string>
+</resources>

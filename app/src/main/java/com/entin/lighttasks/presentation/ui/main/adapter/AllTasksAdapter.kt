@@ -12,12 +12,11 @@ import com.entin.lighttasks.databinding.ItemBinding
 import com.entin.lighttasks.domain.entity.Task
 
 class AllTasksAdapter(
-    private val listener: OnClickOnEmpty,
+    private val listener: OnClickOnEmpty
 ) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemBinding.inflate(inflater, parent, false)
+        val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(binding)
     }
 
@@ -25,9 +24,9 @@ class AllTasksAdapter(
         viewHolder.bind(getItem(position))
     }
 
-    inner class TaskViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TaskViewHolder(private val view: ItemBinding) : RecyclerView.ViewHolder(view.root) {
         init {
-            binding.apply {
+            view.apply {
                 root.setOnClickListener {
                     val position = absoluteAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
@@ -46,7 +45,7 @@ class AllTasksAdapter(
         }
 
         fun bind(task: Task) {
-            binding.apply {
+            view.apply {
                 taskTitle.text = task.title
                 taskMessage.text = task.message
                 taskFinished.isChecked = task.finished
@@ -68,11 +67,23 @@ class AllTasksAdapter(
         }
     }
 
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        // Логика перемещения элементов в адаптере
+    }
+
+    fun onLeftSwipe(position: Int) {
+        // Логика свайпа влево
+    }
+
+    fun onRightSwipe(position: Int) {
+        // Логика свайпа вправо
+    }
+
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.id == newItem.id && oldItem.position == newItem.position
+            oldItem == newItem
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
-            oldItem == newItem
+            oldItem.id == newItem.id && oldItem.position == newItem.position
     }
 }

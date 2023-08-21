@@ -1,16 +1,14 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
-
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 android {
+    namespace = "com.entin.lighttasks"
     compileSdk = Android.compileSdk
     buildToolsVersion = Android.buildTools
 
@@ -18,40 +16,26 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 6
-        versionName = "6"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    buildFeatures {
-        viewBinding = true
+        versionCode = 7
+        versionName = "7.0"
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
         release {
             isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
@@ -61,9 +45,8 @@ dependencies {
     Dependencies.base.apply {
         implementation(coreKtx)
         implementation(appcompat)
-        implementation(material)
         implementation(constraintlayout)
-        implementation(fragment)
+        implementation(material)
     }
 
     // Hilt
@@ -75,8 +58,8 @@ dependencies {
     // ROOM
     Dependencies.room.apply {
         implementation(runtime)
-        kapt(compiler)
         implementation(ktx)
+        kapt(compiler)
     }
 
     // NAVIGATION COMPONENT
@@ -92,43 +75,30 @@ dependencies {
         implementation(viewModel)
     }
 
+    // ViewBinding delegate [No REFLECTION] - Kirill Rozov
+    Dependencies.viewBindingDelegate.apply {
+        implementation(main)
+    }
+
     // Gson
     Dependencies.gson.apply {
-        implementation(gson)
+        implementation (gson)
     }
 
     // DATA STORE
-    Dependencies.dataStore.apply {
-        implementation(dataStore)
-    }
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
     // Recyclerview
     Dependencies.recyclerview.apply {
-        implementation(recyclerview)
-    }
-
-    // Firebase
-    Dependencies.firebase.apply {
-        implementation(platform(bom))
-        implementation(crashlytics)
-        implementation(analytics)
-        implementation(auth)
-        implementation(playServicesAuth)
-        implementation(firestore)
-        implementation(coroutinesPlayServices)
-    }
-
-    // Timber
-    Dependencies.timber.apply {
-        implementation(timber)
-    }
-
-    // No INTERNET Connection
-    Dependencies.connection.apply {
-        implementation(oops)
+        implementation (recyclerview)
     }
 }
 
+// Allow references to generated code
 kapt {
     correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
 }

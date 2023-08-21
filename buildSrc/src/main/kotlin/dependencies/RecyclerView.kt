@@ -4,6 +4,5 @@ package dependencies
 
 object RecyclerView {
 
-    const val recyclerview = "androidx.recyclerview:recyclerview:${Versions.recycler}"
-
+    const val recyclerview = "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
 }

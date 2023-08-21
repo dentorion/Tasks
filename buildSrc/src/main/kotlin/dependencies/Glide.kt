@@ -3,5 +3,5 @@
 package dependencies
 
 object Glide {
-    const val mainGlide = "com.github.bumptech.glide:glide:${Versions.mainGlide}"
+    const val glide = "com.github.bumptech.glide:glide:${Versions.mainGlide}"
 }

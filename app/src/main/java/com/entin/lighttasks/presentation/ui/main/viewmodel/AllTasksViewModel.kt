@@ -14,6 +14,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -84,7 +85,7 @@ class AllTasksViewModel @Inject constructor(
         repository.updateTask(task.copy(finished = isChecked))
     }
 
-    fun onTaskSwipedDelete(task: Task) = diAppScope.launch {
+    fun onTaskSwipedDelete(task: Task) = diAppScope.launch(Dispatchers.IO) {
         repository.deleteTask(task)
         _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
     }
@@ -131,7 +132,7 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
-    fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch {
+    fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteFinishedTasks()
         callBackDismiss()
         _tasksEvent.send(AllTasksEvent.ShowDellFinishedTasks)

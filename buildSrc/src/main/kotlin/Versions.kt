@@ -1,15 +1,19 @@
+@file:Suppress("unused")
+
 object Versions {
 
     /**
-     * Base 
+     * Base
      */
-    const val coreKtx = "1.7.0"
-    const val appcompat = "1.4.0"
-    const val material = "1.4.0"
+    const val core = "1.9.0"
+    const val coreKtx = "1.10.1"
+    const val appcompat = "1.6.1"
+    const val material = "1.9.0"
 
-    const val constraint = "2.1.2"
+    const val constraint = "2.1.4"
     const val recyclerView = "1.2.1"
-    const val fragment = "1.4.0"
+    const val fragment = "1.4.0-alpha01"
+    const val activity = "1.1.0"
     const val swipe = "1.1.0"
 
     const val jUnit = "4.13.2"
@@ -19,9 +23,9 @@ object Versions {
     /**
      * LifeCycle
      */
-    const val lifecycle = "2.4.0"
-    const val liveData = "2.4.0"
-    const val viewModel = "2.4.0"
+    const val lifecycle = "2.6.0"
+    const val liveData = "2.6.0"
+    const val viewModel = "2.6.0"
 
     /**
      * Gson
@@ -29,26 +33,34 @@ object Versions {
     const val gsonMain = "2.8.7"
 
     /**
+     * Drawer menu
+     */
+    const val drawer = "1.2.0"
+
+    /**
      * Hilt
      */
-    const val mainHilt = "2.40"
-    const val compileAndroid = "2.40"
+    const val mainHilt = "2.44"
+    const val compileAndroid = "2.44"
 
     /**
      * Glide
      */
-    const val mainGlide = "4.12.0"
+    const val mainGlide = "4.15.1"
+
+    /** Coil */
+    const val mainCoil = "2.2.0"
 
     /**
      * Navigation
      */
-    const val navigation = "2.3.5"
-    const val navigationUi = "2.3.5"
+    const val navigation = "2.5.3"
+    const val navigationUi = "2.5.3"
 
     /**
      * WorkManager
      */
-    const val workManager = "2.7.1"
+    const val workManager = "2.8.0"
 
     /**
      * Retrofit + GSON
@@ -60,13 +72,13 @@ object Versions {
     /**
      * Room
      */
-    const val room = "2.3.0"
+    const val room = "2.5.0"
 
     /**
      * Coroutines
      */
-    const val coreCoroutines = "1.5.1"
-    const val androidCoroutines = "1.5.2"
+    const val coreCoroutines = "1.6.4"
+    const val androidCoroutines = "1.3.9"
 
     /**
      * Data Store
@@ -76,7 +88,7 @@ object Versions {
     /**
      * RecyclerView
      */
-    const val recycler = "1.2.1"
+    const val recycler = "1.3.0"
 
     /**
      * Timber
@@ -87,4 +99,35 @@ object Versions {
      * Connection
      */
     const val oops = "2.0.0"
+
+    /**
+     * ViewPager 2
+     */
+    const val viewPager = "1.0.0"
+
+    /**
+     * Canary Leak
+     */
+    const val canary = "2.8.1"
+
+    /**
+     * Splash screen
+     */
+    const val splashScreen = "1.0.0"
+
+    /**
+     * Epoxy
+     */
+    const val epoxy = "5.1.1"
+
+    /**
+     * Recycler SnapHelper
+     */
+    const val helper = "2.2.2"
+
+    /** Lottie */
+    const val lottieVersion = "6.1.0"
+
+    /** JWT */
+    const val jwtVersion = "4.4.0"
 }

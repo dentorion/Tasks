@@ -16,7 +16,7 @@ interface TasksRepository {
         hideFinished: Boolean
     ): Flow<List<Task>>
 
-    fun getMaxPosition(): Flow<Int>
+    fun getMaxPosition(): Flow<Int?>
 
     suspend fun newTask(task: Task): Flow<Boolean>
 
