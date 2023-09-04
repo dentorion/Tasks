@@ -87,7 +87,7 @@ class AllTasksViewModel @Inject constructor(
         _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 
-    fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
+    fun onUndoDeleteClick(task: Task) = diAppScope.launch {
         repository.newTask(task).collect { result ->
             if (result) _tasksEvent.send(AllTasksEvent.Smile)
         }
