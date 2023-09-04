@@ -11,8 +11,8 @@
     <string name="new_edit_fragment_field_message">Опис</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
-    <string name="snack_bar_empty_task_title_forbidden">заголовок не може бути порожнім</string>
-    <string name="snack_bar_all_finished_tasks_cleared">завершені завдання очищені</string>
+    <string name="snack_bar_empty_task_title_forbidden">Заголовок не може бути порожнім</string>
+    <string name="snack_bar_all_finished_tasks_cleared">Завершені завдання очищені</string>
     <string name="snack_bar_btn_undo_deleted">"СКАСУВАТИ "</string>
     <string name="snack_bar_message_task_new">Завдання додане</string>
     <string name="snack_bar_message_task_edit">Завдання змінене</string>
@@ -21,14 +21,15 @@
     <string name="sort_by_title">Сортувати за назвою</string>
     <string name="sort_by_date">Сортувати за датою</string>
     <string name="sort_by_important">Важливі завдання в топ</string>
+    <string name="sort_by_manual">Ручне сортування</string>
 
     <string name="options_hide_finished">Приховати виконані</string>
     <string name="options_clear_finished">Видалити виконані</string>
     <string name="options_change_language">Змінити мову</string>
 
-    <string name="description_add_button">кнопка додати</string>
-    <string name="description_notes_are_absent">завдання відсутні</string>
-    <string name="description_item">короткий опис</string>
+    <string name="description_add_button">Кнопка додати</string>
+    <string name="description_notes_are_absent">Завдання відсутні</string>
+    <string name="description_item">Короткий опис</string>
 
     <string name="dialog_delete_message">Видалити всі завершені завдання?</string>
     <string name="dialog_delete_no">НI</string>
@@ -41,9 +42,11 @@
     <string name="action_bar_item_title_search">Пошук</string>
 
     <string name="quote">Праця, яка подобається, перестає бути працею</string>
-    <string name="sort_by_manual">"Ручне сортування "</string>
+
     <string name="manual_order_accepted">Змiни прийнято</string>
+
     <string name="english_language">Англiйська мова</string>
     <string name="polish_language">Польска мова</string>
     <string name="spanish_language">Iспанська мова</string>
+    <string name="ukraine_language">Українська мова</string>
 </resources>

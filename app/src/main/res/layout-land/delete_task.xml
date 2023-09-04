@@ -8,7 +8,7 @@
     android:padding="@dimen/common_dialog_padding_constraint">
 
     <ImageView
-        android:id="@+id/trash_basket"
+        android:id="@+id/circle_spanish"
         android:layout_width="@dimen/trash_basket_icon_width_delete"
         android:layout_height="@dimen/trash_basket_icon_height_delete"
         android:layout_marginTop="24dp"
@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/label_change_language"
         app:srcCompat="@drawable/circle" />
 
     <TextView
@@ -29,8 +29,8 @@
         android:textSize="@dimen/text_size_delete"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/trash_basket" />
+        app:layout_constraintStart_toStartOf="@+id/label_change_language"
+        app:layout_constraintTop_toBottomOf="@+id/circle_spanish" />
 
     <TextView
         android:id="@+id/okBtn"
@@ -40,7 +40,7 @@
         android:textColor="@color/color_main"
         android:textSize="@dimen/text_size_delete"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/trash_basket"
+        app:layout_constraintStart_toEndOf="@+id/circle_spanish"
         app:layout_constraintTop_toTopOf="@+id/cancelBtn" />
 
     <ImageButton
@@ -48,13 +48,13 @@
         android:layout_width="@dimen/circle_size_delete"
         android:layout_height="@dimen/circle_size_delete"
         android:background="@drawable/ic_trash"
-        app:layout_constraintBottom_toBottomOf="@+id/trash_basket"
-        app:layout_constraintEnd_toEndOf="@+id/trash_basket"
-        app:layout_constraintStart_toStartOf="@+id/trash_basket"
-        app:layout_constraintTop_toTopOf="@+id/trash_basket" />
+        app:layout_constraintBottom_toBottomOf="@+id/circle_spanish"
+        app:layout_constraintEnd_toEndOf="@+id/circle_spanish"
+        app:layout_constraintStart_toStartOf="@+id/circle_spanish"
+        app:layout_constraintTop_toTopOf="@+id/circle_spanish" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/label_change_language"
         android:layout_width="@dimen/text_label_width_delete"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -63,7 +63,7 @@
         android:textColor="@color/color_main"
         android:textSize="@dimen/text_size_delete"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/trash_basket"
+        app:layout_constraintBottom_toTopOf="@+id/circle_spanish"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

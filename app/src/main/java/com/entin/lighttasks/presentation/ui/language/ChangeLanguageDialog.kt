@@ -13,6 +13,7 @@ import com.entin.lighttasks.presentation.activity.MainActivity
 import com.entin.lighttasks.presentation.util.LANGUAGE_ENGLISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_POLISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_SPANISH_SHOT
+import com.entin.lighttasks.presentation.util.LANGUAGE_UKRAINE_SHOT
 import java.util.Locale
 
 class ChangeLanguageDialog : DialogFragment() {
@@ -27,11 +28,14 @@ class ChangeLanguageDialog : DialogFragment() {
         rootView.findViewById<ImageButton>(R.id.english).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_ENGLISH_SHOT)
         }
-        rootView.findViewById<ImageButton>(R.id.russian).setOnClickListener {
+        rootView.findViewById<ImageButton>(R.id.spanish).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_SPANISH_SHOT)
         }
         rootView.findViewById<ImageButton>(R.id.polish).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_POLISH_SHOT)
+        }
+        rootView.findViewById<ImageButton>(R.id.ukraine).setOnClickListener {
+            setAppLocale(requireContext(), LANGUAGE_UKRAINE_SHOT)
         }
 
         return rootView

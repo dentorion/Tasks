@@ -47,4 +47,10 @@
     <string name="english_language">English language</string>
     <string name="polish_language">Polish language</string>
     <string name="spanish_language">Spanish language</string>
+    <string name="ukraine_language">Ukrainian language</string>
+
+    <string name="english_language_short" translatable="false">en</string>
+    <string name="spanish_language_short" translatable="false">es</string>
+    <string name="polish_language_short" translatable="false">pl</string>
+    <string name="ukraine_language_short" translatable="false">ua</string>
 </resources>

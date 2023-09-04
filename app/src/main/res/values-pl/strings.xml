@@ -28,8 +28,8 @@
     <string name="options_change_language">Zmienić język</string>
 
     <string name="description_add_button">Przycisk dodawania</string>
-    <string name="description_notes_are_absent">brak zadań</string>
-    <string name="description_item">krótki opis</string>
+    <string name="description_notes_are_absent">Brak zadań</string>
+    <string name="description_item">Krótki opis</string>
 
     <string name="dialog_delete_message">Usunąć wszystkie ukończone zadania?</string>
     <string name="dialog_delete_no">NIE</string>
@@ -47,4 +47,5 @@
     <string name="english_language">Język angielski</string>
     <string name="polish_language">Język polski</string>
     <string name="spanish_language">Język hiszpański</string>
+    <string name="ukraine_language">Język ukraiński</string>
 </resources>

@@ -75,4 +75,6 @@
     <dimen name="icon_opacity_language">0.72</dimen>
     <dimen name="icon_padding_bottom_language">32dp</dimen>
 
+    <dimen name="language_short_label">8sp</dimen>
+
 </resources>

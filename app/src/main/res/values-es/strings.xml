@@ -12,7 +12,7 @@
     <string name="new_edit_fragment_btn_ok">OK</string>
 
     <string name="snack_bar_empty_task_title_forbidden">El título no puede estar vacía</string>
-    <string name="snack_bar_all_finished_tasks_cleared">todas las tareas terminadas borradas</string>
+    <string name="snack_bar_all_finished_tasks_cleared">Todas las tareas terminadas borradas</string>
     <string name="snack_bar_btn_undo_deleted">DESHACER</string>
     <string name="snack_bar_message_task_new">Nueva tarea añadida</string>
     <string name="snack_bar_message_task_edit">Tarea cambiada</string>
@@ -28,7 +28,7 @@
     <string name="options_change_language">Cambiar idioma</string>
 
     <string name="description_add_button">Agregar botón</string>
-    <string name="description_notes_are_absent">faltan notas</string>
+    <string name="description_notes_are_absent">Faltan notas</string>
     <string name="description_item">Breve descripción</string>
 
     <string name="dialog_delete_message">¿Borrar todas las tareas terminadas?</string>
@@ -47,5 +47,6 @@
 
     <string name="english_language">Idioma en Inglés</string>
     <string name="polish_language">Idioma polaco</string>
-    <string name="spanish_language">Lengua española</string>
+    <string name="spanish_language">Idioma español</string>
+    <string name="ukraine_language">idioma ucraniano</string>
 </resources>
