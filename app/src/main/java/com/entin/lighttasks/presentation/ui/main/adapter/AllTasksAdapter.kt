@@ -9,6 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.RADIO_EMPTY_ID
+import com.entin.lighttasks.presentation.util.RADIO_FOOD_ID
+import com.entin.lighttasks.presentation.util.RADIO_HOME_ID
+import com.entin.lighttasks.presentation.util.RADIO_REST_ID
+import com.entin.lighttasks.presentation.util.RADIO_WORK_ID
 
 class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
@@ -52,16 +57,16 @@ class AllTasksAdapter(
                 taskMessage.visibility = if (task.message.isNotBlank()) View.VISIBLE else View.GONE
                 taskImportant.visibility = if (task.important) View.VISIBLE else View.GONE
 
-                val taskImageChoice: Int = when (task.group) {
-                    R.id.radio_empty -> R.drawable.ic_nothing
-                    R.id.radio_rest -> R.drawable.ic_rest
-                    R.id.radio_work -> R.drawable.ic_work
-                    R.id.radio_home -> R.drawable.ic_home
-                    R.id.radio_food -> R.drawable.ic_food
-                    else -> R.drawable.ic_nothing
-                }
-
-                taskGroupIcon.setImageResource(taskImageChoice)
+                taskGroupIcon.setImageResource(
+                    when (task.group) {
+                        RADIO_EMPTY_ID -> R.drawable.ic_nothing
+                        RADIO_WORK_ID -> R.drawable.ic_work
+                        RADIO_REST_ID -> R.drawable.ic_rest
+                        RADIO_FOOD_ID -> R.drawable.ic_food
+                        RADIO_HOME_ID -> R.drawable.ic_home
+                        else -> R.drawable.ic_nothing
+                    },
+                )
             }
         }
     }

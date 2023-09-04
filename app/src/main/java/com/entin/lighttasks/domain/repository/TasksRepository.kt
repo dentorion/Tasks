@@ -2,6 +2,7 @@ package com.entin.lighttasks.domain.repository
 
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.entity.TaskGroup
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -20,11 +21,13 @@ interface TasksRepository {
 
     fun newTask(task: Task): Flow<Boolean>
 
-    suspend fun updateTask(task: Task)
+    suspend fun updateTask(task: Task): Boolean
 
     suspend fun deleteTask(task: Task)
 
     suspend fun deleteFinishedTasks()
 
     suspend fun updateAllTasks(list: List<Task>)
+
+    suspend fun getTaskGroups(): List<TaskGroup>
 }

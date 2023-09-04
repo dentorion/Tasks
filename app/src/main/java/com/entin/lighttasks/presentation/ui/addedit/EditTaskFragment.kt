@@ -13,8 +13,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
+import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
+import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.util.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,6 +33,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val binding get() = _binding!!
 
     private val viewModel: AddEditTaskViewModel by viewModels()
+    private var groupAdapter: RadioButtonAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,13 +41,36 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
+
+        setupCategoryRecyclerView()
+        setupEventObserver()
+        setupFields()
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupEventObserver()
-        setupFields()
+    /** Category */
+    private fun setupCategoryRecyclerView() {
+        groupAdapter = RadioButtonAdapter(viewModel.taskGroup) { element ->
+            onGroupIconSelected(element)
+        }
+
+        binding.categoryRecyclerView.apply {
+            adapter = groupAdapter
+            layoutManager = SlowlyLinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false,
+            )
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.taskGroupsChannel.collect { radioButtonElements ->
+                    groupAdapter?.submitList(radioButtonElements)
+                }
+            }
+        }
     }
 
     /**
@@ -83,13 +111,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         addNewTaskFinishedCheckbox.jumpDrawablesToCurrentState()
         addNewTaskImportantCheckbox.isChecked = viewModel.taskImportant
         addNewTaskImportantCheckbox.jumpDrawablesToCurrentState()
-        addNewTaskRadiogroupIcons.check(viewModel.taskGroup)
 
-        // Two fields and radio group
+        // Radio group
 
-        addNewTaskRadiogroupIcons.setOnCheckedChangeListener { _, checkedId ->
-            viewModel.taskGroup = checkedId
-        }
+        // make()
+
+        // Two fields
 
         addNewTaskTitle.addTextChangedListener {
             viewModel.taskTitle = it.toString()
@@ -114,6 +141,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         addNewTaskOkButton.setOnClickListener {
             viewModel.saveTaskBtnClicked()
         }
+    }
+
+    private fun onGroupIconSelected(element: TaskGroup) {
+        viewModel.taskGroup = element.groupId
     }
 
     // Event: navigate to AllTasksFragment with result

@@ -3,8 +3,8 @@ package com.entin.lighttasks.presentation.ui.addedit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.TASK_EDIT
@@ -36,12 +36,16 @@ class AddEditTaskViewModel @Inject constructor(
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
 
+    private val _taskGroupChannel = Channel<List<TaskGroup>>()
+    val taskGroupsChannel = _taskGroupChannel.receiveAsFlow()
+
     /**
      * If task is editing - task gotten from SavedStateHandle
      *
      */
     val task = state.get<Task>("task")
     private var taskPosition = ZERO
+    private var taskGroups = listOf<TaskGroup>()
 
     init {
         /**
@@ -50,6 +54,13 @@ class AddEditTaskViewModel @Inject constructor(
          */
         viewModelScope.launch(Dispatchers.IO) {
             taskPosition = repository.getMaxPosition().first()?.let { it + 1 } ?: ZERO
+        }
+
+        /**
+         * Get all groups for task to show icons
+         */
+        viewModelScope.launch(Dispatchers.IO) {
+            _taskGroupChannel.send(repository.getTaskGroups())
         }
     }
 
@@ -77,7 +88,7 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_IMPORTANT] = value
         }
 
-    var taskGroup: Int = state.get<Int>(TASK_GROUP) ?: task?.group ?: R.id.radio_empty
+    var taskGroup: Int = state.get<Int>(TASK_GROUP) ?: task?.group ?: ZERO
         set(value) {
             field = value
             state[TASK_GROUP] = value
@@ -88,25 +99,27 @@ class AddEditTaskViewModel @Inject constructor(
             errorBlankText()
         } else {
             if (task != null) {
-                val updatedTask = task.copy(
-                    title = taskTitle,
-                    message = taskMessage,
-                    finished = taskFinished,
-                    important = taskImportant,
-                    group = taskGroup,
-                    position = task.position,
+                updateTask(
+                    task.copy(
+                        title = taskTitle,
+                        message = taskMessage,
+                        finished = taskFinished,
+                        important = taskImportant,
+                        group = taskGroup,
+                        position = task.position,
+                    ),
                 )
-                updateTask(updatedTask)
             } else {
-                val newTask = Task(
-                    title = taskTitle,
-                    message = taskMessage,
-                    finished = taskFinished,
-                    important = taskImportant,
-                    group = taskGroup,
-                    position = taskPosition,
+                saveNewTask(
+                    Task(
+                        title = taskTitle,
+                        message = taskMessage,
+                        finished = taskFinished,
+                        important = taskImportant,
+                        group = taskGroup,
+                        position = taskPosition,
+                    ),
                 )
-                saveNewTask(newTask)
             }
         }
     }
@@ -116,8 +129,9 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     private fun updateTask(uTask: Task) = viewModelScope.launch {
-        repository.updateTask(uTask)
-        _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
+        repository.updateTask(uTask).apply {
+            if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
+        }
     }
 
     private fun saveNewTask(sTask: Task) = viewModelScope.launch(Dispatchers.IO) {

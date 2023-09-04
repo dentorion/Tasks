@@ -42,7 +42,7 @@ interface TaskDao {
     // Update task or list of tasks
 
     @Update
-    suspend fun updateTask(task: Task)
+    suspend fun updateTask(task: Task): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAllTasks(list: List<Task>)

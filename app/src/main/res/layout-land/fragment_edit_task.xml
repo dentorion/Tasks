@@ -116,83 +116,17 @@
                 android:textColor="@color/color_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <RadioGroup
-            android:id="@+id/add_new_task_radiogroup_icons"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoryRecyclerView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:checkedButton="@+id/radio_empty"
-            android:gravity="center"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="@+id/add_new_task_title_layout"
-            app:layout_constraintStart_toStartOf="@+id/add_new_task_title_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_message_layout">
-
-            <RadioButton
-                android:id="@+id/radio_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/landscape_radio_btn_margin_end_add_edit"
-                android:layout_weight="1"
-                android:background="@drawable/empty_btn_radio"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/radio_work"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/landscape_radio_btn_margin_end_add_edit"
-                android:layout_weight="1"
-                android:background="@drawable/work_btn_radio"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/radio_rest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/landscape_radio_btn_margin_end_add_edit"
-                android:layout_weight="1"
-                android:background="@drawable/rest_btn_radio"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/radio_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/landscape_radio_btn_margin_end_add_edit"
-                android:layout_weight="1"
-                android:background="@drawable/food_btn_radio"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/radio_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/home_btn_radio"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </RadioGroup>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/add_new_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_new_task_message_layout"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/recycler_radio_button_item" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_new_task_ok_button"
@@ -217,7 +151,7 @@
             android:textSize="@dimen/quote_text_size_add_edit"
             app:layout_constraintEnd_toEndOf="@+id/add_new_task_message_layout"
             app:layout_constraintStart_toStartOf="@+id/add_new_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_radiogroup_icons"
+            app:layout_constraintTop_toBottomOf="@+id/categoryRecyclerView"
             tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

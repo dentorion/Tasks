@@ -1,9 +1,12 @@
 package com.entin.lighttasks.data.repository
 
 import com.entin.lighttasks.data.db.TaskDao
+import com.entin.lighttasks.data.db.TaskGroupsDao
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -16,6 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class TasksRepositoryImpl @Inject constructor(
     private val tasksDao: TaskDao,
+    private val taskGroupsDao: TaskGroupsDao,
 ) : TasksRepository {
 
     /**
@@ -37,7 +41,7 @@ class TasksRepositoryImpl @Inject constructor(
      * Create new Task
      */
     override fun newTask(task: Task): Flow<Boolean> = flow {
-        emit(tasksDao.newTask(task) > 0)
+        emit(tasksDao.newTask(task) > ZERO)
     }
 
     /**
@@ -47,8 +51,8 @@ class TasksRepositoryImpl @Inject constructor(
         tasksDao.updateAllTasks(list)
     }
 
-    override suspend fun updateTask(task: Task) {
-        tasksDao.updateTask(task)
+    override suspend fun updateTask(task: Task): Boolean {
+        return tasksDao.updateTask(task) > 0
     }
 
     /**
@@ -67,4 +71,10 @@ class TasksRepositoryImpl @Inject constructor(
      */
     override fun getMaxPosition(): Flow<Int?> =
         tasksDao.getLastId()
+
+    /**
+     * Get images for task groups
+     */
+    override suspend fun getTaskGroups(): List<TaskGroup> =
+        taskGroupsDao.getTaskGroups()
 }
