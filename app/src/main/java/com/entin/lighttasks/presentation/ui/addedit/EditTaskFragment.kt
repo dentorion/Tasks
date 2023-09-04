@@ -1,11 +1,10 @@
-package com.entin.lighttasks.presentation.ui.addedit.fragment
+package com.entin.lighttasks.presentation.ui.addedit
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -16,8 +15,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
-import com.entin.lighttasks.presentation.ui.addedit.contract.EditTaskEvent
-import com.entin.lighttasks.presentation.ui.addedit.viewmodel.AddEditTaskViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,12 +28,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private var _binding: FragmentEditTaskBinding? = null
     private val binding get() = _binding!!
 
-    private val vm: AddEditTaskViewModel by viewModels()
+    private val viewModel: AddEditTaskViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
         return binding.root
@@ -54,21 +51,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun setupEventObserver() =
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.editTaskChannel.collect { event: EditTaskEvent ->
+                viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
                     when (event) {
                         /**
                          * Navigation back
                          */
-                        is EditTaskEvent.NavBackWithResult -> {
+                        is EditTaskEventContract.NavBackWithResult -> {
                             eventNavBackWithResult(event.typeNewOrEditorExist)
                         }
                         /**
                          * Error show
                          */
-                        is EditTaskEvent.ShowErrorBlankTitleText -> {
+                        is EditTaskEventContract.ShowErrorBlankTitleText -> {
                             getSnackBar(
                                 resources.getString(R.string.snack_bar_empty_task_title_forbidden),
-                                requireView()
+                                requireView(),
                             ).show()
                         }
                     }
@@ -80,42 +77,42 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      * Setup fields value
      */
     private fun setupFields() = with(binding) {
-        addNewTaskTitle.setText(vm.taskTitle)
-        addNewTaskMessage.setText(vm.taskMessage)
-        addNewTaskFinishedCheckbox.isChecked = vm.taskFinished
+        addNewTaskTitle.setText(viewModel.taskTitle)
+        addNewTaskMessage.setText(viewModel.taskMessage)
+        addNewTaskFinishedCheckbox.isChecked = viewModel.taskFinished
         addNewTaskFinishedCheckbox.jumpDrawablesToCurrentState()
-        addNewTaskImportantCheckbox.isChecked = vm.taskImportant
+        addNewTaskImportantCheckbox.isChecked = viewModel.taskImportant
         addNewTaskImportantCheckbox.jumpDrawablesToCurrentState()
-        addNewTaskRadiogroupIcons.check(vm.taskGroup)
+        addNewTaskRadiogroupIcons.check(viewModel.taskGroup)
 
         // Two fields and radio group
 
         addNewTaskRadiogroupIcons.setOnCheckedChangeListener { _, checkedId ->
-            vm.taskGroup = checkedId
+            viewModel.taskGroup = checkedId
         }
 
         addNewTaskTitle.addTextChangedListener {
-            vm.taskTitle = it.toString()
+            viewModel.taskTitle = it.toString()
         }
 
         addNewTaskMessage.addTextChangedListener {
-            vm.taskMessage = it.toString()
+            viewModel.taskMessage = it.toString()
         }
 
         // Two check buttons [Important and Finished]
 
         addNewTaskFinishedCheckbox.setOnCheckedChangeListener { _, isCheck ->
-            vm.taskFinished = isCheck
+            viewModel.taskFinished = isCheck
         }
 
         addNewTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
-            vm.taskImportant = isCheck
+            viewModel.taskImportant = isCheck
         }
 
         // OK Button
 
         addNewTaskOkButton.setOnClickListener {
-            vm.saveTaskBtnClicked()
+            viewModel.saveTaskBtnClicked()
         }
     }
 
@@ -124,13 +121,13 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         binding.addNewTaskTitle.clearFocus()
         setFragmentResult(
             "operationMode",
-            bundleOf("mode" to event)
+            bundleOf("mode" to event),
         )
         findNavController().popBackStack()
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.deletetask.fragment
+package com.entin.lighttasks.presentation.ui.deletetask
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
+import com.entin.lighttasks.presentation.ui.main.AllTasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -24,7 +24,7 @@ class DeleteTask : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.delete_task, container, false)
 
@@ -43,5 +43,4 @@ class DeleteTask : DialogFragment() {
 
         return rootView
     }
-
 }

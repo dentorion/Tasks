@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.entin.lighttasks.data.db.AppDataBase
 import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.data.repositoryImpl.TasksRepositoryImpl
+import com.entin.lighttasks.data.repository.TasksRepositoryImpl
 import com.entin.lighttasks.domain.repository.TasksRepository
 import dagger.Module
 import dagger.Provides
@@ -37,7 +37,7 @@ object AppModule {
         Room.databaseBuilder(
             context,
             AppDataBase::class.java,
-            "notes-data-base"
+            "notes-data-base",
         )
             .fallbackToDestructiveMigration()
             .build()

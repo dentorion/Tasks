@@ -6,7 +6,7 @@
     app:startDestination="@id/allTasksFragment">
     <fragment
         android:id="@+id/allTasksFragment"
-        android:name="com.entin.lighttasks.presentation.ui.main.fragment.AllTasksFragment"
+        android:name="com.entin.lighttasks.presentation.ui.main.AllTasksFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_all_tasks">
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
-        android:name="com.entin.lighttasks.presentation.ui.addedit.fragment.EditTaskFragment"
+        android:name="com.entin.lighttasks.presentation.ui.addedit.EditTaskFragment"
         android:label="{label}"
         tools:layout="@layout/fragment_edit_task">
         <action
@@ -42,7 +42,7 @@
     </fragment>
     <dialog
         android:id="@+id/deleteTask"
-        android:name="com.entin.lighttasks.presentation.ui.deletetask.fragment.DeleteTask"
+        android:name="com.entin.lighttasks.presentation.ui.deletetask.DeleteTask"
         android:label="DeleteTask" >
         <argument
             android:name="task"
@@ -51,11 +51,11 @@
     <action android:id="@+id/action_global_deleteTask" app:destination="@id/deleteTask" />
     <dialog
         android:id="@+id/deleteFinishedDialog"
-        android:name="com.entin.lighttasks.presentation.ui.deleteall.fragment.DeleteFinishedDialog"
+        android:name="com.entin.lighttasks.presentation.ui.deleteall.DeleteFinishedDialog"
         android:label="DeleteFinishedDialog" />
     <dialog
         android:id="@+id/changeLanguageDialog"
-        android:name="com.entin.lighttasks.presentation.ui.language.fragment.ChangeLanguageDialog"
+        android:name="com.entin.lighttasks.presentation.ui.language.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
     <action android:id="@+id/action_global_deleteFinishedDialog" app:destination="@id/deleteFinishedDialog" />
     <action android:id="@+id/action_global_changeLanguageDialog" app:destination="@id/changeLanguageDialog" />

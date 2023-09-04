@@ -1,8 +1,13 @@
-package com.entin.lighttasks.presentation.ui.main.fragment
+package com.entin.lighttasks.presentation.ui.main
 
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,14 +22,11 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentAllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.ui.addedit.fragment.EditTaskFragment
+import com.entin.lighttasks.presentation.ui.main.AddEditTaskMessage.EDIT
+import com.entin.lighttasks.presentation.ui.main.AddEditTaskMessage.NEW
 import com.entin.lighttasks.presentation.ui.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.ui.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.ui.main.adapter.OnClickOnEmpty
-import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage.EDIT
-import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage.NEW
-import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
-import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +42,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     private var _binding: FragmentAllTasksBinding? = null
     private val binding get() = _binding!!
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val viewModel: AllTasksViewModel by activityViewModels()
     private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(this)
     private lateinit var searchView: SearchView
@@ -51,7 +54,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentAllTasksBinding.inflate(inflater, container, false)
         return binding.root
@@ -85,12 +88,13 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                 layoutManager = LinearLayoutManager(
                     requireContext(),
                     LinearLayoutManager.VERTICAL,
-                    false
+                    false,
                 )
             }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupRecyclerItemTouchListener() {
         ItemTouchHelper(
             ItemTouchHelperCallback(
@@ -103,7 +107,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                 navController = findNavController(),
                 allTasks = allTasks,
                 message = resources.getString(R.string.manual_order_accepted),
-            )
+            ),
         ).attachToRecyclerView(binding.tasksRecyclerView)
     }
 
@@ -123,18 +127,21 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         tasksAdapterList.submitList(listTask)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFabCircleButton() {
         binding.fab.setOnClickListener {
             viewModel.addNewTask()
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupResultListener() {
         setFragmentResultListener("operationMode") { _, bundle ->
             viewModel.onEditResultShow(bundle.getInt("mode"))
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun stateObserver() {
         viewModel.tasksEvent
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
@@ -143,7 +150,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                     is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_message_task_del),
-                            requireView()
+                            requireView(),
                         ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
                             viewModel.onUndoDeleteClick(event.task)
                         }.show()
@@ -153,7 +160,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         val action =
                             AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
                                 event.task,
-                                resources.getString(R.string.new_edit_fragment_task_edit)
+                                resources.getString(R.string.new_edit_fragment_task_edit),
                             )
                         findNavController().navigate(action)
                     }
@@ -162,7 +169,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         val action =
                             AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
                                 null,
-                                resources.getString(R.string.new_edit_fragment_task_new)
+                                resources.getString(R.string.new_edit_fragment_task_new),
                             )
                         findNavController().navigate(action)
                     }
@@ -171,34 +178,35 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         when (event.type) {
                             EDIT -> getSnackBar(
                                 resources.getString(R.string.snack_bar_message_task_edit),
-                                requireView()
+                                requireView(),
                             ).show()
                             NEW -> getSnackBar(
                                 resources.getString(R.string.snack_bar_message_task_new),
-                                requireView()
+                                requireView(),
                             ).show()
                         }
                     }
 
                     is AllTasksEvent.NavToDellFinishedTasks -> {
-                        val action = AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
+                        val action =
+                            AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
                         findNavController().navigate(action)
                     }
 
                     is AllTasksEvent.ShowDellFinishedTasks -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
-                            requireView()
+                            requireView(),
                         ).show()
                     }
 
                     is AllTasksEvent.NavToChangeLanguage -> {
-                        val action = AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
+                        val action =
+                            AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
                         findNavController().navigate(action)
                     }
 
                     is AllTasksEvent.Smile -> {
-
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -206,10 +214,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     // Interface implementation for Adapter
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onTaskClick(task: Task) {
         viewModel.onTaskClick(task)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onFinishedTaskClick(task: Task, mode: Boolean) {
         viewModel.onFinishedTaskClick(task, mode)
     }
@@ -230,6 +240,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     // Menu bar
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.bar_menu, menu)
 
@@ -239,7 +250,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         searchView = searchItem.actionView as SearchView
         // If App's RAM was cleared take last
         val pendingQuery = viewModel.searchValue.value
-        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+        if (!pendingQuery.isNullOrEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(pendingQuery, false)
         }
@@ -252,14 +263,10 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             val params = viewModel.flowSortingPreferences.first()
 
             menu.findItem(R.id.action_sort_by_finished).isChecked = params.hideFinished
-
-            if (Build.VERSION.SDK_INT < 26) {
-                // Hide changing language item before implement old method of context updating
-                menu.removeItem(R.id.action_change_language)
-            }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_sort_by_date -> {

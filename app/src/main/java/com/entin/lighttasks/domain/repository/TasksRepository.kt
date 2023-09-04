@@ -13,7 +13,7 @@ interface TasksRepository {
     fun getAllTasksWithSorting(
         query: String,
         orderSort: OrderSort,
-        hideFinished: Boolean
+        hideFinished: Boolean,
     ): Flow<List<Task>>
 
     fun getMaxPosition(): Flow<Int?>

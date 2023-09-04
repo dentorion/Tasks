@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.deleteall.fragment
+package com.entin.lighttasks.presentation.ui.deleteall
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.entin.lighttasks.R
-import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
+import com.entin.lighttasks.presentation.ui.main.AllTasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -21,7 +21,7 @@ class DeleteFinishedDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.clear_finished, container, false)
 

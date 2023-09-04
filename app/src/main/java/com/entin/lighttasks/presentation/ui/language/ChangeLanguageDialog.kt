@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.language.fragment
+package com.entin.lighttasks.presentation.ui.language
 
 import android.content.Context
 import android.content.Intent
@@ -10,8 +10,9 @@ import android.widget.ImageButton
 import androidx.fragment.app.DialogFragment
 import com.entin.lighttasks.R
 import com.entin.lighttasks.presentation.activity.MainActivity
-import com.entin.lighttasks.presentation.activity.Refreshable
-import com.entin.lighttasks.presentation.util.*
+import com.entin.lighttasks.presentation.util.LANGUAGE_ENGLISH_SHOT
+import com.entin.lighttasks.presentation.util.LANGUAGE_POLISH_SHOT
+import com.entin.lighttasks.presentation.util.LANGUAGE_SPANISH_SHOT
 import java.util.Locale
 
 class ChangeLanguageDialog : DialogFragment() {
@@ -19,7 +20,7 @@ class ChangeLanguageDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.language, container, false)
 

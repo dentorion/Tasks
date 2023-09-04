@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.main.contract
+package com.entin.lighttasks.presentation.ui.main
 
 import com.entin.lighttasks.domain.entity.Task
 
@@ -30,7 +30,7 @@ sealed class AllTasksEvent {
     data class ShowAddEditTaskMessage(val type: AddEditTaskMessage) : AllTasksEvent()
 
     // Show snackBar if task was deleted and returned with UNDO button show snackBar smile
-    object Smile: AllTasksEvent()
+    object Smile : AllTasksEvent()
 }
 
 /**

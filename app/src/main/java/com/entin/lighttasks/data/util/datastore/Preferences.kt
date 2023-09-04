@@ -2,8 +2,11 @@ package com.entin.lighttasks.data.util.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.SortPreferences
@@ -15,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class Preferences @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
 
     /**
@@ -33,8 +36,7 @@ class Preferences @Inject constructor(
         .map { preferences ->
             val sortFinished = preferences[Keys.KEY_SORT_HIDE_FINISHED] ?: false
             val sortOrder = OrderSort.valueOf(
-                preferences[Keys.KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL]
-                    ?: OrderSort.SORT_BY_DATE.name
+                preferences[Keys.KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL] ?: OrderSort.SORT_BY_DATE.name,
             )
             SortPreferences(sortOrder, sortFinished)
         }

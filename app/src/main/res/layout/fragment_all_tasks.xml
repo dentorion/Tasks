@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_main_new"
     android:elevation="@dimen/common_dialog_elevation_constraint"
-    tools:context=".presentation.ui.main.fragment.AllTasksFragment">
+    tools:context=".presentation.ui.main.AllTasksFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

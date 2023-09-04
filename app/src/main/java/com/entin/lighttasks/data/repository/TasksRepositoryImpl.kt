@@ -1,12 +1,11 @@
-package com.entin.lighttasks.data.repositoryImpl
+package com.entin.lighttasks.data.repository
 
-import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.data.db.TaskDao
+import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TasksRepositoryImpl @Inject constructor(
-    private val tasksDao: TaskDao
+    private val tasksDao: TaskDao,
 ) : TasksRepository {
 
     /**

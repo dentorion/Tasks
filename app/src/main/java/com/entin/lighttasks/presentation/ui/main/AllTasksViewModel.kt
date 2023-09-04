@@ -1,17 +1,18 @@
-package com.entin.lighttasks.presentation.ui.main.viewmodel
+package com.entin.lighttasks.presentation.ui.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
-import com.entin.lighttasks.presentation.ui.main.contract.AddEditTaskMessage
-import com.entin.lighttasks.presentation.ui.main.contract.AllTasksEvent
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
@@ -40,14 +41,14 @@ class AllTasksViewModel @Inject constructor(
 
     private val searchFlow = combine(
         searchValue.asFlow(),
-        flowSortingPreferences
+        flowSortingPreferences,
     ) { search, prefs ->
         Pair(search, prefs)
     }.flatMapLatest { request ->
         repository.getAllTasksWithSorting(
             query = request.first,
             orderSort = request.second.sortByTitleDateImportantManual,
-            hideFinished = request.second.hideFinished
+            hideFinished = request.second.hideFinished,
         )
     }
 

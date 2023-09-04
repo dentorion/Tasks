@@ -5,7 +5,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 
-// Searching query after each character added
+/**
+ * Searching query after each character added
+ */
 
 inline fun SearchView.onSearchTextChanged(crossinline callback: (String) -> Unit) {
     this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

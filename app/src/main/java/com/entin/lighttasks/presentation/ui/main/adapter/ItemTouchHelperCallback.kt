@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.ItemTouchHelper.START
 import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.ui.main.fragment.AllTasksFragmentDirections
-import com.entin.lighttasks.presentation.ui.main.viewmodel.AllTasksViewModel
+import com.entin.lighttasks.presentation.ui.main.AllTasksFragmentDirections
+import com.entin.lighttasks.presentation.ui.main.AllTasksViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -42,7 +42,7 @@ class ItemTouchHelperCallback(
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+        target: RecyclerView.ViewHolder,
     ): Boolean {
         onMoveImpl(viewHolder, target)
         return true
@@ -54,7 +54,7 @@ class ItemTouchHelperCallback(
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
+        viewHolder: RecyclerView.ViewHolder,
     ): Int {
         var dragFlags = UP or DOWN
         val swipeFlags = START or END
@@ -77,7 +77,7 @@ class ItemTouchHelperCallback(
     @ExperimentalCoroutinesApi
     private fun onMoveImpl(
         viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+        target: RecyclerView.ViewHolder,
     ) {
         // Positions
         val fromPosition = viewHolder.absoluteAdapterPosition
@@ -146,7 +146,6 @@ class ItemTouchHelperCallback(
             firstTouchedElement = null
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun incrementPositions(taskTo: Task) {
