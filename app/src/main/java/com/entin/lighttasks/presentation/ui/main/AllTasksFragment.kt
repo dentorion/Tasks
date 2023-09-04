@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.ui.main
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -180,6 +179,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                                 resources.getString(R.string.snack_bar_message_task_edit),
                                 requireView(),
                             ).show()
+
                             NEW -> getSnackBar(
                                 resources.getString(R.string.snack_bar_message_task_new),
                                 requireView(),
@@ -273,31 +273,38 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                 viewModel.updateSortingOrder(OrderSort.SORT_BY_DATE)
                 true
             }
+
             R.id.action_sort_by_title -> {
                 viewModel.updateSortingOrder(OrderSort.SORT_BY_TITLE)
                 true
             }
+
             R.id.action_sort_by_finished -> {
                 item.isChecked = !item.isChecked
                 viewModel.updateFinishedOrder(item.isChecked)
                 true
             }
+
             R.id.action_sort_by_manual -> {
                 viewModel.updateSortingOrder(OrderSort.SORT_BY_MANUAL)
                 true
             }
+
             R.id.action_delete_all_tasks -> {
                 viewModel.navToDelete()
                 true
             }
+
             R.id.action_sort_by_important -> {
                 viewModel.updateSortingOrder(OrderSort.SORT_BY_IMPORTANT)
                 true
             }
+
             R.id.action_change_language -> {
                 viewModel.navToChangeLanguage()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
