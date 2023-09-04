@@ -5,6 +5,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.entin.lighttasks.R
 import com.entin.lighttasks.data.db.TaskGroupsDao
 import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.presentation.util.FISH_HOME_ID
 import com.entin.lighttasks.presentation.util.RADIO_EMPTY_ID
 import com.entin.lighttasks.presentation.util.RADIO_FOOD_ID
 import com.entin.lighttasks.presentation.util.RADIO_HOME_ID
@@ -36,6 +37,7 @@ class TaskGroupsCallback(
             TaskGroup(backgroundResource = R.drawable.rest_btn_radio, groupId = RADIO_REST_ID),
             TaskGroup(backgroundResource = R.drawable.food_btn_radio, groupId = RADIO_FOOD_ID),
             TaskGroup(backgroundResource = R.drawable.home_btn_radio, groupId = RADIO_HOME_ID),
+            TaskGroup(backgroundResource = R.drawable.fish_btn_radio, groupId = FISH_HOME_ID),
         )
         provider.get().insertData(radioButtonElements)
     }

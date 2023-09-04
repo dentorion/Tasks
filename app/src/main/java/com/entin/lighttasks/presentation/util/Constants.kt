@@ -34,6 +34,7 @@ const val RADIO_WORK_ID = 1
 const val RADIO_REST_ID = 2
 const val RADIO_FOOD_ID = 3
 const val RADIO_HOME_ID = 4
+const val FISH_HOME_ID = 5
 
 /**
  * Utils

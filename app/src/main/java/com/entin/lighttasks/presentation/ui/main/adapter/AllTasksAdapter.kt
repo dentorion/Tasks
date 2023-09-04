@@ -9,11 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ItemBinding
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.util.RADIO_EMPTY_ID
-import com.entin.lighttasks.presentation.util.RADIO_FOOD_ID
-import com.entin.lighttasks.presentation.util.RADIO_HOME_ID
-import com.entin.lighttasks.presentation.util.RADIO_REST_ID
-import com.entin.lighttasks.presentation.util.RADIO_WORK_ID
+import com.entin.lighttasks.presentation.util.TaskGroupsIds
 
 class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
@@ -59,11 +55,12 @@ class AllTasksAdapter(
 
                 taskGroupIcon.setImageResource(
                     when (task.group) {
-                        RADIO_EMPTY_ID -> R.drawable.ic_nothing
-                        RADIO_WORK_ID -> R.drawable.ic_work
-                        RADIO_REST_ID -> R.drawable.ic_rest
-                        RADIO_FOOD_ID -> R.drawable.ic_food
-                        RADIO_HOME_ID -> R.drawable.ic_home
+                        TaskGroupsIds.EMPTY.id -> R.drawable.ic_nothing
+                        TaskGroupsIds.WORK.id -> R.drawable.ic_work
+                        TaskGroupsIds.REST.id -> R.drawable.ic_rest
+                        TaskGroupsIds.FOOD.id -> R.drawable.ic_food
+                        TaskGroupsIds.HOME.id -> R.drawable.ic_home
+                        TaskGroupsIds.FISH.id -> R.drawable.ic_fish
                         else -> R.drawable.ic_nothing
                     },
                 )
@@ -84,8 +81,7 @@ class AllTasksAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
-        override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem == newItem
+        override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem == newItem
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem.id == newItem.id && oldItem.position == newItem.position
