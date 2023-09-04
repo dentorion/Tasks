@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ItemBinding
-
 import com.entin.lighttasks.domain.entity.Task
 
 class AllTasksAdapter(
-    private val listener: OnClickOnEmpty
+    private val listener: OnClickOnEmpty,
 ) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {

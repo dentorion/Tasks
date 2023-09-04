@@ -44,7 +44,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_new_task_ok_button"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="55dp"
             android:backgroundTint="@color/color_main"
             android:text="@string/new_edit_fragment_btn_ok"
