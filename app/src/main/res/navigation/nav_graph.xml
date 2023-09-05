@@ -43,12 +43,14 @@
     <dialog
         android:id="@+id/deleteTask"
         android:name="com.entin.lighttasks.presentation.ui.deletetask.DeleteTask"
-        android:label="DeleteTask" >
+        android:label="DeleteTask">
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task" />
     </dialog>
-    <action android:id="@+id/action_global_deleteTask" app:destination="@id/deleteTask" />
+    <action
+        android:id="@+id/action_global_deleteTask"
+        app:destination="@id/deleteTask" />
     <dialog
         android:id="@+id/deleteFinishedDialog"
         android:name="com.entin.lighttasks.presentation.ui.deleteall.DeleteFinishedDialog"
@@ -57,6 +59,17 @@
         android:id="@+id/changeLanguageDialog"
         android:name="com.entin.lighttasks.presentation.ui.language.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
-    <action android:id="@+id/action_global_deleteFinishedDialog" app:destination="@id/deleteFinishedDialog" />
-    <action android:id="@+id/action_global_changeLanguageDialog" app:destination="@id/changeLanguageDialog" />
+    <action
+        android:id="@+id/action_global_deleteFinishedDialog"
+        app:destination="@id/deleteFinishedDialog" />
+    <action
+        android:id="@+id/action_global_changeLanguageDialog"
+        app:destination="@id/changeLanguageDialog" />
+    <fragment
+        android:id="@+id/preferencesFragment"
+        android:name="com.entin.lighttasks.presentation.ui.preferencies.PreferencesFragment"
+        android:label="@string/action_bar_item_title_preferences" />
+    <action
+        android:id="@+id/action_global_preferencesFragment"
+        app:destination="@id/preferencesFragment" />
 </navigation>

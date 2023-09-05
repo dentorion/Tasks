@@ -40,6 +40,7 @@
 
     <string name="action_bar_item_title_sort">Sort</string>
     <string name="action_bar_item_title_search">Search</string>
+    <string name="action_bar_item_title_preferences">Settings</string>
 
     <string name="quote">Work that you like ceases to be work</string>
     <string name="manual_order_accepted">Changes saved</string>

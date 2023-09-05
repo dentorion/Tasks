@@ -76,30 +76,29 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /**
      * Event observer
      */
-    private fun setupEventObserver() =
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
-                    when (event) {
-                        /**
-                         * Navigation back
-                         */
-                        is EditTaskEventContract.NavBackWithResult -> {
-                            eventNavBackWithResult(event.typeNewOrEditorExist)
-                        }
-                        /**
-                         * Error show
-                         */
-                        is EditTaskEventContract.ShowErrorBlankTitleText -> {
-                            getSnackBar(
-                                resources.getString(R.string.snack_bar_empty_task_title_forbidden),
-                                requireView(),
-                            ).show()
-                        }
+    private fun setupEventObserver() = viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
+                when (event) {
+                    /**
+                     * Navigation back
+                     */
+                    is EditTaskEventContract.NavBackWithResult -> {
+                        eventNavBackWithResult(event.typeNewOrEditorExist)
+                    }
+                    /**
+                     * Error show
+                     */
+                    is EditTaskEventContract.ShowErrorBlankTitleText -> {
+                        getSnackBar(
+                            resources.getString(R.string.snack_bar_empty_task_title_forbidden),
+                            requireView(),
+                        ).show()
                     }
                 }
             }
         }
+    }
 
     /**
      * Setup fields value
@@ -158,6 +157,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     override fun onDestroyView() {
+        groupAdapter = null
         _binding = null
         super.onDestroyView()
     }

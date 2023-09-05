@@ -123,6 +123,11 @@ class AllTasksViewModel @Inject constructor(
         _tasksEvent.send(AllTasksEvent.NavToChangeLanguage)
     }
 
+    // Preferences
+    fun navToChangePreferences() = viewModelScope.launch {
+        _tasksEvent.send(AllTasksEvent.NavToChangePreferences)
+    }
+
     // Update list after manual changing position of Task
     fun updateAllTasks(list: List<Task>) = viewModelScope.launch {
         repository.updateAllTasks(list)

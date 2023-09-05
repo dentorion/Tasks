@@ -212,6 +212,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
+
+                    AllTasksEvent.NavToChangePreferences -> {
+                        val action = AllTasksFragmentDirections.actionGlobalPreferencesFragment()
+                        findNavController().navigate(action)
+                    }
                 }
             }.launchIn(lifecycleScope)
     }
@@ -306,6 +311,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
             R.id.action_change_language -> {
                 viewModel.navToChangeLanguage()
+                true
+            }
+
+            R.id.action_preferences -> {
+                viewModel.navToChangePreferences()
                 true
             }
 

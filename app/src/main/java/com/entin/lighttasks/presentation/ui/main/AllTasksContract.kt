@@ -23,6 +23,9 @@ sealed class AllTasksEvent {
     // Navigate to Dialog change language
     object NavToChangeLanguage : AllTasksEvent()
 
+    // Navigate to preferences
+    object NavToChangePreferences : AllTasksEvent()
+
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
 
