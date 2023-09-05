@@ -47,7 +47,7 @@ class RadioButtonAdapter(
                 } else {
                     position == selectedPosition
                 }
-                radioButtonItem.setBackgroundResource(radioItemElement.backgroundResource)
+                radioButtonItem.setBackgroundResource(radioItemElement.backgroundRes)
 
                 this.radioButtonItem.setOnClickListener {
                     selectedPosition = adapterPosition
@@ -65,7 +65,7 @@ class RadioButtonAdapter(
                     oldItem: TaskGroup,
                     newItem: TaskGroup,
                 ): Boolean {
-                    return oldItem.backgroundResource == newItem.backgroundResource
+                    return oldItem.backgroundRes == newItem.backgroundRes
                 }
 
                 override fun areContentsTheSame(

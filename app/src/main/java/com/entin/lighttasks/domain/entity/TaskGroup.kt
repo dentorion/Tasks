@@ -15,6 +15,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "taskGroups")
 data class TaskGroup(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "background_resource") val backgroundResource: Int,
+    @ColumnInfo(name = "background_resource") val backgroundRes: Int,
     @ColumnInfo(name = "group_id") val groupId: Int,
 )
