@@ -23,7 +23,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -82,15 +85,15 @@ dependencies {
 
     // Gson
     Dependencies.gson.apply {
-        implementation (gson)
+        implementation(gson)
     }
 
     // DATA STORE
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Recyclerview
     Dependencies.recyclerview.apply {
-        implementation (recyclerview)
+        implementation(recyclerview)
     }
 }
 

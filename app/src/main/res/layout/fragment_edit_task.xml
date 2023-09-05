@@ -100,11 +100,10 @@
             android:hint="@string/new_edit_fragment_field_message"
             android:inputType="text"
             android:textColorHint="@color/color_text"
-            app:boxBackgroundColor="@color/color_main_light_extra"
             app:boxStrokeColor="@color/color_text"
             app:boxStrokeErrorColor="@color/color_important"
             app:counterEnabled="true"
-            app:counterMaxLength="500"
+            app:counterMaxLength="1500"
             app:counterTextColor="@color/color_text"
             app:endIconMode="clear_text"
             app:endIconTint="@color/color_text"
@@ -155,5 +154,4 @@
             tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

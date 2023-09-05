@@ -2,11 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Tasks" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_main_light_extra</item>
+        <item name="colorPrimary">@color/color_text</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor" >@color/color_main_light_extra</item>
         <item name="colorOnSurface">@color/color_main</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/color_main</item>
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
         <item name="snackbarStyle">@style/MySnackBarStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
@@ -64,7 +64,7 @@
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/color_main_light_extra</item>
+        <item name="android:statusBarColor" >@color/color_main_light_extra</item>
     </style>
 
 </resources>
