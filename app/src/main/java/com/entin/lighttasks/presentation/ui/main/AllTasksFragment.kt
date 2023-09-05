@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -188,8 +189,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                     }
 
                     is AllTasksEvent.NavToDellFinishedTasks -> {
-                        val action =
-                            AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
+                        val action = AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
                         findNavController().navigate(action)
                     }
 
@@ -201,12 +201,16 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                     }
 
                     is AllTasksEvent.NavToChangeLanguage -> {
-                        val action =
-                            AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
+                        val action = AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
                         findNavController().navigate(action)
                     }
 
                     is AllTasksEvent.Smile -> {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.be_careful),
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     }
                 }
             }.launchIn(lifecycleScope)
