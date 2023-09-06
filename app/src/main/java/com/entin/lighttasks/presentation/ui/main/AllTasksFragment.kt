@@ -44,7 +44,14 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val viewModel: AllTasksViewModel by activityViewModels()
-    private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(this)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(
+        this,
+        ::openDeleteDialog,
+    ) { listTasks ->
+        viewModel.updateAllTasks(listTasks)
+    }
     private lateinit var searchView: SearchView
 
     private var allTasks = mutableListOf<Task>()
@@ -100,13 +107,6 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             ItemTouchHelperCallback(
                 tasksAdapterList = tasksAdapterList,
                 viewModel = viewModel,
-                myJob = myJob,
-                firstTouchedElement = firstTouchedElement,
-                context = requireContext(),
-                lifecycleScope = this.lifecycleScope,
-                navController = findNavController(),
-                allTasks = allTasks,
-                message = resources.getString(R.string.manual_order_accepted),
             ),
         ).attachToRecyclerView(binding.tasksRecyclerView)
     }
@@ -147,14 +147,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .onEach { event: AllTasksEvent ->
                 when (event) {
-                    is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
-                        getSnackBar(
-                            resources.getString(R.string.snack_bar_message_task_del),
-                            requireView(),
-                        ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
-                            viewModel.onUndoDeleteClick(event.task)
-                        }.show()
-                    }
+                    is AllTasksEvent.ShowUndoDeleteTaskMessage -> getSnackBar(
+                        resources.getString(R.string.snack_bar_message_task_del),
+                        requireView(),
+                    ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
+                        viewModel.onUndoDeleteClick(event.task)
+                    }.show()
 
                     is AllTasksEvent.NavToEditTask -> {
                         val action =
@@ -188,35 +186,28 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         }
                     }
 
-                    is AllTasksEvent.NavToDellFinishedTasks -> {
-                        val action = AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog()
-                        findNavController().navigate(action)
-                    }
+                    is AllTasksEvent.NavToDellFinishedTasks -> findNavController().navigate(
+                        AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog(),
+                    )
 
-                    is AllTasksEvent.ShowDellFinishedTasks -> {
-                        getSnackBar(
-                            resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
-                            requireView(),
-                        ).show()
-                    }
+                    is AllTasksEvent.ShowDellFinishedTasks -> getSnackBar(
+                        resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
+                        requireView(),
+                    ).show()
 
-                    is AllTasksEvent.NavToChangeLanguage -> {
-                        val action = AllTasksFragmentDirections.actionGlobalChangeLanguageDialog()
-                        findNavController().navigate(action)
-                    }
+                    is AllTasksEvent.NavToChangeLanguage -> findNavController().navigate(
+                        AllTasksFragmentDirections.actionGlobalChangeLanguageDialog(),
+                    )
 
-                    is AllTasksEvent.Smile -> {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.be_careful),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+                    is AllTasksEvent.Smile -> Toast.makeText(
+                        requireContext(),
+                        getString(R.string.be_careful),
+                        Toast.LENGTH_SHORT,
+                    ).show()
 
-                    AllTasksEvent.NavToChangePreferences -> {
-                        val action = AllTasksFragmentDirections.actionGlobalPreferencesFragment()
-                        findNavController().navigate(action)
-                    }
+                    AllTasksEvent.NavToChangePreferences -> findNavController().navigate(
+                        AllTasksFragmentDirections.actionGlobalPreferencesFragment(),
+                    )
                 }
             }.launchIn(lifecycleScope)
     }
@@ -231,6 +222,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onFinishedTaskClick(task: Task, mode: Boolean) {
         viewModel.onFinishedTaskClick(task, mode)
+    }
+
+    // Delete dialog for Adapter
+
+    private fun openDeleteDialog(task: Task) {
+        findNavController().navigate(AllTasksFragmentDirections.actionGlobalDeleteTask(task))
     }
 
     // Empty List Welcome

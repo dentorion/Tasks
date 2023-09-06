@@ -9,10 +9,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.Collections
 
 class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
-) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()) {
+    private val navigateToTaskScreen: (Task) -> Unit,
+    private val updateDb: (List<Task>) -> Unit,
+) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()), ItemTouchHelperAdapter {
+
+    private var job: Job? = null
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -89,16 +100,36 @@ class AllTasksAdapter(
         }
     }
 
-    fun onItemMove(fromPosition: Int, toPosition: Int) {
-        // Логика перемещения элементов в адаптере
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        val newCurrentList = mutableListOf<Task>().apply { addAll(currentList) }
+
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(newCurrentList, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(newCurrentList, i, i - 1)
+            }
+        }
+        submitList(newCurrentList)
+
+        job?.cancel()
+        job = scope.launch {
+            delay(500L)
+            newCurrentList.mapIndexed { index, task -> task.position = index }
+            updateDb(newCurrentList)
+        }
+
+        return true
     }
 
-    fun onLeftSwipe(position: Int) {
-        // Логика свайпа влево
-    }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val task = currentList[viewHolder.absoluteAdapterPosition]
+        navigateToTaskScreen(task)
 
-    fun onRightSwipe(position: Int) {
-        // Логика свайпа вправо
+        // To prevent empty place of task in recyclerview
+        notifyItemChanged(viewHolder.absoluteAdapterPosition)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {

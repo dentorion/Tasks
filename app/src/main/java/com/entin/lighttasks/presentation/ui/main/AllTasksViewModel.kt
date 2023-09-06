@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.ui.main
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
@@ -38,6 +39,7 @@ class AllTasksViewModel @Inject constructor(
     val tasksEvent = _tasksEvent.receiveAsFlow()
 
     var isManualSorting: Boolean = false
+        private set
 
     private val searchFlow = combine(
         searchValue.asFlow(),
@@ -52,7 +54,7 @@ class AllTasksViewModel @Inject constructor(
         )
     }
 
-    val tasks = searchFlow.asLiveData()
+    val tasks: LiveData<List<Task>> = searchFlow.asLiveData()
 
     init {
         viewModelScope.launch {
@@ -129,7 +131,7 @@ class AllTasksViewModel @Inject constructor(
     }
 
     // Update list after manual changing position of Task
-    fun updateAllTasks(list: List<Task>) = viewModelScope.launch {
+    fun updateAllTasks(list: List<Task>) = diAppScope.launch {
         repository.updateAllTasks(list)
     }
 }
