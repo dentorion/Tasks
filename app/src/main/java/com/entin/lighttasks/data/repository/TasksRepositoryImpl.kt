@@ -9,6 +9,7 @@ import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,6 +36,8 @@ class TasksRepositoryImpl @Inject constructor(
             OrderSort.SORT_BY_TITLE -> tasksDao.getTasksSortedByTitle(query, hideFinished)
             OrderSort.SORT_BY_IMPORTANT -> tasksDao.getTasksSortedByImportant(query, hideFinished)
             OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManual(query, hideFinished)
+            OrderSort.SORT_BY_ICON -> tasksDao.getTasksSortedByImportant(query, hideFinished)
+                .map { list -> list.filter { it.group == orderSort.groupId } }
         }
 
     /**

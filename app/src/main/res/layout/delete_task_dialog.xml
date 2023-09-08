@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_new"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:padding="@dimen/common_dialog_padding_constraint">
+
+    <ImageView
+        android:id="@+id/dialog_delete_task_circle"
+        android:layout_width="@dimen/trash_basket_icon_width_delete"
+        android:layout_height="@dimen/trash_basket_icon_height_delete"
+        android:layout_marginTop="24dp"
+        android:alpha="@dimen/trash_basket_opacity_delete"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_delete_task_cancel_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_delete_task_label_question"
+        app:srcCompat="@drawable/circle" />
+
+    <TextView
+        android:id="@+id/dialog_delete_task_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/dialog_delete_no"
+        android:textColor="@color/color_main"
+        android:textSize="@dimen/text_size_delete"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/dialog_delete_task_label_question"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_delete_task_circle" />
+
+    <TextView
+        android:id="@+id/dialog_delete_task_ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_delete_yes"
+        android:textColor="@color/color_main"
+        android:textSize="@dimen/text_size_delete"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_delete_task_cancel_button" />
+
+    <ImageButton
+        android:id="@+id/dialog_delete_task_basket"
+        android:layout_width="@dimen/circle_size_delete"
+        android:layout_height="@dimen/circle_size_delete"
+        android:background="@drawable/ic_trash"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintStart_toStartOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_delete_task_circle" />
+
+    <TextView
+        android:id="@+id/dialog_delete_task_label_question"
+        android:layout_width="@dimen/text_label_width_delete"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/dialog_delete_task"
+        android:textAllCaps="true"
+        android:textColor="@color/color_main"
+        android:textSize="@dimen/text_size_delete"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.language
+package com.entin.lighttasks.presentation.ui.dialogs
 
 import android.content.Context
 import android.content.Intent
@@ -23,18 +23,18 @@ class ChangeLanguageDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val rootView = inflater.inflate(R.layout.language, container, false)
+        val rootView = inflater.inflate(R.layout.change_language_dialog, container, false)
 
-        rootView.findViewById<ImageButton>(R.id.english).setOnClickListener {
+        rootView.findViewById<ImageButton>(R.id.dialog_change_language_english).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_ENGLISH_SHOT)
         }
-        rootView.findViewById<ImageButton>(R.id.spanish).setOnClickListener {
+        rootView.findViewById<ImageButton>(R.id.dialog_change_language_spanish).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_SPANISH_SHOT)
         }
-        rootView.findViewById<ImageButton>(R.id.polish).setOnClickListener {
+        rootView.findViewById<ImageButton>(R.id.dialog_change_language_polish).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_POLISH_SHOT)
         }
-        rootView.findViewById<ImageButton>(R.id.ukraine).setOnClickListener {
+        rootView.findViewById<ImageButton>(R.id.dialog_change_language_ukraine).setOnClickListener {
             setAppLocale(requireContext(), LANGUAGE_UKRAINE_SHOT)
         }
 

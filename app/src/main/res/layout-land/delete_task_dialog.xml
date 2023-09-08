@@ -8,62 +8,62 @@
     android:padding="@dimen/common_dialog_padding_constraint">
 
     <ImageView
-        android:id="@+id/circle_spanish"
-        android:layout_width="@dimen/trash_basket_icon_width_clear"
-        android:layout_height="@dimen/trash_basket_icon_height_clear"
+        android:id="@+id/dialog_delete_task_circle"
+        android:layout_width="@dimen/trash_basket_icon_width_delete"
+        android:layout_height="@dimen/trash_basket_icon_height_delete"
         android:layout_marginTop="24dp"
-        android:alpha="@dimen/trash_basket_opacity_clear"
-        app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
+        android:alpha="@dimen/trash_basket_opacity_delete"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_delete_task_cancel_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_change_language"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_delete_task_label_question"
         app:srcCompat="@drawable/circle" />
 
     <TextView
-        android:id="@+id/cancelBtn"
+        android:id="@+id/dialog_delete_task_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/dialog_delete_no"
         android:textColor="@color/color_main"
-        android:textSize="@dimen/text_size_clear"
+        android:textSize="@dimen/text_size_delete"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/label_change_language"
-        app:layout_constraintTop_toBottomOf="@+id/circle_spanish" />
+        app:layout_constraintStart_toStartOf="@+id/dialog_delete_task_label_question"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_delete_task_circle" />
 
     <TextView
-        android:id="@+id/okBtn"
+        android:id="@+id/dialog_delete_task_ok_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_delete_yes"
         android:textColor="@color/color_main"
-        android:textSize="@dimen/text_size_clear"
+        android:textSize="@dimen/text_size_delete"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/circle_spanish"
-        app:layout_constraintTop_toTopOf="@+id/cancelBtn" />
+        app:layout_constraintStart_toEndOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_delete_task_cancel_button" />
 
     <ImageButton
-        android:id="@+id/polish"
-        android:layout_width="@dimen/circle_size_clear"
-        android:layout_height="@dimen/circle_size_clear"
+        android:id="@+id/dialog_delete_task_basket"
+        android:layout_width="@dimen/circle_size_delete"
+        android:layout_height="@dimen/circle_size_delete"
         android:background="@drawable/ic_trash"
-        app:layout_constraintBottom_toBottomOf="@+id/circle_spanish"
-        app:layout_constraintEnd_toEndOf="@+id/circle_spanish"
-        app:layout_constraintStart_toStartOf="@+id/circle_spanish"
-        app:layout_constraintTop_toTopOf="@+id/circle_spanish" />
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintStart_toStartOf="@+id/dialog_delete_task_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_delete_task_circle" />
 
     <TextView
-        android:id="@+id/label_change_language"
-        android:layout_width="@dimen/text_label_width_clear"
+        android:id="@+id/dialog_delete_task_label_question"
+        android:layout_width="@dimen/text_label_width_delete"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/dialog_delete_message"
+        android:text="@string/dialog_delete_task"
         android:textAllCaps="true"
         android:textColor="@color/color_main"
-        android:textSize="@dimen/text_size_clear"
+        android:textSize="@dimen/text_size_delete"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/circle_spanish"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_delete_task_circle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

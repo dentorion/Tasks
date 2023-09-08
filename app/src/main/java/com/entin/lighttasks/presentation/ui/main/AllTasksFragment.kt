@@ -47,8 +47,9 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(
-        this,
-        ::openDeleteDialog,
+        listener = this,
+        navigateToDeleteDialog = ::openDeleteDialog,
+        navigateToSortDialog = ::openSortDialog,
     ) { listTasks ->
         viewModel.updateAllTasks(listTasks)
     }
@@ -228,6 +229,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     private fun openDeleteDialog(task: Task) {
         findNavController().navigate(AllTasksFragmentDirections.actionGlobalDeleteTask(task))
+    }
+
+    // Delete dialog for Adapter
+
+    private fun openSortDialog(task: Task) {
+        findNavController().navigate(AllTasksFragmentDirections.actionGlobalSortTasksByIconDialog(task))
     }
 
     // Empty List Welcome

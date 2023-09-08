@@ -42,7 +42,7 @@
     </fragment>
     <dialog
         android:id="@+id/deleteTask"
-        android:name="com.entin.lighttasks.presentation.ui.deletetask.DeleteTask"
+        android:name="com.entin.lighttasks.presentation.ui.dialogs.DeleteTaskDialog"
         android:label="DeleteTask">
         <argument
             android:name="task"
@@ -53,11 +53,11 @@
         app:destination="@id/deleteTask" />
     <dialog
         android:id="@+id/deleteFinishedDialog"
-        android:name="com.entin.lighttasks.presentation.ui.deleteall.DeleteFinishedDialog"
+        android:name="com.entin.lighttasks.presentation.ui.dialogs.DeleteFinishedTasksDialog"
         android:label="DeleteFinishedDialog" />
     <dialog
         android:id="@+id/changeLanguageDialog"
-        android:name="com.entin.lighttasks.presentation.ui.language.ChangeLanguageDialog"
+        android:name="com.entin.lighttasks.presentation.ui.dialogs.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog" />
     <action
         android:id="@+id/action_global_deleteFinishedDialog"
@@ -72,4 +72,15 @@
     <action
         android:id="@+id/action_global_preferencesFragment"
         app:destination="@id/preferencesFragment" />
+    <dialog
+        android:id="@+id/sortTasksByIconDialog"
+        android:name="com.entin.lighttasks.presentation.ui.dialogs.SortTasksByIconDialog"
+        android:label="SortTasksByIconDialog">
+        <argument
+            android:name="task"
+            app:argType="com.entin.lighttasks.domain.entity.Task" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_sortTasksByIconDialog"
+        app:destination="@id/sortTasksByIconDialog" />
 </navigation>

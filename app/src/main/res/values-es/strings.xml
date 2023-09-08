@@ -35,6 +35,7 @@
     <string name="dialog_delete_no">NO</string>
     <string name="dialog_delete_yes">SÍ</string>
     <string name="dialog_delete_task">¿Eliminar tarea?</string>
+    <string name="dialog_sort_task">¿Ordenar tarea por imagen?</string>
 
     <string name="dialog_choose_language">Elige lengua</string>
 
@@ -51,4 +52,5 @@
     <string name="ukraine_language">idioma ucraniano</string>
     <string name="be_careful">Ten cuidado</string>
     <string name="action_bar_item_title_preferences">Ajustes</string>
+
 </resources>

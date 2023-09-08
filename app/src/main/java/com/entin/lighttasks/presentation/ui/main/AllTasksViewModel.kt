@@ -134,4 +134,8 @@ class AllTasksViewModel @Inject constructor(
     fun updateAllTasks(list: List<Task>) = diAppScope.launch {
         repository.updateAllTasks(list)
     }
+
+    fun onTaskSortByIcon(task: Task) {
+        updateSortingOrder(OrderSort.SORT_BY_ICON.apply { groupId = task.group })
+    }
 }

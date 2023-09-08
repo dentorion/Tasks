@@ -35,6 +35,7 @@
     <string name="dialog_delete_no">NO</string>
     <string name="dialog_delete_yes">YES</string>
     <string name="dialog_delete_task">Delete Task?</string>
+    <string name="dialog_sort_task">Sort task by image?</string>
 
     <string name="dialog_choose_language">Choose language</string>
 

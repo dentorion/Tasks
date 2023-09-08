@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_new"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:padding="@dimen/common_dialog_padding_constraint">
+
+    <TextView
+        android:id="@+id/dialog_change_language_label_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_choose_language"
+        android:textAllCaps="true"
+        android:textColor="@color/color_main"
+        android:textSize="@dimen/text_size_language"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/dialog_change_language_circle_english"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:layout_marginTop="16dp"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/english_language"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_change_language_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_label_question"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_label_question"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_label_question"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageButton
+        android:id="@+id/dialog_change_language_english"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:background="@drawable/ic_united_kingdom"
+        android:contentDescription="@string/english_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintTop_toTopOf="@+id/dialog_change_language_circle_english" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/english_language_short"
+        android:textAllCaps="true"
+        android:textSize="@dimen/language_short_label"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_english"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_english" />
+
+    <ImageView
+        android:id="@+id/dialog_change_language_circle"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:layout_marginTop="16dp"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/spanish_language"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_english"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle_english"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageButton
+        android:id="@+id/dialog_change_language_spanish"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:background="@drawable/ic_spain"
+        android:contentDescription="@string/spanish_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_change_language_circle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/spanish_language_short"
+        android:textAllCaps="true"
+        android:textSize="@dimen/language_short_label"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_spanish"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_spanish" />
+
+    <ImageView
+        android:id="@+id/dialog_change_language_circle_polish"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:layout_marginTop="16dp"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/polish_language"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_change_language_circle_ukraine"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageButton
+        android:id="@+id/dialog_change_language_polish"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:background="@drawable/ic_poland"
+        android:contentDescription="@string/polish_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintTop_toTopOf="@+id/dialog_change_language_circle_polish" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/polish_language_short"
+        android:textAllCaps="true"
+        android:textSize="@dimen/language_short_label"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_polish"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_polish" />
+
+    <ImageView
+        android:id="@+id/dialog_change_language_circle_ukraine"
+        android:layout_width="@dimen/icon_circle_size_language"
+        android:layout_height="@dimen/icon_circle_size_language"
+        android:layout_marginTop="16dp"
+        android:alpha="@dimen/icon_opacity_language"
+        android:contentDescription="@string/polish_language"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_polish"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle_polish"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageButton
+        android:id="@+id/dialog_change_language_ukraine"
+        android:layout_width="@dimen/icon_size_language"
+        android:layout_height="@dimen/icon_size_language"
+        android:background="@drawable/ic_ukraine"
+        android:contentDescription="@string/polish_language"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_ukraine"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_ukraine"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_ukraine"
+        app:layout_constraintTop_toTopOf="@+id/dialog_change_language_circle_ukraine" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/ukraine_language_short"
+        android:textAllCaps="true"
+        android:textSize="@dimen/language_short_label"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_change_language_circle_ukraine"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_ukraine"
+        app:layout_constraintStart_toStartOf="@+id/dialog_change_language_ukraine" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
