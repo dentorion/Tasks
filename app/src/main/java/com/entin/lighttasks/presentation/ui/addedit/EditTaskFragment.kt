@@ -1,9 +1,12 @@
 package com.entin.lighttasks.presentation.ui.addedit
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -19,6 +22,7 @@ import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
+import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,7 +59,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             onGroupIconSelected(element)
         }
 
-        binding.categoryRecyclerView.apply {
+        binding.addEditTaskCategoryRecyclerview.apply {
             adapter = groupAdapter
             layoutManager = SlowlyLinearLayoutManager(
                 requireContext(),
@@ -104,40 +108,57 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      * Setup fields value
      */
     private fun setupFields() = with(binding) {
-        addNewTaskTitle.setText(viewModel.taskTitle)
-        addNewTaskMessage.setText(viewModel.taskMessage)
-        addNewTaskFinishedCheckbox.isChecked = viewModel.taskFinished
-        addNewTaskFinishedCheckbox.jumpDrawablesToCurrentState()
-        addNewTaskImportantCheckbox.isChecked = viewModel.taskImportant
-        addNewTaskImportantCheckbox.jumpDrawablesToCurrentState()
+        addEditTaskTitle.setText(viewModel.taskTitle)
+        addEditTaskMessage.setText(viewModel.taskMessage)
+        addEditTaskFinishedCheckbox.isChecked = viewModel.taskFinished
+        addEditTaskFinishedCheckbox.jumpDrawablesToCurrentState()
+        addEditTaskImportantCheckbox.isChecked = viewModel.taskImportant
+        addEditTaskImportantCheckbox.jumpDrawablesToCurrentState()
 
-        // Radio group
+        // Share data
 
-        // make()
+        addEditTaskCircleShare.setOnClickListener {
+            val dataToSend = addEditTaskTitle.text.toString() + NEW_LINE + addEditTaskMessage.text.toString()
+
+            try {
+                startActivity(
+                    Intent.createChooser(
+                        Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, dataToSend)
+                            type = "text/plain"
+                        },
+                        requireContext().getString(R.string.detail_share_to)
+                    )
+                )
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(requireContext(), "Error sending.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // Two fields
 
-        addNewTaskTitle.addTextChangedListener {
+        addEditTaskTitle.addTextChangedListener {
             viewModel.taskTitle = it.toString()
         }
 
-        addNewTaskMessage.addTextChangedListener {
+        addEditTaskMessage.addTextChangedListener {
             viewModel.taskMessage = it.toString()
         }
 
         // Two check buttons [Important and Finished]
 
-        addNewTaskFinishedCheckbox.setOnCheckedChangeListener { _, isCheck ->
+        addEditTaskFinishedCheckbox.setOnCheckedChangeListener { _, isCheck ->
             viewModel.taskFinished = isCheck
         }
 
-        addNewTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
+        addEditTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
             viewModel.taskImportant = isCheck
         }
 
         // OK Button
 
-        addNewTaskOkButton.setOnClickListener {
+        addEditTaskOkButton.setOnClickListener {
             viewModel.saveTaskBtnClicked()
         }
     }
@@ -148,7 +169,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     // Event: navigate to AllTasksFragment with result
     private fun eventNavBackWithResult(event: Int) {
-        binding.addNewTaskTitle.clearFocus()
+        binding.addEditTaskTitle.clearFocus()
         setFragmentResult(
             "operationMode",
             bundleOf("mode" to event),

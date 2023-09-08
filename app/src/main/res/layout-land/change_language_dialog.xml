@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_label_question"
         app:layout_constraintStart_toStartOf="@+id/dialog_change_language_label_question"
         app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_label_question"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <ImageButton
         android:id="@+id/dialog_change_language_english"
@@ -69,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_english"
         app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_english"
         app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle_english"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <ImageButton
         android:id="@+id/dialog_change_language_spanish"
@@ -105,7 +105,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle"
         app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle"
         app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <ImageButton
         android:id="@+id/dialog_change_language_polish"
@@ -141,7 +141,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dialog_change_language_circle_polish"
         app:layout_constraintStart_toStartOf="@+id/dialog_change_language_circle_polish"
         app:layout_constraintTop_toBottomOf="@+id/dialog_change_language_circle_polish"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <ImageButton
         android:id="@+id/dialog_change_language_ukraine"

@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_clear_finished_label_question"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <TextView
         android:id="@+id/dialog_clear_finished_cancel_button"

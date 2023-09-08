@@ -52,5 +52,6 @@
     <string name="ukraine_language">idioma ucraniano</string>
     <string name="be_careful">Ten cuidado</string>
     <string name="action_bar_item_title_preferences">Ajustes</string>
+    <string name="detail_share_to" >Share to:</string>
 
 </resources>

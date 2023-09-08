@@ -52,4 +52,5 @@
     <string name="ukraine_language">Українська мова</string>
     <string name="be_careful">Будь обережний</string>
     <string name="action_bar_item_title_preferences">Налаштування</string>
+    <string name="detail_share_to" >Поділитися з:</string>
 </resources>

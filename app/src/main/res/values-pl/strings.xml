@@ -51,5 +51,6 @@
     <string name="ukraine_language">Język ukraiński</string>
     <string name="be_careful">Bądź ostrożny</string>
     <string name="action_bar_item_title_preferences">Ustawienia</string>
+    <string name="detail_share_to" >Dzielić się z:</string>
 
 </resources>

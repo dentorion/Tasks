@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_delete_task_label_question"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <TextView
         android:id="@+id/dialog_delete_task_cancel_button"

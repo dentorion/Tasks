@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_sort_task_label_question"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <TextView
         android:id="@+id/dialog_sort_task_cancel_button"
@@ -56,7 +56,7 @@
         app:layout_constraintStart_toStartOf="@+id/dialog_sort_task_circle"
         app:layout_constraintTop_toTopOf="@+id/dialog_sort_task_circle"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <TextView
         android:id="@+id/dialog_sort_task_label_question"

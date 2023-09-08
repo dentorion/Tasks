@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout2"
+    android:id="@+id/add_edit_task"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_main_new"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/add_new_task_important_checkbox"
+            android:id="@+id/add_edit_task_important_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/important_background"
@@ -23,11 +23,11 @@
             android:paddingEnd="@dimen/checkbox_important_padding_end_add_edit"
             android:text="@string/new_edit_fragment_important_checkbox"
             android:textColor="@color/color_important_text_new_edit_fragment"
-            app:layout_constraintStart_toStartOf="@+id/add_new_task_title_layout"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_title_layout"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/add_new_task_finished_checkbox"
+            android:id="@+id/add_edit_task_finished_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -38,23 +38,23 @@
             android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
             android:text="@string/new_edit_fragment_done_checkbox_title"
             android:textColor="@color/color_text"
-            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_important_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_new_task_important_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_new_task_important_checkbox" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_important_checkbox"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_important_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_important_checkbox" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_task_ok_button"
+            android:id="@+id/add_edit_task_ok_button"
             android:layout_width="60dp"
             android:layout_height="55dp"
             android:backgroundTint="@color/color_main"
             android:text="@string/new_edit_fragment_btn_ok"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/add_new_task_finished_checkbox"
-            app:layout_constraintEnd_toEndOf="@+id/add_new_task_title_layout"
-            app:layout_constraintTop_toTopOf="@+id/add_new_task_finished_checkbox" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_title_layout"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_new_task_title_layout"
+            android:id="@+id/add_edit_task_title_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,10 +77,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_ok_button">
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_ok_button">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_new_task_title"
+                android:id="@+id/add_edit_task_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -90,7 +90,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_new_task_message_layout"
+            android:id="@+id/add_edit_task_message_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,10 +112,10 @@
             app:hintTextColor="@color/color_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_title_layout">
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_title_layout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_new_task_message"
+                android:id="@+id/add_edit_task_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="4"
@@ -126,20 +126,49 @@
                 android:textColor="@color/color_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_slide"
+            app:layout_constraintBottom_toTopOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_circle_share" />
+
+        <ImageView
+            android:id="@+id/add_edit_task_circle_share"
+            android:layout_width="55dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_circle"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview" />
+
+        <ImageView
+            android:id="@+id/add_edit_task_share"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="12dp"
+            android:src="@drawable/ic_share"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_circle_share"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_circle_share"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_circle_share"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_circle_share" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categoryRecyclerView"
+            android:id="@+id/add_edit_task_category_recyclerview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/add_new_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_new_task_message_layout"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_circle_share"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/recycler_radio_button_item" />
 
         <TextView
-            android:id="@+id/add_new_task_label_smart"
+            android:id="@+id/add_edit_task_label_smart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -148,9 +177,9 @@
             android:textAllCaps="true"
             android:textColor="@color/quote"
             android:textSize="@dimen/quote_text_size_add_edit"
-            app:layout_constraintEnd_toEndOf="@+id/add_new_task_message_layout"
-            app:layout_constraintStart_toStartOf="@+id/add_new_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/categoryRecyclerView"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_category_recyclerview"
             tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

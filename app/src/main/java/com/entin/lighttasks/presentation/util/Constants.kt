@@ -32,3 +32,4 @@ const val TASK_GROUP = "taskGroup"
 
 const val ZERO = 0
 const val EMPTY_STRING = ""
+const val NEW_LINE = "\n"
