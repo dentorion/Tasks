@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.ui.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ItemBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable

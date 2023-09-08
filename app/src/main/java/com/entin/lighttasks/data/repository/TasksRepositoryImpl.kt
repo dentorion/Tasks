@@ -30,14 +30,38 @@ class TasksRepositoryImpl @Inject constructor(
         query: String,
         orderSort: OrderSort,
         hideFinished: Boolean,
+        isAsc: Boolean,
     ): Flow<List<Task>> =
         when (orderSort) {
-            OrderSort.SORT_BY_DATE -> tasksDao.getTasksSortedByDateCreated(query, hideFinished)
-            OrderSort.SORT_BY_TITLE -> tasksDao.getTasksSortedByTitle(query, hideFinished)
-            OrderSort.SORT_BY_IMPORTANT -> tasksDao.getTasksSortedByImportant(query, hideFinished)
-            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManual(query, hideFinished)
-            OrderSort.SORT_BY_ICON -> tasksDao.getTasksSortedByImportant(query, hideFinished)
-                .map { list -> list.filter { it.group == orderSort.groupId } }
+            OrderSort.SORT_BY_DATE -> {
+                if (isAsc) {
+                    tasksDao.getTasksSortedByDateCreatedAsc(query, hideFinished)
+                } else {
+                    tasksDao.getTasksSortedByDateCreatedDesc(query, hideFinished)
+                }
+            }
+            OrderSort.SORT_BY_TITLE -> {
+                if (isAsc) {
+                    tasksDao.getTasksSortedByTitleAsc(query, hideFinished)
+                } else {
+                    tasksDao.getTasksSortedByTitleDesc(query, hideFinished)
+                }
+            }
+            OrderSort.SORT_BY_ICON -> {
+                if(isAsc) {
+                    tasksDao.getTasksSortedByIconAsc(query, hideFinished, orderSort.groupId)
+                } else {
+                    tasksDao.getTasksSortedByIconDesc(query, hideFinished, orderSort.groupId)
+                }
+            }
+            OrderSort.SORT_BY_IMPORTANT -> {
+                if(isAsc) {
+                    tasksDao.getTasksSortedByImportantAsc(query, hideFinished)
+                } else {
+                    tasksDao.getTasksSortedByImportantDesc(query, hideFinished)
+                }
+            }
+            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(query, hideFinished)
         }
 
     /**

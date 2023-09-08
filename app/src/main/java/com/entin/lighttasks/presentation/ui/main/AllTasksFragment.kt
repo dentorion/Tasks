@@ -56,8 +56,6 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     private lateinit var searchView: SearchView
 
     private var allTasks = mutableListOf<Task>()
-    private var myJob: Job? = null
-    private var firstTouchedElement: Task? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -289,6 +287,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
             R.id.action_sort_by_title -> {
                 viewModel.updateSortingOrder(OrderSort.SORT_BY_TITLE)
+                true
+            }
+
+            R.id.action_sort_desc_asc -> {
+                viewModel.updateSortASC()
                 true
             }
 

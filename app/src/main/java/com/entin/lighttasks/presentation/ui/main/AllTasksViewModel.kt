@@ -41,6 +41,9 @@ class AllTasksViewModel @Inject constructor(
     var isManualSorting: Boolean = false
         private set
 
+    private var isASCSorting: Boolean = true
+    private var sortType: OrderSort = OrderSort.SORT_BY_DATE
+
     private val searchFlow = combine(
         searchValue.asFlow(),
         flowSortingPreferences,
@@ -51,6 +54,7 @@ class AllTasksViewModel @Inject constructor(
             query = request.first,
             orderSort = request.second.sortByTitleDateImportantManual,
             hideFinished = request.second.hideFinished,
+            isAsc = request.second.sortASC,
         )
     }
 
@@ -60,6 +64,8 @@ class AllTasksViewModel @Inject constructor(
         viewModelScope.launch {
             flowSortingPreferences.collect {
                 isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
+                sortType = it.sortByTitleDateImportantManual
+                isASCSorting = it.sortASC
             }
         }
     }
@@ -68,6 +74,10 @@ class AllTasksViewModel @Inject constructor(
 
     fun updateFinishedOrder(hideFinished: Boolean) = viewModelScope.launch {
         preferences.updateFinishedSort(hideFinished)
+    }
+
+    fun updateSortASC() = viewModelScope.launch {
+        preferences.updateSortASC(isASCSorting.not())
     }
 
     fun updateSortingOrder(argument: OrderSort) = viewModelScope.launch {
