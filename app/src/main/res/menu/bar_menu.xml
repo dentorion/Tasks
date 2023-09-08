@@ -11,9 +11,9 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_preferences"
-        android:icon="@drawable/ic_preferences"
-        android:title="@string/action_bar_item_title_preferences"
+        android:id="@+id/action_sort_desc_asc"
+        android:icon="@drawable/ic_sort_desc_asc"
+        android:title="sort type"
         app:showAsAction="always|collapseActionView" />
 
     <item
@@ -58,6 +58,11 @@
     <item
         android:id="@+id/action_delete_all_tasks"
         android:title="@string/options_clear_finished"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_preferences"
+        android:title="@string/action_bar_item_title_preferences"
         app:showAsAction="never" />
 
 </menu>
