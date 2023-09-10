@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.entin.lighttasks.databinding.ItemBinding
+import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Collections
+import java.util.Date
 
 class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
@@ -28,7 +29,7 @@ class AllTasksAdapter(
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = TaskItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(binding)
     }
 
@@ -36,7 +37,8 @@ class AllTasksAdapter(
         viewHolder.bind(getItem(position))
     }
 
-    inner class TaskViewHolder(private val view: ItemBinding) : RecyclerView.ViewHolder(view.root) {
+    inner class TaskViewHolder(private val view: TaskItemBinding) :
+        RecyclerView.ViewHolder(view.root) {
         init {
             view.apply {
                 root.setOnClickListener {
@@ -59,13 +61,19 @@ class AllTasksAdapter(
         fun bind(task: Task) {
             view.apply {
                 taskTitle.text = task.title
-                taskMessage.text = task.message
+                taskMessage.apply {
+                    visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
+                    text = task.message
+                }
                 taskFinished.isChecked = task.finished
-
-                taskMessage.visibility = if (task.message.isNotBlank()) View.VISIBLE else View.GONE
                 taskImportant.visibility = if (task.important) View.VISIBLE else View.GONE
-
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
+                taskExpired.apply {
+                    if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateFirst) {
+
+                    }
+                    visibility = if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateFirst) View.VISIBLE else View.GONE
+                }
             }
         }
     }

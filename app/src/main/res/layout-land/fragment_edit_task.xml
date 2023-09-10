@@ -10,7 +10,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp">
 
         <CheckBox
             android:id="@+id/add_edit_task_important_checkbox"
@@ -126,7 +127,15 @@
                 android:textColor="@color/color_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_slide"
+            app:layout_constraintBottom_toTopOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_circle_share" />
+
+        <ImageView
             android:id="@+id/add_edit_task_circle_share"
             android:layout_width="55dp"
             android:layout_height="0dp"
@@ -135,7 +144,7 @@
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
             app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/add_edit_task_share"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -143,8 +152,8 @@
             android:layout_marginVertical="12dp"
             android:src="@drawable/ic_share"
             app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_circle_share"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_circle_share"
             app:layout_constraintEnd_toEndOf="@+id/add_edit_task_circle_share"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_circle_share"
             app:layout_constraintTop_toTopOf="@+id/add_edit_task_circle_share" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -160,19 +169,145 @@
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/recycler_radio_button_item" />
 
+        <ImageView
+            android:id="@+id/add_edit_task_label_advanced_points"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/ic_three_dots_vertical"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_circle_share" />
+
         <TextView
-            android:id="@+id/add_edit_task_label_smart"
+            android:id="@+id/add_edit_task_label_advanced"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/quote"
+            android:text="@string/add_edit_task_date_picker_label"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="@color/quote"
-            android:textSize="@dimen/quote_text_size_add_edit"
-            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            android:textColor="@color/color_text"
+            android:textSize="@dimen/add_edit_task_date_picker_label"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_label_advanced_points"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_label_advanced_points"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_label_advanced_points"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <CheckBox
+            android:id="@+id/add_edit_task_date_picker_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/checkbox_light_solid_background"
+            android:buttonTint="@color/color_text"
+            android:minHeight="48dp"
+            android:paddingStart="@dimen/checkbox_done_padding_start_add_edit"
+            android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
+            android:textColor="@color/color_text"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_advanced" />
+
+        <ImageView
+            android:id="@+id/add_edit_task_add_date_label_arrow"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_arrow_left_fill"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox" />
+
+        <TextView
+            android:id="@+id/add_edit_task_add_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textAlignment="center"
+            android:text="@string/add_edit_task_add_date_label"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="@dimen/add_edit_task_add_date_label"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_add_date_label_arrow"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <RadioGroup
+            android:id="@+id/add_edit_task_date_picker_radio_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox">
+
+            <RadioButton
+                android:id="@+id/add_edit_task_date_picker_calendar_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/food_radio_calendar_range"
+                android:buttonTint="@color/color_main"
+                android:checked="true"
+                android:textAlignment="textEnd"
+                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
+                app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
+                app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox" />
+
+            <RadioButton
+                android:id="@+id/add_edit_task_date_picker_calendar_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/food_radio_calendar_event"
+                android:buttonTint="@color/color_main"
+                android:checked="false"
+                android:textAlignment="textEnd"
+                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_calendar_range"
+                app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_calendar_range"
+                app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_calendar_range" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/add_edit_task_date_picker_first"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/checkbox_light_solid_background"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/click_me"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/add_edit_task_date_picker_second"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_radio_group"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_radio_group"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/add_edit_task_date_picker_second"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/checkbox_light_solid_background"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/click_me"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_radio_group"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_date_picker_first"
             tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

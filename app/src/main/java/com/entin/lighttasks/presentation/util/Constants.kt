@@ -25,11 +25,17 @@ const val TASK_MESSAGE = "taskMessage"
 const val TASK_FINISHED = "taskFinished"
 const val TASK_IMPORTANT = "taskImportant"
 const val TASK_GROUP = "taskGroup"
+const val TASK_EXPIRE_DATE_FIRST = "taskExpireDateFirst"
+const val TASK_EXPIRE_DATE_SECOND = "taskExpireDateSecond"
+const val TASK_IS_EXPIRED = "isTaskExpired"
+const val TASK_IS_EVENT = "isEvent"
+const val TASK_IS_RANGE = "isRange"
 
 /**
  * Utils
  */
 
 const val ZERO = 0
+const val ZERO_LONG = 0L
 const val EMPTY_STRING = ""
 const val NEW_LINE = "\n"

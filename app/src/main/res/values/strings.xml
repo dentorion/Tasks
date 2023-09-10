@@ -11,8 +11,9 @@
     <string name="new_edit_fragment_field_message">Description</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
-    <string name="snack_bar_empty_task_title_forbidden">title can\'t be empty</string>
-    <string name="snack_bar_all_finished_tasks_cleared">all finished tasks cleared</string>
+    <string name="snack_bar_empty_task_title_forbidden">Title can\'t be empty</string>
+    <string name="snack_bar_dates_picked">Date error</string>
+    <string name="snack_bar_all_finished_tasks_cleared">All finished tasks cleared</string>
     <string name="snack_bar_btn_undo_deleted">UNDO</string>
     <string name="snack_bar_message_task_new">New task added</string>
     <string name="snack_bar_message_task_edit">Task changed</string>
@@ -43,7 +44,7 @@
     <string name="action_bar_item_title_search">Search</string>
     <string name="action_bar_item_title_preferences">Settings</string>
 
-    <string name="quote">Work that you like ceases to be work</string>
+    <string name="add_edit_task_date_picker_label">Advanced options</string>
     <string name="manual_order_accepted">Changes saved</string>
 
     <string name="english_language">English language</string>
@@ -59,4 +60,7 @@
     <string name="be_careful">Be careful next time!</string>
 
     <string name="detail_share_to">Share to:</string>
+    <string name="click_me">click me</string>
+    <string name="options_show_events">Hide events</string>
+    <string name="add_edit_task_add_date_label" >Add time limit</string>
 </resources>

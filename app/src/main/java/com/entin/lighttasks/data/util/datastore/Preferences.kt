@@ -33,13 +33,14 @@ class Preferences @Inject constructor(
     val preferencesFlow: Flow<SortPreferences> = context.dataStore.data.catch {
             emit(emptyPreferences())
         }.map { preferences ->
-            val sortFinished = preferences[Keys.KEY_SORT_HIDE_FINISHED] ?: false
+            val hideFinished = preferences[Keys.KEY_SORT_HIDE_FINISHED] ?: false
             val sortOrder = OrderSort.valueOf(
                 preferences[Keys.KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL]
                     ?: OrderSort.SORT_BY_DATE.name
             )
             val sortASC = preferences[Keys.KEY_SORT_ASC] ?: true
-            SortPreferences(sortOrder, sortFinished, sortASC)
+            val hideDatePick = preferences[Keys.KEY_SORT_HIDE_DATE_PICK] ?: false
+            SortPreferences(sortOrder, hideFinished, sortASC, hideDatePick)
         }
 
     /**
@@ -61,6 +62,15 @@ class Preferences @Inject constructor(
     }
 
     /**
+     * Update result list filter by date pick flag
+     */
+    suspend fun updateShowDatePickedTask(hideDatePick: Boolean) {
+        context.dataStore.edit { settings ->
+            settings[Keys.KEY_SORT_HIDE_DATE_PICK] = hideDatePick
+        }
+    }
+
+    /**
      * Update sort order by
      *  - Title
      *  - Date creation
@@ -75,6 +85,7 @@ class Preferences @Inject constructor(
 
     private object Keys {
         val KEY_SORT_HIDE_FINISHED = booleanPreferencesKey("finished_show")
+        val KEY_SORT_HIDE_DATE_PICK = booleanPreferencesKey("date_pick_show")
         val KEY_SORT_ASC = booleanPreferencesKey("sort_asc")
         val KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL = stringPreferencesKey("sort_show")
     }

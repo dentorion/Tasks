@@ -1,5 +1,10 @@
 package com.entin.lighttasks.presentation.ui.addedit
 
+import android.R.attr.bottom
+import android.R.attr.left
+import android.R.attr.right
+import android.R.attr.top
+import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -23,9 +29,14 @@ import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.util.NEW_LINE
+import com.entin.lighttasks.presentation.util.convertUnixTimestampToYearMonthDay
 import com.entin.lighttasks.presentation.util.getSnackBar
+import com.entin.lighttasks.presentation.util.toFormattedDateString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
+
 
 /**
  * Fragment for adding new task or editing existing task
@@ -78,45 +89,47 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /**
-     * Event observer
-     */
-    private fun setupEventObserver() = viewLifecycleOwner.lifecycleScope.launch {
-        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
-                when (event) {
-                    /**
-                     * Navigation back
-                     */
-                    is EditTaskEventContract.NavBackWithResult -> {
-                        eventNavBackWithResult(event.typeNewOrEditorExist)
-                    }
-                    /**
-                     * Error show
-                     */
-                    is EditTaskEventContract.ShowErrorBlankTitleText -> {
-                        getSnackBar(
-                            resources.getString(R.string.snack_bar_empty_task_title_forbidden),
-                            requireView(),
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Setup fields value
      */
     private fun setupFields() = with(binding) {
+        /** Title */
         addEditTaskTitle.setText(viewModel.taskTitle)
+        addEditTaskTitle.addTextChangedListener {
+            viewModel.taskTitle = it.toString()
+        }
+        /** Message */
         addEditTaskMessage.setText(viewModel.taskMessage)
-        addEditTaskFinishedCheckbox.isChecked = viewModel.taskFinished
-        addEditTaskFinishedCheckbox.jumpDrawablesToCurrentState()
-        addEditTaskImportantCheckbox.isChecked = viewModel.taskImportant
-        addEditTaskImportantCheckbox.jumpDrawablesToCurrentState()
-
-        // Share data
-
+        addEditTaskMessage.addTextChangedListener {
+            viewModel.taskMessage = it.toString()
+        }
+        /** Finished */
+        addEditTaskFinishedCheckbox.apply {
+            this.isChecked = viewModel.taskFinished
+            this.jumpDrawablesToCurrentState()
+        }
+        addEditTaskFinishedCheckbox.setOnCheckedChangeListener { _, isCheck ->
+            viewModel.taskFinished = isCheck
+        }
+        /** Important */
+        addEditTaskImportantCheckbox.apply {
+            this.isChecked = viewModel.taskImportant
+            this.jumpDrawablesToCurrentState()
+        }
+        addEditTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
+            viewModel.taskImportant = isCheck
+        }
+        /** Expired */
+        addEditTaskDatePickerCheckbox.apply {
+            this.isChecked = viewModel.isTaskExpired
+            this.jumpDrawablesToCurrentState()
+            isDatePickersShown(viewModel.isTaskExpired)
+        }
+        addEditTaskDatePickerCheckbox.setOnCheckedChangeListener { _, isCheck ->
+            viewModel.isTaskExpired = isCheck
+            isDatePickersShown(isCheck)
+            addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
+        }
+        /** Share data */
         addEditTaskCircleShare.setOnClickListener {
             val dataToSend = addEditTaskTitle.text.toString() + NEW_LINE + addEditTaskMessage.text.toString()
 
@@ -135,36 +148,95 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 Toast.makeText(requireContext(), "Error sending.", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // Two fields
-
-        addEditTaskTitle.addTextChangedListener {
-            viewModel.taskTitle = it.toString()
+        /** Radio Group */
+        // Event
+        addEditTaskDatePickerCalendarEvent.isChecked = viewModel.isEvent
+        // Range
+        addEditTaskDatePickerCalendarRange.isChecked = viewModel.isEvent.not()
+        // Radio Group
+        addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, _ ->
+            viewModel.isEvent = viewModel.isEvent.not()
+            addEditTaskDatePickerSecond.isVisible = !viewModel.isEvent
         }
-
-        addEditTaskMessage.addTextChangedListener {
-            viewModel.taskMessage = it.toString()
+        addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
+        /** First Date picker */
+        addEditTaskDatePickerFirst.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                R.style.DatePickerStyle,
+                null,
+                Calendar.YEAR,
+                Calendar.MONTH,
+                Calendar.DAY_OF_MONTH,
+            ).also { dialog ->
+                dialog.apply {
+                    datePicker.minDate = Date().time
+                    setOnDateSetListener { _, year, month, day ->
+                        val selectedDateCalendar = Calendar.getInstance()
+                        selectedDateCalendar.set(Calendar.YEAR, year)
+                        selectedDateCalendar.set(Calendar.MONTH, month)
+                        selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
+                        viewModel.taskExpireFirstDate = selectedDateCalendar.timeInMillis
+                        setFirstDateExpire()
+                    }
+                    show()
+                }
+            }
         }
-
-        // Two check buttons [Important and Finished]
-
-        addEditTaskFinishedCheckbox.setOnCheckedChangeListener { _, isCheck ->
-            viewModel.taskFinished = isCheck
+        setFirstDateExpire()
+        /** Second Date picker */
+        addEditTaskDatePickerSecond.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                R.style.DatePickerStyle,
+                null,
+                Calendar.YEAR,
+                Calendar.MONTH,
+                Calendar.DAY_OF_MONTH,
+            ).also { dialog ->
+                dialog.apply {
+                    datePicker.minDate = viewModel.taskExpireFirstDate
+                    setOnDateSetListener { _, year, month, day ->
+                        val selectedDateCalendar = Calendar.getInstance()
+                        selectedDateCalendar.set(Calendar.YEAR, year)
+                        selectedDateCalendar.set(Calendar.MONTH, month)
+                        selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
+                        viewModel.taskExpireSecondDate = selectedDateCalendar.timeInMillis
+                        setSecondDateExpire()
+                    }
+                    show()
+                }
+            }
         }
-
-        addEditTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
-            viewModel.taskImportant = isCheck
-        }
-
-        // OK Button
-
+        setSecondDateExpire()
+        /** OK Button */
         addEditTaskOkButton.setOnClickListener {
             viewModel.saveTaskBtnClicked()
         }
     }
 
+    private fun setFirstDateExpire() {
+        binding.addEditTaskDatePickerFirst.text = viewModel.taskExpireFirstDate.toFormattedDateString()
+    }
+
+    private fun setSecondDateExpire() {
+        binding.addEditTaskDatePickerSecond.text = viewModel.taskExpireSecondDate.toFormattedDateString()
+    }
+
     private fun onGroupIconSelected(element: TaskGroup) {
         viewModel.taskGroup = element.groupId
+    }
+
+    private fun isDatePickersShown(value: Boolean) {
+        binding.apply {
+            addEditTaskAddDateLabel.isVisible = !value
+            addEditTaskAddDateLabelArrow.isVisible = !value
+
+            addEditTaskDatePickerCalendarEvent.isVisible = value
+            addEditTaskDatePickerCalendarRange.isVisible = value
+            addEditTaskDatePickerFirst.isVisible = value
+            addEditTaskDatePickerSecond.isVisible = value
+        }
     }
 
     // Event: navigate to AllTasksFragment with result
@@ -175,6 +247,42 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             bundleOf("mode" to event),
         )
         findNavController().popBackStack()
+    }
+
+    /**
+     * Event observer
+     */
+    private fun setupEventObserver() = viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
+                when (event) {
+                    /**
+                     * Navigation back
+                     */
+                    is EditTaskEventContract.NavBackWithResult -> {
+                        eventNavBackWithResult(event.typeNewOrEditorExist)
+                    }
+                    /**
+                     * Error blank title text show
+                     */
+                    is EditTaskEventContract.ShowErrorBlankTitleText -> {
+                        getSnackBar(
+                            resources.getString(R.string.snack_bar_empty_task_title_forbidden),
+                            requireView(),
+                        ).show()
+                    }
+                    /**
+                     * Error dates picked show
+                     */
+                    is EditTaskEventContract.ShowErrorDatesPicked -> {
+                        getSnackBar(
+                            resources.getString(R.string.snack_bar_dates_picked),
+                            requireView(),
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -67,4 +67,21 @@
         <item name="android:statusBarColor" >@color/color_main_light_extra</item>
     </style>
 
+    <!-- DATE PICKER -->
+
+    <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@color/color_main_light_extra</item>
+        <item name="android:textColorPrimary">@color/color_text</item>
+        <item name="colorAccent">@color/color_stroke_checkbox</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColorSecondaryInverse">@color/color_text</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DatePickerButtonStyle</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DatePickerButtonStyle</item>
+    </style>
+
+    <style name="DatePickerButtonStyle" parent="android:Widget.Material.Button.Borderless">
+        <item name="android:textColor">@color/color_main</item>
+    </style>
+
 </resources>

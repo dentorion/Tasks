@@ -9,7 +9,6 @@ import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,37 +30,38 @@ class TasksRepositoryImpl @Inject constructor(
         orderSort: OrderSort,
         hideFinished: Boolean,
         isAsc: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>> =
         when (orderSort) {
             OrderSort.SORT_BY_DATE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByDateCreatedAsc(query, hideFinished)
+                    tasksDao.getTasksSortedByDateCreatedAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByDateCreatedDesc(query, hideFinished)
+                    tasksDao.getTasksSortedByDateCreatedDesc(query, hideFinished, hideDatePick)
                 }
             }
             OrderSort.SORT_BY_TITLE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByTitleAsc(query, hideFinished)
+                    tasksDao.getTasksSortedByTitleAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByTitleDesc(query, hideFinished)
+                    tasksDao.getTasksSortedByTitleDesc(query, hideFinished, hideDatePick)
                 }
             }
             OrderSort.SORT_BY_ICON -> {
                 if(isAsc) {
-                    tasksDao.getTasksSortedByIconAsc(query, hideFinished, orderSort.groupId)
+                    tasksDao.getTasksSortedByIconAsc(hideFinished, orderSort.groupId, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByIconDesc(query, hideFinished, orderSort.groupId)
+                    tasksDao.getTasksSortedByIconDesc(hideFinished, orderSort.groupId, hideDatePick)
                 }
             }
             OrderSort.SORT_BY_IMPORTANT -> {
                 if(isAsc) {
-                    tasksDao.getTasksSortedByImportantAsc(query, hideFinished)
+                    tasksDao.getTasksSortedByImportantAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByImportantDesc(query, hideFinished)
+                    tasksDao.getTasksSortedByImportantDesc(query, hideFinished, hideDatePick)
                 }
             }
-            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(query, hideFinished)
+            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
         }
 
     /**

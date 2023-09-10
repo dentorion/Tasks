@@ -16,6 +16,7 @@ interface TasksRepository {
         orderSort: OrderSort,
         hideFinished: Boolean,
         isAsc: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     fun getMaxPosition(): Flow<Int?>

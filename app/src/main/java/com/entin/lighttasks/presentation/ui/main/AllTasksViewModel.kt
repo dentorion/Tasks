@@ -41,6 +41,7 @@ class AllTasksViewModel @Inject constructor(
     var isManualSorting: Boolean = false
         private set
 
+    private var hideDatePickedTasks: Boolean = true
     private var isASCSorting: Boolean = true
     private var sortType: OrderSort = OrderSort.SORT_BY_DATE
 
@@ -55,6 +56,7 @@ class AllTasksViewModel @Inject constructor(
             orderSort = request.second.sortByTitleDateImportantManual,
             hideFinished = request.second.hideFinished,
             isAsc = request.second.sortASC,
+            hideDatePick = request.second.hideDatePickedTasks,
         )
     }
 
@@ -66,42 +68,64 @@ class AllTasksViewModel @Inject constructor(
                 isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
                 sortType = it.sortByTitleDateImportantManual
                 isASCSorting = it.sortASC
+                hideDatePickedTasks = it.hideDatePickedTasks
             }
         }
     }
 
     // SORTING Tasks
 
-    fun updateFinishedOrder(hideFinished: Boolean) = viewModelScope.launch {
-        preferences.updateFinishedSort(hideFinished)
+    fun updateShowFinishedTask(hideFinished: Boolean) {
+        viewModelScope.launch {
+            preferences.updateFinishedSort(hideFinished)
+        }
     }
 
-    fun updateSortASC() = viewModelScope.launch {
-        preferences.updateSortASC(isASCSorting.not())
+    fun updateShowDatePickedTask(hideDatePicked: Boolean) {
+        viewModelScope.launch {
+            preferences.updateShowDatePickedTask(hideDatePicked)
+        }
     }
 
-    fun updateSortingOrder(argument: OrderSort) = viewModelScope.launch {
-        preferences.updateSortOrder(argument)
+    fun updateSortASC() {
+        viewModelScope.launch {
+            preferences.updateSortASC(isASCSorting.not())
+        }
+    }
+
+    fun updateSortingOrder(argument: OrderSort) {
+        viewModelScope.launch {
+            preferences.updateSortOrder(argument)
+        }
     }
 
     // TASK
 
-    fun onTaskClick(task: Task) = viewModelScope.launch {
-        _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
+    fun onTaskClick(task: Task) {
+        viewModelScope.launch {
+            _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
+        }
     }
 
-    fun onFinishedTaskClick(task: Task, isChecked: Boolean) = viewModelScope.launch {
-        repository.updateTask(task.copy(finished = isChecked))
+    fun onFinishedTaskClick(task: Task, isChecked: Boolean) {
+        viewModelScope.launch {
+            repository.updateTask(task.copy(finished = isChecked))
+        }
     }
 
-    fun onTaskSwipedDelete(task: Task) = diAppScope.launch {
-        repository.deleteTask(task)
-        _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
+    fun onTaskSwipedDelete(task: Task) {
+        diAppScope.launch {
+            repository.deleteTask(task)
+            _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
+        }
     }
 
-    fun onUndoDeleteClick(task: Task) = diAppScope.launch {
-        repository.newTask(task).collect { result ->
-            if (result) _tasksEvent.send(AllTasksEvent.Smile)
+
+    fun onUndoDeleteClick(task: Task) {
+        diAppScope.launch {
+            repository.newTask(task).collect { result ->
+                if (result) _tasksEvent.send(AllTasksEvent.Smile)
+            }
         }
     }
 

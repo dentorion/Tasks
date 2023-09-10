@@ -40,7 +40,7 @@
     <dimen name="margin_start_task_title_item">11dp</dimen>
     <dimen name="text_size_task_message_item">11sp</dimen>
     <dimen name="checkbox_margin_start_item">16dp</dimen>
-    <dimen name="important_label_width_item">2.5dp</dimen>
+    <dimen name="important_label_width_item">5dp</dimen>
     <dimen name="small_icon_size_item">27dp</dimen>
     <dimen name="small_icon_margin_end_size_item">24dp</dimen>
     <dimen name="small_icon_opacity_size_item">0.72</dimen>
@@ -66,7 +66,8 @@
 
     <dimen name="landscape_radio_btn_margin_end_add_edit">20dp</dimen>
     <dimen name="radio_btn_margin_end_add_edit">10dp</dimen>
-    <dimen name="quote_text_size_add_edit">10sp</dimen>
+    <dimen name="add_edit_task_date_picker_label">14sp</dimen>
+    <dimen name="add_edit_task_add_date_label">12sp</dimen>
 
     <!-- Language Dialog -->
     <dimen name="text_size_language">16sp</dimen>

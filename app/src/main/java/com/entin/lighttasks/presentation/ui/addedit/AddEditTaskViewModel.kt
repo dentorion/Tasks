@@ -8,19 +8,25 @@ import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.TASK_EDIT
+import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
+import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
 import com.entin.lighttasks.presentation.util.TASK_GROUP
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
+import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
+import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.TASK_TITLE
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -41,11 +47,9 @@ class AddEditTaskViewModel @Inject constructor(
 
     /**
      * If task is editing - task gotten from SavedStateHandle
-     *
      */
     val task = state.get<Task>("task")
     private var taskPosition = ZERO
-    private var taskGroups = listOf<TaskGroup>()
 
     init {
         /**
@@ -66,14 +70,14 @@ class AddEditTaskViewModel @Inject constructor(
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: task?.title ?: EMPTY_STRING
         set(value) {
-            field = value
-            state[TASK_TITLE] = value
+            field = value.trim()
+            state[TASK_TITLE] = value.trim()
         }
 
     var taskMessage = state.get<String>(TASK_MESSAGE) ?: task?.message ?: EMPTY_STRING
         set(value) {
-            field = value
-            state[TASK_MESSAGE] = value
+            field = value.trim()
+            state[TASK_MESSAGE] = value.trim()
         }
 
     var taskFinished = state.get<Boolean>(TASK_FINISHED) ?: task?.finished ?: false
@@ -94,52 +98,104 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_GROUP] = value
         }
 
-    fun saveTaskBtnClicked() = viewModelScope.launch(Dispatchers.IO) {
-        if (taskTitle.isBlank()) {
-            errorBlankText()
-        } else {
-            if (task != null) {
-                updateTask(
-                    task.copy(
-                        title = taskTitle,
-                        message = taskMessage,
-                        finished = taskFinished,
-                        important = taskImportant,
-                        group = taskGroup,
-                        position = task.position,
-                    ),
-                )
+    var taskExpireFirstDate: Long =
+        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: Date().time
+        set(value) {
+            field = value
+            state[TASK_EXPIRE_DATE_FIRST] = value
+        }
+
+    var taskExpireSecondDate: Long =
+        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: Date().time
+        set(value) {
+            field = value
+            state[TASK_EXPIRE_DATE_SECOND] = value
+        }
+
+    var isEvent = state.get<Boolean>(TASK_IS_EVENT) ?: task?.isEvent ?: false
+        set(value) {
+            field = value
+            state[TASK_IS_EVENT] = value
+        }
+
+    var isTaskExpired = state.get<Boolean>(TASK_IS_EXPIRED) ?: task?.isTaskExpired ?: false
+        set(value) {
+            field = value
+            state[TASK_IS_EXPIRED] = value
+        }
+
+    fun saveTaskBtnClicked() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (taskTitle.isBlank()) {
+                errorBlankText()
+            } else if (isTaskExpired && !isEvent && taskExpireFirstDate > taskExpireSecondDate) {
+                errorDatesPicked()
             } else {
-                saveNewTask(
-                    Task(
-                        title = taskTitle,
-                        message = taskMessage,
-                        finished = taskFinished,
-                        important = taskImportant,
-                        group = taskGroup,
-                        position = taskPosition,
-                    ),
-                )
+                if (task != null) {
+                    updateTask(
+                        task.copy(
+                            title = taskTitle,
+                            message = taskMessage,
+                            finished = taskFinished,
+                            important = taskImportant,
+                            group = taskGroup,
+                            position = task.position,
+                            expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
+                            expireDateSecond = if (isTaskExpired) taskExpireSecondDate else ZERO_LONG,
+                            isTaskExpired = isTaskExpired,
+                            isEvent = isEvent,
+                            isRange = isEvent.not(),
+                        ),
+                    )
+                } else {
+                    saveNewTask(
+                        Task(
+                            title = taskTitle,
+                            message = taskMessage,
+                            finished = taskFinished,
+                            important = taskImportant,
+                            group = taskGroup,
+                            position = taskPosition,
+                            expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
+                            expireDateSecond = if (isTaskExpired) taskExpireSecondDate else ZERO_LONG,
+                            isTaskExpired = isTaskExpired,
+                            isEvent = isEvent,
+                            isRange = isEvent.not(),
+                        ),
+                    )
+                }
             }
         }
     }
 
-    private fun errorBlankText() = viewModelScope.launch {
-        _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
-    }
-
-    private fun updateTask(uTask: Task) = viewModelScope.launch {
-        repository.updateTask(uTask).apply {
-            if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
+    private fun errorBlankText() {
+        viewModelScope.launch {
+            _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
         }
     }
 
-    private fun saveNewTask(sTask: Task) = viewModelScope.launch(Dispatchers.IO) {
-        repository.newTask(sTask).collect { result ->
-            if (result) {
-                _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
-            } else {
-                _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
+    private fun errorDatesPicked() {
+        viewModelScope.launch {
+            _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
+        }
+    }
+
+    private fun updateTask(uTask: Task) {
+        viewModelScope.launch {
+            repository.updateTask(uTask).apply {
+                if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
+            }
+        }
+    }
+
+    private fun saveNewTask(sTask: Task) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.newTask(sTask).collect { result ->
+                if (result) {
+                    _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
+                } else {
+                    _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -18,11 +19,16 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "task_title") val title: String,
-    @ColumnInfo(name = "task_message") val message: String,
-    @ColumnInfo(name = "task_finished") val finished: Boolean = false,
-    @ColumnInfo(name = "task_important") val important: Boolean = false,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "message") val message: String,
+    @ColumnInfo(name = "is_finished") val finished: Boolean = false,
+    @ColumnInfo(name = "is_important") val important: Boolean = false,
     @ColumnInfo(name = "date_created") val date: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "task_group") val group: Int,
-    @ColumnInfo(name = "task_position") var position: Int = Int.MAX_VALUE,
+    @ColumnInfo(name = "position") var position: Int = Int.MAX_VALUE,
+    @ColumnInfo(name = "expire_date_first") var expireDateFirst: Long = ZERO_LONG,
+    @ColumnInfo(name = "expire_date_second") var expireDateSecond: Long = ZERO_LONG,
+    @ColumnInfo(name = "is_task_expired") val isTaskExpired: Boolean = false,
+    @ColumnInfo(name = "is_event") val isEvent: Boolean = false,
+    @ColumnInfo(name = "is_range") val isRange: Boolean = false,
 ) : Parcelable

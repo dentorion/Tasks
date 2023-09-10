@@ -17,4 +17,6 @@
     <color name="color_important_text_new_edit_fragment">#B71C1C</color>
     <color name="color_important_background_new_edit_fragment">#14B71C1C</color>
     <color name="color_important_stroke_new_edit_fragment">#1E9E1414</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color">@color/color_stroke_checkbox</color>
 </resources>

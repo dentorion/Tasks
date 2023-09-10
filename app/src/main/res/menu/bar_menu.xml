@@ -51,6 +51,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_hide_date_pick"
+        android:checkable="true"
+        android:title="@string/options_show_events"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_change_language"
         android:title="@string/options_change_language"
         app:showAsAction="never" />

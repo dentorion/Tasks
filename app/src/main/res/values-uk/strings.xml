@@ -12,6 +12,7 @@
     <string name="new_edit_fragment_btn_ok">OK</string>
 
     <string name="snack_bar_empty_task_title_forbidden">Заголовок не може бути порожнім</string>
+    <string name="snack_bar_dates_picked">Помилка в датах</string>
     <string name="snack_bar_all_finished_tasks_cleared">Завершені завдання очищені</string>
     <string name="snack_bar_btn_undo_deleted">"СКАСУВАТИ "</string>
     <string name="snack_bar_message_task_new">Завдання додане</string>
@@ -42,7 +43,7 @@
     <string name="action_bar_item_title_sort">Сортування</string>
     <string name="action_bar_item_title_search">Пошук</string>
 
-    <string name="quote">Праця, яка подобається, перестає бути працею</string>
+    <string name="add_edit_task_date_picker_label">Розширені опції</string>
 
     <string name="manual_order_accepted">Змiни прийнято</string>
 
@@ -53,4 +54,7 @@
     <string name="be_careful">Будь обережний</string>
     <string name="action_bar_item_title_preferences">Налаштування</string>
     <string name="detail_share_to" >Поділитися з:</string>
+    <string name="click_me">клацни мене</string>
+    <string name="options_show_events" >Hide events</string>
+    <string name="add_edit_task_add_date_label" >Додати часове обмеження</string>
 </resources>

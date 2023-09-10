@@ -12,6 +12,7 @@
     <string name="new_edit_fragment_btn_ok">OK</string>
 
     <string name="snack_bar_empty_task_title_forbidden">El título no puede estar vacía</string>
+    <string name="snack_bar_dates_picked">Error de fecha</string>
     <string name="snack_bar_all_finished_tasks_cleared">Todas las tareas terminadas borradas</string>
     <string name="snack_bar_btn_undo_deleted">DESHACER</string>
     <string name="snack_bar_message_task_new">Nueva tarea añadida</string>
@@ -42,7 +43,7 @@
     <string name="action_bar_item_title_sort">Clasificar</string>
     <string name="action_bar_item_title_search">Buscar</string>
 
-    <string name="quote">El trabajo que te gusta deja de ser trabajo</string>
+    <string name="add_edit_task_date_picker_label">Opciones avanzadas</string>
     <string name="sort_by_manual">Clasificación manual</string>
     <string name="manual_order_accepted">Cambios guardados</string>
 
@@ -53,5 +54,8 @@
     <string name="be_careful">Ten cuidado</string>
     <string name="action_bar_item_title_preferences">Ajustes</string>
     <string name="detail_share_to" >Share to:</string>
+    <string name="click_me">haz click en mi</string>
+    <string name="options_show_events" >Hide events</string>
+    <string name="add_edit_task_add_date_label" >Agregar un límite de tiempo</string>
 
 </resources>

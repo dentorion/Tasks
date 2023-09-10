@@ -31,7 +31,6 @@ import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,7 +52,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     ) { listTasks ->
         viewModel.updateAllTasks(listTasks)
     }
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
 
     private var allTasks = mutableListOf<Task>()
 
@@ -263,10 +262,10 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         val pendingQuery = viewModel.searchValue.value
         if (!pendingQuery.isNullOrEmpty()) {
             searchItem.expandActionView()
-            searchView.setQuery(pendingQuery, false)
+            searchView?.setQuery(pendingQuery, false)
         }
 
-        searchView.onSearchTextChanged {
+        searchView?.onSearchTextChanged {
             viewModel.searchValue.value = it
         }
 
@@ -297,7 +296,13 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
             R.id.action_sort_by_finished -> {
                 item.isChecked = !item.isChecked
-                viewModel.updateFinishedOrder(item.isChecked)
+                viewModel.updateShowFinishedTask(item.isChecked)
+                true
+            }
+
+            R.id.action_hide_date_pick -> {
+                item.isChecked = !item.isChecked
+                viewModel.updateShowDatePickedTask(item.isChecked)
                 true
             }
 
@@ -332,7 +337,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        searchView.setOnQueryTextListener(null)
+        searchView?.setOnQueryTextListener(null)
         binding.tasksRecyclerView.adapter = null
         _binding = null
     }

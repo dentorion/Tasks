@@ -8,5 +8,6 @@ package com.entin.lighttasks.presentation.ui.addedit
 
 sealed class EditTaskEventContract {
     object ShowErrorBlankTitleText : EditTaskEventContract()
+    object ShowErrorDatesPicked : EditTaskEventContract()
     data class NavBackWithResult(val typeNewOrEditorExist: Int) : EditTaskEventContract()
 }
