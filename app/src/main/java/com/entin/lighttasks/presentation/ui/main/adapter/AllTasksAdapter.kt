@@ -1,5 +1,7 @@
 package com.entin.lighttasks.presentation.ui.main.adapter
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.convertDpToPixel
+import com.entin.lighttasks.presentation.util.convertPixelsToDp
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,15 +72,24 @@ class AllTasksAdapter(
                 taskFinished.isChecked = task.finished
                 taskImportant.visibility = if (task.important) View.VISIBLE else View.GONE
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
-                taskExpired.apply {
+                taskExpiredBackground.apply {
                     if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateFirst) {
-
+                        taskExpiredIndicator.apply {
+                            visibility = View.VISIBLE
+                            val fullHeightDp = convertDpToPixel(100.toFloat(), this.context).toInt()
+                            val fullLengthPeriod = task.expireDateSecond - task.expireDateFirst
+                            val lengthPassed = Date().time - task.expireDateFirst
+                            val progressPercentage = (lengthPassed / fullLengthPeriod.toFloat()) * 100
+                            val height = (progressPercentage * fullHeightDp / 100).toInt()
+                            layoutParams.height = height
+                        }
                     }
                     visibility = if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateFirst) View.VISIBLE else View.GONE
                 }
             }
         }
     }
+
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         val newCurrentList = mutableListOf<Task>().apply { addAll(currentList) }

@@ -1,9 +1,5 @@
 package com.entin.lighttasks.presentation.ui.addedit
 
-import android.R.attr.bottom
-import android.R.attr.left
-import android.R.attr.right
-import android.R.attr.top
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -26,10 +22,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.presentation.ui.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.util.NEW_LINE
-import com.entin.lighttasks.presentation.util.convertUnixTimestampToYearMonthDay
+import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.toFormattedDateString
 import dagger.hilt.android.AndroidEntryPoint
@@ -158,16 +156,18 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             viewModel.isEvent = viewModel.isEvent.not()
             addEditTaskDatePickerSecond.isVisible = !viewModel.isEvent
         }
-        addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
         /** First Date picker */
         addEditTaskDatePickerFirst.setOnClickListener {
+            val date = Calendar.getInstance().apply {
+                time = Date(getCorrectDate(viewModel.taskExpireFirstDate))
+            }
             DatePickerDialog(
                 requireContext(),
                 R.style.DatePickerStyle,
                 null,
-                Calendar.YEAR,
-                Calendar.MONTH,
-                Calendar.DAY_OF_MONTH,
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH)
             ).also { dialog ->
                 dialog.apply {
                     datePicker.minDate = Date().time
@@ -176,6 +176,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         selectedDateCalendar.set(Calendar.YEAR, year)
                         selectedDateCalendar.set(Calendar.MONTH, month)
                         selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
+                        selectedDateCalendar.set(Calendar.HOUR_OF_DAY, ZERO)
+                        selectedDateCalendar.set(Calendar.MINUTE, ZERO)
+                        selectedDateCalendar.set(Calendar.SECOND, ZERO)
                         viewModel.taskExpireFirstDate = selectedDateCalendar.timeInMillis
                         setFirstDateExpire()
                     }
@@ -185,22 +188,29 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
         setFirstDateExpire()
         /** Second Date picker */
+        addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
         addEditTaskDatePickerSecond.setOnClickListener {
+            val date = Calendar.getInstance().apply {
+                time = Date(getCorrectDate(viewModel.taskExpireSecondDate))
+            }
             DatePickerDialog(
                 requireContext(),
                 R.style.DatePickerStyle,
                 null,
-                Calendar.YEAR,
-                Calendar.MONTH,
-                Calendar.DAY_OF_MONTH,
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
             ).also { dialog ->
                 dialog.apply {
-                    datePicker.minDate = viewModel.taskExpireFirstDate
+                    datePicker.minDate = getCorrectDate(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
                     setOnDateSetListener { _, year, month, day ->
                         val selectedDateCalendar = Calendar.getInstance()
                         selectedDateCalendar.set(Calendar.YEAR, year)
                         selectedDateCalendar.set(Calendar.MONTH, month)
                         selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
+                        selectedDateCalendar.set(Calendar.HOUR_OF_DAY, 23)
+                        selectedDateCalendar.set(Calendar.MINUTE, 59)
+                        selectedDateCalendar.set(Calendar.SECOND, 59)
                         viewModel.taskExpireSecondDate = selectedDateCalendar.timeInMillis
                         setSecondDateExpire()
                     }
@@ -216,11 +226,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     private fun setFirstDateExpire() {
-        binding.addEditTaskDatePickerFirst.text = viewModel.taskExpireFirstDate.toFormattedDateString()
+        binding.addEditTaskDatePickerFirst.text =
+            if (viewModel.taskExpireFirstDate == ZERO_LONG) {
+                Date().time.toFormattedDateString()
+            } else {
+                viewModel.taskExpireFirstDate.toFormattedDateString()
+            }
     }
 
     private fun setSecondDateExpire() {
-        binding.addEditTaskDatePickerSecond.text = viewModel.taskExpireSecondDate.toFormattedDateString()
+        binding.addEditTaskDatePickerSecond.text =
+            if (viewModel.taskExpireSecondDate == ZERO_LONG) {
+                Date().time.toFormattedDateString()
+            } else {
+                viewModel.taskExpireSecondDate.toFormattedDateString()
+            }
     }
 
     private fun onGroupIconSelected(element: TaskGroup) {
@@ -238,6 +258,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskDatePickerSecond.isVisible = value
         }
     }
+
+    private fun getCorrectDate(date: Long): Long =
+        if (date == ZERO_LONG) Date().time else date
 
     // Event: navigate to AllTasksFragment with result
     private fun eventNavBackWithResult(event: Int) {

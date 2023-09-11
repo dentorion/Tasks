@@ -26,7 +26,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.Calendar
 import javax.inject.Inject
 
 /**
@@ -99,14 +99,24 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     var taskExpireFirstDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: Date().time
+        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_FIRST] = value
         }
 
     var taskExpireSecondDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: Date().time
+        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: (Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis + ONE_DAY_MLS)
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_SECOND] = value
@@ -198,5 +208,9 @@ class AddEditTaskViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        const val ONE_DAY_MLS = 86400000
     }
 }
