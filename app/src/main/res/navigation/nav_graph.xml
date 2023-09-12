@@ -83,4 +83,13 @@
     <action
         android:id="@+id/action_global_sortTasksByIconDialog"
         app:destination="@id/sortTasksByIconDialog" />
+    <dialog
+        android:id="@+id/taskDetailsDialog"
+        android:name="com.entin.lighttasks.presentation.ui.dialogs.TaskDetailsDialog"
+        android:label="TaskDetailsDialog" >
+        <argument
+            android:name="task"
+            app:argType="com.entin.lighttasks.domain.entity.Task" />
+    </dialog>
+    <action android:id="@+id/action_global_taskDetailsDialog" app:destination="@id/taskDetailsDialog" />
 </navigation>

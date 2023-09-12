@@ -23,7 +23,7 @@ data class Task(
     @ColumnInfo(name = "message") val message: String,
     @ColumnInfo(name = "is_finished") val finished: Boolean = false,
     @ColumnInfo(name = "is_important") val important: Boolean = false,
-    @ColumnInfo(name = "date_created") val date: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "task_group") val group: Int,
     @ColumnInfo(name = "position") var position: Int = Int.MAX_VALUE,
     @ColumnInfo(name = "expire_date_first") var expireDateFirst: Long = ZERO_LONG,

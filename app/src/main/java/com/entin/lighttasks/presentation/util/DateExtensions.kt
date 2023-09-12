@@ -8,18 +8,18 @@ import java.util.Date
 import java.util.Locale
 
 fun Date.toFormattedString(): String {
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
     return dateFormat.format(this)
 }
 
 fun Long.toFormattedDateString(): String {
     val date = Date(this)
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
     return dateFormat.format(date)
 }
 
 fun convertUnixTimestampToYearMonthDay(timestamp: Long): Triple<Int, Int, Int> {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
     val date = Date(timestamp) // Convert seconds to milliseconds
 
     val formattedDate = dateFormat.format(date)

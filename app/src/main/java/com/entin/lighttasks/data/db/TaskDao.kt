@@ -32,10 +32,10 @@ interface TaskDao {
 
     // SORT_BY_DATE
 
-    @Query("SELECT * FROM tasks WHERE (is_finished != :hideFinished OR is_finished = 0) AND (is_task_expired != :hideDatePick OR is_task_expired = 0) AND title LIKE '%' || :search || '%' ORDER BY is_finished ASC, date_created ASC")
+    @Query("SELECT * FROM tasks WHERE (is_finished != :hideFinished OR is_finished = 0) AND (is_task_expired != :hideDatePick OR is_task_expired = 0) AND title LIKE '%' || :search || '%' ORDER BY is_finished ASC, created_at ASC")
     fun getTasksSortedByDateCreatedAsc(search: String, hideFinished: Boolean, hideDatePick: Boolean): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE (is_finished != :hideFinished OR is_finished = 0) AND (is_task_expired != :hideDatePick OR is_task_expired = 0) AND title LIKE '%' || :search || '%' ORDER BY is_finished ASC, date_created DESC")
+    @Query("SELECT * FROM tasks WHERE (is_finished != :hideFinished OR is_finished = 0) AND (is_task_expired != :hideDatePick OR is_task_expired = 0) AND title LIKE '%' || :search || '%' ORDER BY is_finished ASC, created_at DESC")
     fun getTasksSortedByDateCreatedDesc(search: String, hideFinished: Boolean, hideDatePick: Boolean): Flow<List<Task>>
 
     // SORT_BY_IMPORTANT

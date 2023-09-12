@@ -49,6 +49,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         listener = this,
         navigateToDeleteDialog = ::openDeleteDialog,
         navigateToSortDialog = ::openSortDialog,
+        openTaskDetailsDialog = ::openTaskDetailsDialog,
     ) { listTasks ->
         viewModel.updateAllTasks(listTasks)
     }
@@ -231,7 +232,17 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     // Delete dialog for Adapter
 
     private fun openSortDialog(task: Task) {
-        findNavController().navigate(AllTasksFragmentDirections.actionGlobalSortTasksByIconDialog(task))
+        findNavController().navigate(
+            AllTasksFragmentDirections.actionGlobalSortTasksByIconDialog(
+                task
+            )
+        )
+    }
+
+    //
+
+    private fun openTaskDetailsDialog(task: Task) {
+        findNavController().navigate(AllTasksFragmentDirections.actionGlobalTaskDetailsDialog(task))
     }
 
     // Empty List Welcome

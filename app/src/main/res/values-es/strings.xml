@@ -57,5 +57,7 @@
     <string name="click_me">haz click en mi</string>
     <string name="options_show_events" >Hide events</string>
     <string name="add_edit_task_add_date_label" >Agregar un límite de tiempo</string>
+    <string name="close" >Cerca</string>
+    <string name="expiration_date_format">Términos: %1$s - %2$s</string>
 
 </resources>

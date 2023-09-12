@@ -63,4 +63,6 @@
     <string name="click_me">click me</string>
     <string name="options_show_events">Hide events</string>
     <string name="add_edit_task_add_date_label" >Add time limit</string>
+    <string name="close" >Close</string>
+    <string name="expiration_date_format">Expiration date: %1$s - %2$s</string>
 </resources>

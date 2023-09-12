@@ -57,4 +57,6 @@
     <string name="click_me">клацни мене</string>
     <string name="options_show_events" >Hide events</string>
     <string name="add_edit_task_add_date_label" >Додати часове обмеження</string>
+    <string name="close" >Закрити</string>
+    <string name="expiration_date_format">Термін дії: %1$s - %2$s</string>
 </resources>

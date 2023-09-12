@@ -1,7 +1,5 @@
 package com.entin.lighttasks.presentation.ui.main.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.convertDpToPixel
-import com.entin.lighttasks.presentation.util.convertPixelsToDp
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +23,7 @@ class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
     private val navigateToDeleteDialog: (Task) -> Unit,
     private val navigateToSortDialog: (Task) -> Unit,
+    private val openTaskDetailsDialog: (Task) -> Unit,
     private val updateDb: (List<Task>) -> Unit,
 ) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()), ItemTouchHelperAdapter {
 
@@ -64,6 +62,11 @@ class AllTasksAdapter(
 
         fun bind(task: Task) {
             view.apply {
+                root.setOnLongClickListener {
+                    openTaskDetailsDialog(task)
+                    true
+                }
+
                 taskTitle.text = task.title
                 taskMessage.apply {
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE

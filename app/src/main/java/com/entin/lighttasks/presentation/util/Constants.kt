@@ -17,6 +17,12 @@ const val LANGUAGE_POLISH_SHOT = "pl"
 const val LANGUAGE_UKRAINE_SHOT = "uk"
 
 /**
+ * Date formatting
+ */
+
+const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
+
+/**
  * Fields name for AddEditTaskViewModel
  */
 
