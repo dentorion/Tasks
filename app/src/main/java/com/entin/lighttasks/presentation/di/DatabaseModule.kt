@@ -30,6 +30,7 @@ object DatabaseModule {
             DATABASE_NAME,
         )
             .addMigrations(DbMigration().migrationFrom1To2)
+            .addMigrations(DbMigration().migrationFrom2To3)
             .addCallback(TaskGroupsCallback(provider))
             .fallbackToDestructiveMigration()
             .build()

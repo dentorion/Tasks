@@ -7,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class DbMigration {
 
-/**
+    /**
      * Migration From 1 to 2 version
      */
     val migrationFrom1To2 = object : Migration(1, 2) {
@@ -54,24 +54,57 @@ class DbMigration {
                     "(R.drawable.bicycle_btn_radio, 8)," +
                     "(R.drawable.saw_btn_radio, 9)," +
                     "(R.drawable.camera_btn_radio, 10)," +
-                    "(R.drawable.broom_btn_radio, 11)," +
-                    "(R.drawable.film_btn_radio, 12)," +
-                    "(R.drawable.collision_btn_radio, 13)," +
-                    "(R.drawable.coconut_btn_radio, 14)," +
-                    "(R.drawable.beer_btn_radio, 15)," +
-                    "(R.drawable.boy_btn_radio, 16)," +
-                    "(R.drawable.underwear_btn_radio, 17)," +
-                    "(R.drawable.balloon_btn_radio, 18)," +
-                    "(R.drawable.alien_btn_radio, 19)," +
-                    "(R.drawable.car_btn_radio, 20)," +
-                    "(R.drawable.amphora_btn_radio, 21)," +
-                    "(R.drawable.accordion_btn_radio, 22)," +
-                    "(R.drawable.airplane_btn_radio, 23)," +
-                    "(R.drawable.tree_btn_radio, 24)," +
-                    "(R.drawable.bandage_btn_radio, 25)," +
-                    "(R.drawable.deer_btn_radio, 26)," +
-                    "(R.drawable.knife_btn_radio, 27);",
+                        "(R.drawable.broom_btn_radio, 11)," +
+                        "(R.drawable.film_btn_radio, 12)," +
+                        "(R.drawable.collision_btn_radio, 13)," +
+                        "(R.drawable.coconut_btn_radio, 14)," +
+                        "(R.drawable.beer_btn_radio, 15)," +
+                        "(R.drawable.boy_btn_radio, 16)," +
+                        "(R.drawable.underwear_btn_radio, 17)," +
+                        "(R.drawable.balloon_btn_radio, 18)," +
+                        "(R.drawable.alien_btn_radio, 19)," +
+                        "(R.drawable.car_btn_radio, 20)," +
+                        "(R.drawable.amphora_btn_radio, 21)," +
+                        "(R.drawable.accordion_btn_radio, 22)," +
+                        "(R.drawable.airplane_btn_radio, 23)," +
+                        "(R.drawable.tree_btn_radio, 24)," +
+                        "(R.drawable.bandage_btn_radio, 25)," +
+                        "(R.drawable.deer_btn_radio, 26)," +
+                        "(R.drawable.knife_btn_radio, 27);",
             )
+        }
+    }
+
+    /**
+     * Migration From 1 to 2 version
+     */
+    val migrationFrom2To3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Tasks
+
+            database.execSQL(
+                "CREATE TABLE tasksNew (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "title TEXT NOT NULL, " +
+                        "message TEXT NOT NULL, " +
+                        "is_finished INTEGER NOT NULL, " +
+                        "is_important INTEGER NOT NULL, " +
+                        "created_at INTEGER NOT NULL, " +
+                        "task_group INTEGER NOT NULL, " +
+                        "position INTEGER NOT NULL, " +
+                        "expire_date_first INTEGER NOT NULL, " +
+                        "expire_date_second INTEGER NOT NULL, " +
+                        "is_task_expired INTEGER NOT NULL, " +
+                        "is_event INTEGER NOT NULL, " +
+                        "is_range INTEGER NOT NULL)"
+            )
+
+            database.execSQL(
+                "INSERT INTO tasksNew (id, title, message, is_finished, is_important, created_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range) " +
+                        "SELECT id, task_title, task_message, task_finished, task_important, date_created, task_group, task_position, 0, 0, 0, 0, 0 FROM tasks",
+            )
+            database.execSQL("DROP TABLE tasks")
+            database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
         }
     }
 }
