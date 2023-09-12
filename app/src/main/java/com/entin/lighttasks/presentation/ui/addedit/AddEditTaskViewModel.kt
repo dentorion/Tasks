@@ -99,7 +99,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     var taskExpireFirstDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: Calendar.getInstance().apply {
+        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, 0)
                 set(Calendar.MINUTE, 0)
                 set(Calendar.SECOND, 0)
@@ -111,7 +111,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     var taskExpireSecondDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: (Calendar.getInstance().apply {
+        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: (Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, 23)
                 set(Calendar.MINUTE, 59)
                 set(Calendar.SECOND, 59)

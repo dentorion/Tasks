@@ -22,6 +22,6 @@ fun convertDpToPixel(dp: Float, context: Context): Float {
  * @param context Context to get resources and device specific display metrics
  * @return A float value to represent dp equivalent to px value
  */
-fun convertPixelsToDp(px: Float, context: Context): Int {
-    return (px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).toInt()
+fun convertPixelsToDp(px: Int, context: Context): Int {
+    return (px / (context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT))
 }

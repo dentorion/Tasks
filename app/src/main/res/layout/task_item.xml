@@ -80,7 +80,8 @@
         android:id="@+id/task_expired_background"
         android:layout_width="@dimen/important_label_width_item"
         android:layout_height="wrap_content"
-        android:background="#9B7998"
+        android:layout_marginEnd="3dp"
+        android:background="@color/task_expire_background_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -88,15 +89,16 @@
     <View
         android:id="@+id/task_expired_indicator"
         android:layout_width="3dp"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="1dp"
-        android:layout_marginVertical="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="1dp"
         android:background="@color/color_main_light_extra"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/task_expired_background"
-        app:layout_constraintTop_toTopOf="@+id/task_expired_background"
-        app:layout_constraintVertical_bias="1.0" />
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/task_expired_background"
+        app:layout_constraintEnd_toEndOf="@+id/task_expired_background"
+        app:layout_constraintStart_toStartOf="@+id/task_expired_background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

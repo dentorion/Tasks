@@ -172,13 +172,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 dialog.apply {
                     datePicker.minDate = Date().time
                     setOnDateSetListener { _, year, month, day ->
-                        val selectedDateCalendar = Calendar.getInstance()
-                        selectedDateCalendar.set(Calendar.YEAR, year)
-                        selectedDateCalendar.set(Calendar.MONTH, month)
-                        selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
-                        selectedDateCalendar.set(Calendar.HOUR_OF_DAY, ZERO)
-                        selectedDateCalendar.set(Calendar.MINUTE, ZERO)
-                        selectedDateCalendar.set(Calendar.SECOND, ZERO)
+                        val selectedDateCalendar = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, year)
+                            set(Calendar.MONTH, month)
+                            set(Calendar.DAY_OF_MONTH, day)
+                            set(Calendar.HOUR_OF_DAY, ZERO)
+                            set(Calendar.MINUTE, ZERO)
+                            set(Calendar.SECOND, ZERO)
+                        }
                         viewModel.taskExpireFirstDate = selectedDateCalendar.timeInMillis
                         setFirstDateExpire()
                     }
@@ -204,13 +205,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 dialog.apply {
                     datePicker.minDate = getCorrectDate(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
                     setOnDateSetListener { _, year, month, day ->
-                        val selectedDateCalendar = Calendar.getInstance()
-                        selectedDateCalendar.set(Calendar.YEAR, year)
-                        selectedDateCalendar.set(Calendar.MONTH, month)
-                        selectedDateCalendar.set(Calendar.DAY_OF_MONTH, day)
-                        selectedDateCalendar.set(Calendar.HOUR_OF_DAY, 23)
-                        selectedDateCalendar.set(Calendar.MINUTE, 59)
-                        selectedDateCalendar.set(Calendar.SECOND, 59)
+                        val selectedDateCalendar = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, year)
+                            set(Calendar.MONTH, month)
+                            set(Calendar.DAY_OF_MONTH, day)
+                            set(Calendar.HOUR_OF_DAY, 23)
+                            set(Calendar.MINUTE, 59)
+                            set(Calendar.SECOND, 59)
+                        }
                         viewModel.taskExpireSecondDate = selectedDateCalendar.timeInMillis
                         setSecondDateExpire()
                     }
