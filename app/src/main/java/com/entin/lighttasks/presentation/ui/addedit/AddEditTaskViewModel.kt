@@ -7,6 +7,7 @@ import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.TASK
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
@@ -15,6 +16,7 @@ import com.entin.lighttasks.presentation.util.TASK_GROUP
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
 import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
+import com.entin.lighttasks.presentation.util.TASK_IS_RANGE
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.TASK_TITLE
@@ -23,10 +25,10 @@ import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -45,21 +47,22 @@ class AddEditTaskViewModel @Inject constructor(
     private val _taskGroupChannel = Channel<List<TaskGroup>>()
     val taskGroupsChannel = _taskGroupChannel.receiveAsFlow()
 
-    /**
-     * If task is editing - task gotten from SavedStateHandle
-     */
-    val task = state.get<Task>("task")
-    private var taskPosition = ZERO
+    // If task is editing - task from SavedStateHandle
+    val task: Task? = state.get<Task>(TASK)
+
+    // Today
+    private val defaultStartDateTime = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, ZERO)
+        set(Calendar.MINUTE, ZERO)
+    }.timeInMillis
+
+    // Tomorrow
+    private val defaultFinishDateTime = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 23)
+        set(Calendar.MINUTE, 59)
+    }.timeInMillis + ONE_DAY_MLS
 
     init {
-        /**
-         * Setup position for new task = current max position + 1
-         * On filling data -> save it to state
-         */
-        viewModelScope.launch(Dispatchers.IO) {
-            taskPosition = repository.getMaxPosition().first()?.let { it + 1 } ?: ZERO
-        }
-
         /**
          * Get all groups for task to show icons
          */
@@ -80,13 +83,13 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_MESSAGE] = value.trim()
         }
 
-    var taskFinished = state.get<Boolean>(TASK_FINISHED) ?: task?.finished ?: false
+    var taskFinished = state.get<Boolean>(TASK_FINISHED) ?: task?.isFinished ?: false
         set(value) {
             field = value
             state[TASK_FINISHED] = value
         }
 
-    var taskImportant = state.get<Boolean>(TASK_IMPORTANT) ?: task?.important ?: false
+    var taskImportant = state.get<Boolean>(TASK_IMPORTANT) ?: task?.isImportant ?: false
         set(value) {
             field = value
             state[TASK_IMPORTANT] = value
@@ -99,24 +102,14 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     var taskExpireFirstDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.timeInMillis
+        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: defaultStartDateTime
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_FIRST] = value
         }
 
     var taskExpireSecondDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: (Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, 23)
-                set(Calendar.MINUTE, 59)
-                set(Calendar.SECOND, 59)
-                set(Calendar.MILLISECOND, 0)
-            }.timeInMillis + ONE_DAY_MLS)
+        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: defaultFinishDateTime
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_SECOND] = value
@@ -128,6 +121,12 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_IS_EVENT] = value
         }
 
+    var isRange = state.get<Boolean>(TASK_IS_RANGE) ?: task?.isRange ?: true
+        set(value) {
+            field = value
+            state[TASK_IS_RANGE] = value
+        }
+
     var isTaskExpired = state.get<Boolean>(TASK_IS_EXPIRED) ?: task?.isTaskExpired ?: false
         set(value) {
             field = value
@@ -136,41 +135,53 @@ class AddEditTaskViewModel @Inject constructor(
 
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
+            // Empty title error
             if (taskTitle.isBlank()) {
                 errorBlankText()
-            } else if (isTaskExpired && !isEvent && taskExpireFirstDate > taskExpireSecondDate) {
+            }
+            // First date > Second date in range task, that has date of expire
+            else if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
                 errorDatesPicked()
             } else {
+                // Update
                 if (task != null) {
                     updateTask(
                         task.copy(
+                            id = task.id,
                             title = taskTitle,
                             message = taskMessage,
-                            finished = taskFinished,
-                            important = taskImportant,
+                            isFinished = taskFinished,
+                            isImportant = taskImportant,
+                            createdAt = task.createdAt,
+                            editedAt = Date().time,
                             group = taskGroup,
                             position = task.position,
                             expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
                             expireDateSecond = if (isTaskExpired) taskExpireSecondDate else ZERO_LONG,
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
-                            isRange = isEvent.not(),
+                            isRange = isRange,
                         ),
                     )
-                } else {
+                }
+                // Create new
+                else {
                     saveNewTask(
                         Task(
+                            id = ZERO, // will be replaced in Room
                             title = taskTitle,
                             message = taskMessage,
-                            finished = taskFinished,
-                            important = taskImportant,
+                            isFinished = taskFinished,
+                            isImportant = taskImportant,
                             group = taskGroup,
-                            position = taskPosition,
+                            position = ZERO, // will be replaced in Repository
+                            createdAt = Date().time,
+                            editedAt = ZERO_LONG,
                             expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
-                            expireDateSecond = if (isTaskExpired) taskExpireSecondDate else ZERO_LONG,
+                            expireDateSecond = if (isTaskExpired && isRange) taskExpireSecondDate else ZERO_LONG,
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
-                            isRange = isEvent.not(),
+                            isRange = isRange,
                         ),
                     )
                 }
@@ -178,39 +189,31 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    private fun errorBlankText() {
-        viewModelScope.launch {
-            _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
+    private suspend fun errorBlankText() {
+        _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
+    }
+
+    private suspend fun errorDatesPicked() {
+        _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
+    }
+
+    private suspend fun updateTask(uTask: Task) {
+        repository.updateTask(uTask).apply {
+            if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
         }
     }
 
-    private fun errorDatesPicked() {
-        viewModelScope.launch {
-            _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
-        }
-    }
-
-    private fun updateTask(uTask: Task) {
-        viewModelScope.launch {
-            repository.updateTask(uTask).apply {
-                if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
-            }
-        }
-    }
-
-    private fun saveNewTask(sTask: Task) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.newTask(sTask).collect { result ->
-                if (result) {
-                    _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
-                } else {
-                    _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
-                }
+    private suspend fun saveNewTask(task: Task) {
+        repository.newTask(task).collect { result ->
+            if (result) {
+                _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
+            } else {
+                _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleText)
             }
         }
     }
 
     companion object {
-        const val ONE_DAY_MLS = 86400000
+        const val ONE_DAY_MLS = 86400000L
     }
 }

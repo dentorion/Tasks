@@ -75,8 +75,8 @@ class AllTasksAdapter(
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
                     text = task.message
                 }
-                taskFinished.isChecked = task.finished
-                taskImportant.visibility = if (task.important) View.VISIBLE else View.GONE
+                taskFinished.isChecked = task.isFinished
+                taskImportant.visibility = if (task.isImportant) View.VISIBLE else View.GONE
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
 
                 // Height of task

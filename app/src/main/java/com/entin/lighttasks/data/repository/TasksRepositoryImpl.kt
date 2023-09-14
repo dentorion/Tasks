@@ -8,7 +8,9 @@ import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -68,7 +70,7 @@ class TasksRepositoryImpl @Inject constructor(
      * Create new Task
      */
     override fun newTask(task: Task): Flow<Boolean> = flow {
-        emit(tasksDao.newTask(task) > ZERO)
+        emit(tasksDao.newTask(task.copy(position = getMaxPosition().first())) > ZERO)
     }
 
     /**
@@ -96,8 +98,8 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Get maximum position of tasks table
      */
-    override fun getMaxPosition(): Flow<Int?> =
-        tasksDao.getLastId()
+    override fun getMaxPosition(): Flow<Int> =
+        tasksDao.getLastId().map { max -> max?.let { it + 1 } ?: ZERO }
 
     /**
      * Get images for task groups

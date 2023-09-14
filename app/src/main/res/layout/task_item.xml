@@ -80,7 +80,7 @@
         android:id="@+id/task_expired_background"
         android:layout_width="@dimen/important_label_width_item"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="5dp"
         android:background="@color/task_expire_background_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

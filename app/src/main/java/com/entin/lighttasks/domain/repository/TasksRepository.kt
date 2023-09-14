@@ -19,7 +19,7 @@ interface TasksRepository {
         hideDatePick: Boolean,
     ): Flow<List<Task>>
 
-    fun getMaxPosition(): Flow<Int?>
+    fun getMaxPosition(): Flow<Int>
 
     fun newTask(task: Task): Flow<Boolean>
 

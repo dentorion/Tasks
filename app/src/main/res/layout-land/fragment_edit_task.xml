@@ -194,7 +194,7 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <CheckBox
-            android:id="@+id/add_edit_task_date_picker_checkbox"
+            android:id="@+id/add_edit_task_expired_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
@@ -213,9 +213,9 @@
             android:layout_height="12dp"
             android:src="@drawable/ic_arrow_left_fill"
             android:layout_marginStart="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox" />
 
         <TextView
             android:id="@+id/add_edit_task_add_date_label"
@@ -228,9 +228,9 @@
             android:textColor="@color/color_main"
             android:textSize="@dimen/add_edit_task_add_date_label"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_add_date_label_arrow"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox"
             tools:ignore="TouchTargetSizeCheck" />
 
         <RadioGroup
@@ -239,8 +239,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox">
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox">
 
             <RadioButton
                 android:id="@+id/add_edit_task_date_picker_calendar_range"
@@ -250,9 +250,9 @@
                 android:buttonTint="@color/color_main"
                 android:checked="true"
                 android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_checkbox"
-                app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_checkbox"
-                app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_checkbox" />
+                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
+                app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
+                app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox" />
 
             <RadioButton
                 android:id="@+id/add_edit_task_date_picker_calendar_event"

@@ -109,7 +109,7 @@ class AllTasksViewModel @Inject constructor(
 
     fun onFinishedTaskClick(task: Task, isChecked: Boolean) {
         viewModelScope.launch {
-            repository.updateTask(task.copy(finished = isChecked))
+            repository.updateTask(task.copy(isFinished = isChecked))
         }
     }
 

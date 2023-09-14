@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -117,15 +118,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             viewModel.taskImportant = isCheck
         }
         /** Expired */
-        addEditTaskDatePickerCheckbox.apply {
+        addEditTaskExpiredCheckbox.apply {
             this.isChecked = viewModel.isTaskExpired
             this.jumpDrawablesToCurrentState()
-            isDatePickersShown(viewModel.isTaskExpired)
+            isDatePickersShown()
         }
-        addEditTaskDatePickerCheckbox.setOnCheckedChangeListener { _, isCheck ->
+        addEditTaskExpiredCheckbox.setOnCheckedChangeListener { _, isCheck ->
             viewModel.isTaskExpired = isCheck
-            isDatePickersShown(isCheck)
-            addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
+            isDatePickersShown()
         }
         /** Share data */
         addEditTaskCircleShare.setOnClickListener {
@@ -138,8 +138,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TEXT, dataToSend)
                             type = "text/plain"
-                        },
-                        requireContext().getString(R.string.detail_share_to)
+                        }, requireContext().getString(R.string.detail_share_to)
                     )
                 )
             } catch (e: ActivityNotFoundException) {
@@ -147,24 +146,36 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
         }
         /** Radio Group */
-        // Event
-        addEditTaskDatePickerCalendarEvent.isChecked = viewModel.isEvent
-        // Range
-        addEditTaskDatePickerCalendarRange.isChecked = viewModel.isEvent.not()
-        // Radio Group
-        addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, _ ->
-            viewModel.isEvent = viewModel.isEvent.not()
-            addEditTaskDatePickerSecond.isVisible = !viewModel.isEvent
+        // Event flag
+        addEditTaskDatePickerCalendarEvent.isChecked = viewModel.isEvent && !viewModel.isRange
+        // Range flag
+        addEditTaskDatePickerCalendarRange.isChecked = viewModel.isRange && !viewModel.isEvent
+        // is Event (not range) listener
+        addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, checkId ->
+            when (checkId) {
+                binding.addEditTaskDatePickerCalendarEvent.id -> {
+                    viewModel.isEvent = true
+                    viewModel.isRange = false
+                }
+
+                binding.addEditTaskDatePickerCalendarRange.id -> {
+                    viewModel.isEvent = false
+                    viewModel.isRange = true
+                }
+
+                else -> {
+                    Log.e("GlobalErrors", "Error setting type: event / range.")
+                }
+            }
+            addEditTaskDatePickerSecond.isVisible = viewModel.isRange && !viewModel.isEvent
         }
         /** First Date picker */
         addEditTaskDatePickerFirst.setOnClickListener {
             val date = Calendar.getInstance().apply {
-                time = Date(getCorrectDate(viewModel.taskExpireFirstDate))
+                time = Date(replaceZeroDate(viewModel.taskExpireFirstDate))
             }
             DatePickerDialog(
-                requireContext(),
-                R.style.DatePickerStyle,
-                null,
+                requireContext(), R.style.DatePickerStyle, null,
                 date.get(Calendar.YEAR),
                 date.get(Calendar.MONTH),
                 date.get(Calendar.DAY_OF_MONTH)
@@ -181,18 +192,19 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                             set(Calendar.SECOND, ZERO)
                         }
                         viewModel.taskExpireFirstDate = selectedDateCalendar.timeInMillis
-                        setFirstDateExpire()
+                        setFirstDateOfExpire()
                     }
                     show()
                 }
             }
         }
-        setFirstDateExpire()
+        setFirstDateOfExpire()
         /** Second Date picker */
-        addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent
+        addEditTaskDatePickerSecond.isVisible =
+            viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
         addEditTaskDatePickerSecond.setOnClickListener {
             val date = Calendar.getInstance().apply {
-                time = Date(getCorrectDate(viewModel.taskExpireSecondDate))
+                time = Date(replaceZeroDate(viewModel.taskExpireSecondDate))
             }
             DatePickerDialog(
                 requireContext(),
@@ -203,7 +215,8 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 date.get(Calendar.DAY_OF_MONTH),
             ).also { dialog ->
                 dialog.apply {
-                    datePicker.minDate = getCorrectDate(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
+                    datePicker.minDate =
+                        replaceZeroDate(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
                     setOnDateSetListener { _, year, month, day ->
                         val selectedDateCalendar = Calendar.getInstance().apply {
                             set(Calendar.YEAR, year)
@@ -214,32 +227,31 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                             set(Calendar.SECOND, 59)
                         }
                         viewModel.taskExpireSecondDate = selectedDateCalendar.timeInMillis
-                        setSecondDateExpire()
+                        setSecondDateOfExpire()
                     }
                     show()
                 }
             }
         }
-        setSecondDateExpire()
+        setSecondDateOfExpire()
         /** OK Button */
         addEditTaskOkButton.setOnClickListener {
             viewModel.saveTaskBtnClicked()
         }
     }
 
-    private fun setFirstDateExpire() {
-        binding.addEditTaskDatePickerFirst.text =
-            if (viewModel.taskExpireFirstDate == ZERO_LONG) {
-                Date().time.toFormattedDateString()
-            } else {
-                viewModel.taskExpireFirstDate.toFormattedDateString()
-            }
+    private fun setFirstDateOfExpire() {
+        binding.addEditTaskDatePickerFirst.text = if (viewModel.taskExpireFirstDate == ZERO_LONG) {
+            Date().time.toFormattedDateString()
+        } else {
+            viewModel.taskExpireFirstDate.toFormattedDateString()
+        }
     }
 
-    private fun setSecondDateExpire() {
+    private fun setSecondDateOfExpire() {
         binding.addEditTaskDatePickerSecond.text =
             if (viewModel.taskExpireSecondDate == ZERO_LONG) {
-                Date().time.toFormattedDateString()
+                (Date().time + ONE_DAY_MLS).toFormattedDateString()
             } else {
                 viewModel.taskExpireSecondDate.toFormattedDateString()
             }
@@ -249,20 +261,22 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         viewModel.taskGroup = element.groupId
     }
 
-    private fun isDatePickersShown(value: Boolean) {
+    private fun isDatePickersShown() {
         binding.apply {
-            addEditTaskAddDateLabel.isVisible = !value
-            addEditTaskAddDateLabelArrow.isVisible = !value
-
-            addEditTaskDatePickerCalendarEvent.isVisible = value
-            addEditTaskDatePickerCalendarRange.isVisible = value
-            addEditTaskDatePickerFirst.isVisible = value
-            addEditTaskDatePickerSecond.isVisible = value
+            // Label
+            addEditTaskAddDateLabel.isVisible = !viewModel.isTaskExpired
+            addEditTaskAddDateLabelArrow.isVisible = !viewModel.isTaskExpired
+            // Radio flags of event / radio
+            addEditTaskDatePickerCalendarEvent.isVisible = viewModel.isTaskExpired
+            addEditTaskDatePickerCalendarRange.isVisible = viewModel.isTaskExpired
+            // Date pickers with date as title
+            addEditTaskDatePickerFirst.isVisible =
+                viewModel.isTaskExpired && (viewModel.isRange || viewModel.isEvent)
+            addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && viewModel.isRange
         }
     }
 
-    private fun getCorrectDate(date: Long): Long =
-        if (date == ZERO_LONG) Date().time else date
+    private fun replaceZeroDate(date: Long): Long = if (date == ZERO_LONG) Date().time else date
 
     // Event: navigate to AllTasksFragment with result
     private fun eventNavBackWithResult(event: Int) {

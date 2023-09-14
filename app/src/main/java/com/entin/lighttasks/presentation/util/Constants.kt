@@ -26,6 +26,7 @@ const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
  * Fields name for AddEditTaskViewModel
  */
 
+const val TASK = "task"
 const val TASK_TITLE = "taskTitle"
 const val TASK_MESSAGE = "taskMessage"
 const val TASK_FINISHED = "taskFinished"
