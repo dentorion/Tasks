@@ -58,4 +58,5 @@
     <string name="add_edit_task_add_date_label" >Dodaj ograniczenie czasowe</string>
     <string name="close" >Zamknąć</string>
     <string name="expiration_date_format">Okres: %1$s - %2$s</string>
+    <string name="no_name_title_task">Zadanie bez tytułu</string>
 </resources>

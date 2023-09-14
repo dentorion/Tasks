@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel
 import com.entin.lighttasks.presentation.util.convertPixelsToDp
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
@@ -70,7 +71,7 @@ class AllTasksAdapter(
                     true
                 }
 
-                taskTitle.text = task.title
+                taskTitle.text = checkForEmptyTitle(task.title, this.root.resources, task.id)
                 taskMessage.apply {
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
                     text = task.message
@@ -91,16 +92,6 @@ class AllTasksAdapter(
                         val lengthPassed = Date().time - task.expireDateFirst
                         val progressPercentage = (lengthPassed / fullLengthPeriod.toFloat()) * 100
                         val height = (progressPercentage * fullHeightPx / 100).toInt()
-
-                        Log.e(
-                            "EBLAN",
-                            "..NOW.. fullHeightPx: $fullHeightPx, fullLengthPeriod: $fullLengthPeriod, lengthPassed: $lengthPassed, progressPercentage: $progressPercentage, height: $height px / ${
-                                convertPixelsToDp(
-                                    height,
-                                    this.context
-                                )
-                            } dp"
-                        )
                         layoutParams.height = height
                     }
                 }

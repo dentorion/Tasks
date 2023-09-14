@@ -59,5 +59,6 @@
     <string name="add_edit_task_add_date_label" >Agregar un límite de tiempo</string>
     <string name="close" >Cerca</string>
     <string name="expiration_date_format">Términos: %1$s - %2$s</string>
+    <string name="no_name_title_task">Tarea sin título</string>
 
 </resources>

@@ -38,11 +38,14 @@ const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
 
+
 /**
  * Utils
  */
 
 const val ZERO = 0
 const val ZERO_LONG = 0L
+const val ONE = 1
 const val EMPTY_STRING = ""
 const val NEW_LINE = "\n"
+const val NO_NAME_TITLE_TASK = "[*!NO_NAME!*]"

@@ -26,9 +26,11 @@ import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.presentation.ui.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
+import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.toFormattedDateString
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,8 +67,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     /** Category */
     private fun setupCategoryRecyclerView() {
-        groupAdapter = RadioButtonAdapter(viewModel.taskGroup) { element ->
-            onGroupIconSelected(element)
+        groupAdapter = RadioButtonAdapter(
+            viewModel.taskGroup,
+        ) { element, position ->
+            onGroupIconSelected(element, position)
         }
 
         binding.addEditTaskCategoryRecyclerview.apply {
@@ -80,8 +84,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.taskGroupsChannel.collect { radioButtonElements ->
-                    groupAdapter?.submitList(radioButtonElements)
+                viewModel.taskGroupsChannel.collect { icons ->
+                    val selectedIcon = icons.first { it.groupId == viewModel.taskGroup }
+                    val indexOfSelectedIcon = icons.indexOf(selectedIcon)
+                    groupAdapter?.submitList(icons)
+                    val marginElements = if (indexOfSelectedIcon >= 2) 2 else 0
+                    binding.addEditTaskCategoryRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
                 }
             }
         }
@@ -92,7 +100,15 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      */
     private fun setupFields() = with(binding) {
         /** Title */
-        addEditTaskTitle.setText(viewModel.taskTitle)
+        viewModel.task?.let {
+            addEditTaskTitle.setText(
+                checkForEmptyTitle(
+                    viewModel.taskTitle, resources, viewModel.getTaskId()
+                )
+            )
+        } ?: kotlin.run {
+            EMPTY_STRING
+        }
         addEditTaskTitle.addTextChangedListener {
             viewModel.taskTitle = it.toString()
         }
@@ -167,7 +183,8 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     Log.e("GlobalErrors", "Error setting type: event / range.")
                 }
             }
-            addEditTaskDatePickerSecond.isVisible = viewModel.isRange && !viewModel.isEvent
+            addEditTaskDatePickerSecond.isVisible =
+                viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
         }
         /** First Date picker */
         addEditTaskDatePickerFirst.setOnClickListener {
@@ -242,7 +259,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     private fun setFirstDateOfExpire() {
         binding.addEditTaskDatePickerFirst.text = if (viewModel.taskExpireFirstDate == ZERO_LONG) {
-            Date().time.toFormattedDateString()
+            Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, ZERO)
+                set(Calendar.MINUTE, ZERO)
+            }.timeInMillis.toFormattedDateString()
         } else {
             viewModel.taskExpireFirstDate.toFormattedDateString()
         }
@@ -251,14 +271,20 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun setSecondDateOfExpire() {
         binding.addEditTaskDatePickerSecond.text =
             if (viewModel.taskExpireSecondDate == ZERO_LONG) {
-                (Date().time + ONE_DAY_MLS).toFormattedDateString()
+                (Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                }.timeInMillis + ONE_DAY_MLS).toFormattedDateString()
             } else {
                 viewModel.taskExpireSecondDate.toFormattedDateString()
             }
     }
 
-    private fun onGroupIconSelected(element: TaskGroup) {
-        viewModel.taskGroup = element.groupId
+    private fun onGroupIconSelected(element: TaskGroup, position: Int?) {
+        position?.let {
+            viewModel.taskGroup = element.groupId
+            binding.addEditTaskCategoryRecyclerview.smoothScrollToPosition(it)
+        }
     }
 
     private fun isDatePickersShown() {

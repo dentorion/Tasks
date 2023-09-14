@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.ui.addedit.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,13 +11,14 @@ import com.entin.lighttasks.domain.entity.TaskGroup
 
 class RadioButtonAdapter(
     private val taskGroupId: Int,
-    private val onClick: (element: TaskGroup) -> Unit,
+    private val onClick: (element: TaskGroup, position: Int?) -> Unit,
 ) : ListAdapter<TaskGroup, RadioButtonAdapter.RadioButtonViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
 
     var selectedPosition = RecyclerView.NO_POSITION
         private set
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RadioButtonViewHolder =
         RadioButtonViewHolder(
@@ -39,7 +41,7 @@ class RadioButtonAdapter(
         fun bind(
             radioItemElement: TaskGroup,
             position: Int,
-            adapterPosition: Int,
+            adapterPosition: Int
         ) {
             binding.apply {
                 radioButtonItem.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
@@ -51,7 +53,7 @@ class RadioButtonAdapter(
 
                 this.radioButtonItem.setOnClickListener {
                     selectedPosition = adapterPosition
-                    onClick(radioItemElement)
+                    onClick(radioItemElement, position)
                     notifyDataSetChanged()
                 }
             }

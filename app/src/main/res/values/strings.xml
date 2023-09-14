@@ -65,4 +65,5 @@
     <string name="add_edit_task_add_date_label" >Add time limit</string>
     <string name="close" >Close</string>
     <string name="expiration_date_format">Expiration date: %1$s - %2$s</string>
+    <string name="no_name_title_task">Untitled task</string>
 </resources>

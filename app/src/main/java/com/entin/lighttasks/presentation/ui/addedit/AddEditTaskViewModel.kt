@@ -41,6 +41,7 @@ class AddEditTaskViewModel @Inject constructor(
     private val repository: TasksRepository,
 ) : ViewModel() {
 
+
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
 
@@ -67,9 +68,11 @@ class AddEditTaskViewModel @Inject constructor(
          * Get all groups for task to show icons
          */
         viewModelScope.launch(Dispatchers.IO) {
-            _taskGroupChannel.send(repository.getTaskGroups())
+            _taskGroupChannel.send(repository.getTaskGroups().shuffled())
         }
     }
+
+    fun getTaskId(): Int? = task?.id
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: task?.title ?: EMPTY_STRING
         set(value) {
@@ -131,16 +134,16 @@ class AddEditTaskViewModel @Inject constructor(
         set(value) {
             field = value
             state[TASK_IS_EXPIRED] = value
+            if (value) {
+                if (taskExpireFirstDate == ZERO_LONG) taskExpireFirstDate = defaultStartDateTime
+                if (taskExpireSecondDate == ZERO_LONG) taskExpireSecondDate = defaultFinishDateTime
+            }
         }
 
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-            // Empty title error
-            if (taskTitle.isBlank()) {
-                errorBlankText()
-            }
             // First date > Second date in range task, that has date of expire
-            else if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
+            if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
                 errorDatesPicked()
             } else {
                 // Update

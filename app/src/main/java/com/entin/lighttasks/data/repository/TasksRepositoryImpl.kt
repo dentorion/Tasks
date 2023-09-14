@@ -6,6 +6,7 @@ import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.TaskGroup
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -81,7 +82,7 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateTask(task: Task): Boolean {
-        return tasksDao.updateTask(task) > 0
+        return tasksDao.updateTask(task) > ZERO
     }
 
     /**
@@ -99,7 +100,7 @@ class TasksRepositoryImpl @Inject constructor(
      * Get maximum position of tasks table
      */
     override fun getMaxPosition(): Flow<Int> =
-        tasksDao.getLastId().map { max -> max?.let { it + 1 } ?: ZERO }
+        tasksDao.getLastId().map { max -> max?.let { it + ONE } ?: ZERO }
 
     /**
      * Get images for task groups

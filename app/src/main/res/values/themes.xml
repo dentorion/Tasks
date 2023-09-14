@@ -1,10 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
-    <style name="Theme.Tasks" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Tasks" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_text</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor" >@color/color_main_light_extra</item>
+        <item name="android:statusBarColor">@color/color_main_light_extra</item>
         <item name="colorOnSurface">@color/color_main</item>
         <item name="android:textColor">@color/color_main</item>
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
@@ -69,7 +69,7 @@
 
     <!-- DATE PICKER -->
 
-    <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+    <style name="DatePickerStyle" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:windowBackground">@color/color_main_light_extra</item>
         <item name="android:textColorPrimary">@color/color_text</item>
         <item name="colorAccent">@color/color_stroke_checkbox</item>
