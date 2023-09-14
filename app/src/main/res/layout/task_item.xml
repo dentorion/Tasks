@@ -69,22 +69,40 @@
         android:id="@+id/task_group_icon"
         android:layout_width="@dimen/small_icon_size_item"
         android:layout_height="@dimen/small_icon_size_item"
-        android:layout_marginEnd="@dimen/small_icon_margin_end_size_item"
         android:alpha="@dimen/small_icon_opacity_size_item"
-        app:layout_constraintBottom_toBottomOf="@+id/task_finished"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/task_alarm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/task_finished"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/ic_food" />
+
+    <ImageView
+        android:id="@+id/task_alarm"
+        android:layout_width="16dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="2dp"
+        android:alpha="@dimen/small_icon_opacity_size_item"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/task_group_icon"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/task_group_icon"
+        app:layout_constraintTop_toBottomOf="@+id/task_group_icon"
+        app:srcCompat="@drawable/ic_alarm_black"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/task_expired_background"
         android:layout_width="@dimen/important_label_width_item"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
+        android:visibility="invisible"
         android:background="@color/task_expire_background_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/task_expired_indicator"
@@ -92,13 +110,13 @@
         android:layout_height="match_parent"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
         android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
         android:background="@color/color_main_light_extra"
         android:visibility="invisible"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/task_expired_background"
         app:layout_constraintEnd_toEndOf="@+id/task_expired_background"
-        app:layout_constraintStart_toStartOf="@+id/task_expired_background" />
+        app:layout_constraintStart_toStartOf="@+id/task_expired_background"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

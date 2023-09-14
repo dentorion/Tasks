@@ -48,4 +48,3 @@ const val ZERO_LONG = 0L
 const val ONE = 1
 const val EMPTY_STRING = ""
 const val NEW_LINE = "\n"
-const val NO_NAME_TITLE_TASK = "[*!NO_NAME!*]"

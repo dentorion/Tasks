@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 10
-        versionName = "10.0"
+        versionCode = 11
+        versionName = "11.0"
     }
 
     buildTypes {
@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

@@ -83,34 +83,85 @@ class AllTasksAdapter(
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
 
-                // FirstDate....Now....SecondDate
-                if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateFirst && Date().time <= task.expireDateSecond) {
-                    taskExpiredBackground.visibility = View.VISIBLE
-                    taskExpiredIndicator.apply {
-                        visibility = View.VISIBLE
-                        val fullLengthPeriod = task.expireDateSecond - task.expireDateFirst
-                        val lengthPassed = Date().time - task.expireDateFirst
-                        val progressPercentage = (lengthPassed / fullLengthPeriod.toFloat()) * 100
-                        val height = (progressPercentage * fullHeightPx / 100).toInt()
-                        layoutParams.height = height
-                    }
-                }
+                /** Range */
 
-                // FirstDate....SecondDate....Now
-                if (task.isTaskExpired && task.isRange && Date().time >= task.expireDateSecond) {
-                    taskExpiredBackground.apply {
-                        visibility = View.VISIBLE
-                        setBackgroundColor(resources.getColor(R.color.color_main_light_extra))
-                    }
-                    taskExpiredIndicator.apply {
-                        visibility = View.VISIBLE
-                        setBackgroundColor(resources.getColor(R.color.task_expire_background_indicator))
-                        layoutParams.height = convertDpToPixel(96.toFloat(), this.context).toInt()
-                    }
-                }
+                if(task.isTaskExpired) {
 
-                // Without date
-                if (!task.isTaskExpired || Date().time < task.expireDateFirst) {
+                    if (task.isRange) {
+
+                        // Now....FirstDate....SecondDate
+                        if(Date().time < task.expireDateFirst) {
+                            taskExpiredBackground.visibility = View.INVISIBLE
+                            taskExpiredIndicator.visibility = View.INVISIBLE
+                            taskAlarm.apply {
+                                visibility = View.VISIBLE
+                                setImageDrawable(resources.getDrawable(R.drawable.ic_alarm_rose_light))
+                            }
+                        }
+
+                        // FirstDate....Now....SecondDate
+                        if (Date().time >= task.expireDateFirst && Date().time <= task.expireDateSecond) {
+                            taskExpiredBackground.visibility = View.VISIBLE
+                            taskExpiredIndicator.apply {
+                                visibility = View.VISIBLE
+                                val fullLengthPeriod = task.expireDateSecond - task.expireDateFirst
+                                val lengthPassed = Date().time - task.expireDateFirst
+                                val progressPercentage = (lengthPassed / fullLengthPeriod.toFloat()) * 100
+                                val height = (progressPercentage * fullHeightPx / 100).toInt()
+                                layoutParams.height = height
+                            }
+                        }
+
+                        // FirstDate....SecondDate....Now
+                        if (Date().time > task.expireDateSecond) {
+                            taskExpiredBackground.visibility = View.INVISIBLE
+                            taskExpiredIndicator.visibility = View.INVISIBLE
+                            taskAlarm.apply {
+                                visibility = View.VISIBLE
+                                setImageDrawable(resources.getDrawable(R.drawable.ic_alarm_black))
+                            }
+                        }
+                    }
+
+                    if (task.isEvent) {
+
+                        // FirstDate....Now
+                        if (Date().time > task.expireDateFirst) {
+                            Log.e("STATUS", "FirstDate....Now")
+                            taskExpiredBackground.visibility = View.INVISIBLE
+                            taskExpiredIndicator.visibility = View.INVISIBLE
+                            taskAlarm.apply {
+                                visibility = View.VISIBLE
+                                setImageDrawable(resources.getDrawable(R.drawable.ic_alarm_black))
+                            }
+                        }
+
+                        // Now....FirstDate
+                        if (Date().time < task.expireDateFirst) {
+                            Log.e("STATUS", "Now....FirstDate")
+                            taskExpiredBackground.visibility = View.INVISIBLE
+                            taskExpiredIndicator.visibility = View.INVISIBLE
+                            taskAlarm.apply {
+                                visibility = View.VISIBLE
+                                setImageDrawable(resources.getDrawable(R.drawable.ic_alarm_rose_light))
+                            }
+                        }
+
+                        // Now
+                        if (Date().day == Date(task.expireDateFirst).day) {
+                            Log.e("STATUS", "Now: day:${Date().day} == ${Date(task.expireDateFirst).day}")
+                            taskExpiredBackground.visibility = View.INVISIBLE
+                            taskExpiredIndicator.visibility = View.INVISIBLE
+                            taskAlarm.apply {
+                                visibility = View.VISIBLE
+                                setImageDrawable(resources.getDrawable(R.drawable.ic_alarm_red))
+                            }
+                        }
+                    }
+                } else {
+                    /** Event */
+
+                    // Without date
                     taskExpiredBackground.visibility = View.GONE
                     taskExpiredIndicator.visibility = View.GONE
                 }
