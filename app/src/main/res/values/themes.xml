@@ -2,11 +2,12 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Tasks" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/color_text</item>
+        <item name="colorPrimary">@color/color_main</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">@color/color_main_light_extra</item>
         <item name="colorOnSurface">@color/color_main</item>
         <item name="android:textColor">@color/color_main</item>
+
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
         <item name="snackbarStyle">@style/MySnackBarStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
@@ -46,7 +47,7 @@
 
     <!-- SNACK BAR -->
     <style name="MySnackBarStyle" parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:backgroundTint">@color/color_main</item>
+        <item name="android:backgroundTint">@color/color_main_light_extra</item>
     </style>
 
     <!-- FLOATING BUTTON -->
