@@ -26,6 +26,9 @@ sealed class AllTasksEvent {
     // Navigate to preferences
     object NavToChangePreferences : AllTasksEvent()
 
+    // Navigate to calendar
+    object NavToCalendar : AllTasksEvent()
+
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
 

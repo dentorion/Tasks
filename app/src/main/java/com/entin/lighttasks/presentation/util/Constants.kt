@@ -38,6 +38,9 @@ const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
 
+const val CALENDAR_CONSTRAINTS = "calendarConstraints"
+const val CALENDAR_ICON_SORT = "iconSort"
+
 
 /**
  * Utils
@@ -46,5 +49,9 @@ const val TASK_IS_RANGE = "isRange"
 const val ZERO = 0
 const val ZERO_LONG = 0L
 const val ONE = 1
+const val THOUSAND = 1000L
 const val EMPTY_STRING = ""
 const val NEW_LINE = "\n"
+const val LAST_HOUR = 23
+const val LAST_MINUTE = 59
+const val LAST_SECOND = 59

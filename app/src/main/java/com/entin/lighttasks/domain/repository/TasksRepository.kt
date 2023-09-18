@@ -1,8 +1,9 @@
 package com.entin.lighttasks.domain.repository
 
+import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -31,5 +32,7 @@ interface TasksRepository {
 
     suspend fun updateAllTasks(list: List<Task>)
 
-    suspend fun getTaskGroups(): List<TaskGroup>
+    suspend fun getTaskIconGroups(): List<IconTask>
+
+    fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>>
 }

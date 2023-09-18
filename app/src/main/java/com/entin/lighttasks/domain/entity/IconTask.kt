@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
 
 @Keep
 @Entity(tableName = "taskGroups")
-data class TaskGroup(
+data class IconTask(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "background_resource") val backgroundRes: Int,
     @ColumnInfo(name = "group_id") val groupId: Int,

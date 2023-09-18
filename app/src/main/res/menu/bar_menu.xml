@@ -11,10 +11,10 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_sort_desc_asc"
-        android:icon="@drawable/ic_sort_desc_asc"
-        android:title="sort type"
-        app:showAsAction="always|collapseActionView" />
+        android:id="@+id/action_sort_calendar"
+        android:icon="@drawable/ic_calendar_menu"
+        android:title="@string/sort_calendar"
+        app:showAsAction="always" />
 
     <item
         android:icon="@drawable/ic_sort"
@@ -39,6 +39,10 @@
             <item
                 android:id="@+id/action_sort_by_manual"
                 android:title="@string/sort_by_manual" />
+
+            <item
+                android:id="@+id/action_sort_desc_asc"
+                android:title="@string/sort_by_reverse" />
 
         </menu>
 

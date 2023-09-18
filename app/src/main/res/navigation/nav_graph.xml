@@ -86,10 +86,19 @@
     <dialog
         android:id="@+id/taskDetailsDialog"
         android:name="com.entin.lighttasks.presentation.ui.dialogs.TaskDetailsDialog"
-        android:label="TaskDetailsDialog" >
+        android:label="TaskDetailsDialog">
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task" />
     </dialog>
-    <action android:id="@+id/action_global_taskDetailsDialog" app:destination="@id/taskDetailsDialog" />
+    <action
+        android:id="@+id/action_global_taskDetailsDialog"
+        app:destination="@id/taskDetailsDialog" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.entin.lighttasks.presentation.ui.calendar.CalendarFragment"
+        android:label="@string/sort_calendar" />
+    <action
+        android:id="@+id/action_global_calendarFragment"
+        app:destination="@id/calendarFragment" />
 </navigation>

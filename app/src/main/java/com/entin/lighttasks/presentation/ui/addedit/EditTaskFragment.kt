@@ -22,9 +22,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.presentation.ui.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
-import com.entin.lighttasks.presentation.ui.addedit.adapter.RadioButtonAdapter
+import com.entin.lighttasks.presentation.ui.addedit.adapter.IconTaskAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
@@ -49,7 +49,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val binding get() = _binding!!
 
     private val viewModel: AddEditTaskViewModel by viewModels()
-    private var groupAdapter: RadioButtonAdapter? = null
+    private var groupAdapter: IconTaskAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,9 +67,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     /** Category */
     private fun setupCategoryRecyclerView() {
-        groupAdapter = RadioButtonAdapter(
-            viewModel.taskGroup,
-        ) { element, position ->
+        groupAdapter = IconTaskAdapter(viewModel.taskGroup) { element, position ->
             onGroupIconSelected(element, position)
         }
 
@@ -275,12 +273,22 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     set(Calendar.HOUR_OF_DAY, 23)
                     set(Calendar.MINUTE, 59)
                 }.timeInMillis + ONE_DAY_MLS).toFormattedDateString()
+            } else if (viewModel.taskExpireFirstDate == viewModel.taskExpireSecondDate) {
+                viewModel.taskExpireSecondDate = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                }.timeInMillis + ONE_DAY_MLS
+
+                (Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                }.timeInMillis + ONE_DAY_MLS).toFormattedDateString()
             } else {
                 viewModel.taskExpireSecondDate.toFormattedDateString()
             }
     }
 
-    private fun onGroupIconSelected(element: TaskGroup, position: Int?) {
+    private fun onGroupIconSelected(element: IconTask, position: Int?) {
         position?.let {
             viewModel.taskGroup = element.groupId
             binding.addEditTaskCategoryRecyclerview.smoothScrollToPosition(it)

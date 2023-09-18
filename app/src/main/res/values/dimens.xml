@@ -34,7 +34,7 @@
 
     <!-- Item in RecyclerView -->
     <dimen name="height_item">100dp</dimen>
-    <dimen name="margin_bottom_item">1dp</dimen>
+    <dimen name="margin_bottom_item">2dp</dimen>
     <dimen name="margin_end_task_message_item">16dp</dimen>
     <dimen name="text_size_task_title_item">16sp</dimen>
     <dimen name="margin_start_task_title_item">11dp</dimen>

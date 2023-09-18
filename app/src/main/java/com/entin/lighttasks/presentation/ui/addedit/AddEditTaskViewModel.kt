@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.TASK
@@ -45,8 +45,8 @@ class AddEditTaskViewModel @Inject constructor(
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
 
-    private val _taskGroupChannel = Channel<List<TaskGroup>>()
-    val taskGroupsChannel = _taskGroupChannel.receiveAsFlow()
+    private val _Icon_taskChannel = Channel<List<IconTask>>()
+    val taskGroupsChannel = _Icon_taskChannel.receiveAsFlow()
 
     // If task is editing - task from SavedStateHandle
     val task: Task? = state.get<Task>(TASK)
@@ -68,7 +68,7 @@ class AddEditTaskViewModel @Inject constructor(
          * Get all groups for task to show icons
          */
         viewModelScope.launch(Dispatchers.IO) {
-            _taskGroupChannel.send(repository.getTaskGroups().shuffled())
+            _Icon_taskChannel.send(repository.getTaskIconGroups().shuffled())
         }
     }
 
@@ -146,6 +146,15 @@ class AddEditTaskViewModel @Inject constructor(
             if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
                 errorDatesPicked()
             } else {
+                val expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
+                val expireDateSecond = if (isTaskExpired && isEvent) {
+                    expireDateFirst
+                } else if (isTaskExpired && isRange) {
+                    taskExpireSecondDate
+                } else {
+                    ZERO_LONG
+                }
+
                 // Update
                 if (task != null) {
                     updateTask(
@@ -159,8 +168,8 @@ class AddEditTaskViewModel @Inject constructor(
                             editedAt = Date().time,
                             group = taskGroup,
                             position = task.position,
-                            expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
-                            expireDateSecond = if (isTaskExpired) taskExpireSecondDate else ZERO_LONG,
+                            expireDateFirst = expireDateFirst,
+                            expireDateSecond = expireDateSecond,
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
                             isRange = isRange,
@@ -180,8 +189,8 @@ class AddEditTaskViewModel @Inject constructor(
                             position = ZERO, // will be replaced in Repository
                             createdAt = Date().time,
                             editedAt = ZERO_LONG,
-                            expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG,
-                            expireDateSecond = if (isTaskExpired && isRange) taskExpireSecondDate else ZERO_LONG,
+                            expireDateFirst = expireDateFirst,
+                            expireDateSecond = expireDateSecond,
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
                             isRange = isRange,

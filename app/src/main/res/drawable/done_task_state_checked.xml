@@ -9,9 +9,8 @@
     </item>
 
     <item
-        android:width="25dp"
-        android:height="25dp"
-        android:left="28dp"
+        android:width="22dp"
+        android:height="22dp"
         android:gravity="center"
         android:drawable="@drawable/ic_done_task" />
 

@@ -3,12 +3,12 @@ package com.entin.lighttasks.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 
 @Database(
     entities = [
         Task::class,
-        TaskGroup::class,
+        IconTask::class,
     ],
     version = 3,
     exportSchema = false,

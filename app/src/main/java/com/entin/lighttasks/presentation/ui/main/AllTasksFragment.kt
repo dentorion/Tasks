@@ -204,8 +204,12 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         Toast.LENGTH_SHORT,
                     ).show()
 
-                    AllTasksEvent.NavToChangePreferences -> findNavController().navigate(
+                    is AllTasksEvent.NavToChangePreferences -> findNavController().navigate(
                         AllTasksFragmentDirections.actionGlobalPreferencesFragment(),
+                    )
+
+                    is AllTasksEvent.NavToCalendar -> findNavController().navigate(
+                        AllTasksFragmentDirections.actionGlobalCalendarFragment(),
                     )
                 }
             }.launchIn(lifecycleScope)
@@ -239,7 +243,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         )
     }
 
-    //
+    // Open dialog for Showing details of task
 
     private fun openTaskDetailsDialog(task: Task) {
         findNavController().navigate(AllTasksFragmentDirections.actionGlobalTaskDetailsDialog(task))
@@ -308,6 +312,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             R.id.action_sort_by_finished -> {
                 item.isChecked = !item.isChecked
                 viewModel.updateShowFinishedTask(item.isChecked)
+                true
+            }
+
+            R.id.action_sort_calendar -> {
+                viewModel.openCalendar()
                 true
             }
 

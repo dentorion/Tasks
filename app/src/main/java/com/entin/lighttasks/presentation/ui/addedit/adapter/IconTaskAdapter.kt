@@ -1,24 +1,22 @@
 package com.entin.lighttasks.presentation.ui.addedit.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.RecyclerRadioButtonItemBinding
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 
-class RadioButtonAdapter(
+class IconTaskAdapter(
     private val taskGroupId: Int,
-    private val onClick: (element: TaskGroup, position: Int?) -> Unit,
-) : ListAdapter<TaskGroup, RadioButtonAdapter.RadioButtonViewHolder>(
+    private val onClick: (element: IconTask, position: Int?) -> Unit,
+) : ListAdapter<IconTask, IconTaskAdapter.RadioButtonViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
 
     var selectedPosition = RecyclerView.NO_POSITION
         private set
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RadioButtonViewHolder =
         RadioButtonViewHolder(
@@ -26,7 +24,7 @@ class RadioButtonAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-            ),
+            )
         )
 
     override fun onBindViewHolder(holder: RadioButtonViewHolder, position: Int) {
@@ -39,19 +37,19 @@ class RadioButtonAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            radioItemElement: TaskGroup,
+            radioItemElement: IconTask,
             position: Int,
             adapterPosition: Int
         ) {
             binding.apply {
-                radioButtonItem.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
+                icon.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
                     radioItemElement.groupId == taskGroupId
                 } else {
                     position == selectedPosition
                 }
-                radioButtonItem.setBackgroundResource(radioItemElement.backgroundRes)
+                icon.setBackgroundResource(radioItemElement.backgroundRes)
 
-                this.radioButtonItem.setOnClickListener {
+                this.icon.setOnClickListener {
                     selectedPosition = adapterPosition
                     onClick(radioItemElement, position)
                     notifyDataSetChanged()
@@ -62,17 +60,17 @@ class RadioButtonAdapter(
 
     companion object {
         private val RadioButtonAdapterDiffCallback =
-            object : DiffUtil.ItemCallback<TaskGroup>() {
+            object : DiffUtil.ItemCallback<IconTask>() {
                 override fun areItemsTheSame(
-                    oldItem: TaskGroup,
-                    newItem: TaskGroup,
+                    oldItem: IconTask,
+                    newItem: IconTask,
                 ): Boolean {
                     return oldItem.backgroundRes == newItem.backgroundRes
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: TaskGroup,
-                    newItem: TaskGroup,
+                    oldItem: IconTask,
+                    newItem: IconTask,
                 ): Boolean {
                     return oldItem == newItem
                 }

@@ -27,6 +27,6 @@ class SlowlyLinearLayoutManager(
     }
 
     companion object {
-        private const val MILLISECONDS_PER_INCH = 200f
+        private const val MILLISECONDS_PER_INCH = 500f
     }
 }

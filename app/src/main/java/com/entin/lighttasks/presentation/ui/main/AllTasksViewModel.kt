@@ -14,6 +14,7 @@ import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
@@ -171,5 +172,12 @@ class AllTasksViewModel @Inject constructor(
 
     fun onTaskSortByIcon(task: Task) {
         updateSortingOrder(OrderSort.SORT_BY_ICON.apply { groupId = task.group })
+    }
+
+    // Calendar open
+    fun openCalendar() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _tasksEvent.send(AllTasksEvent.NavToCalendar)
+        }
     }
 }

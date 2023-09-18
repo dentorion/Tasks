@@ -1,9 +1,8 @@
 package com.entin.lighttasks.presentation.util
 
+import com.entin.lighttasks.R
+import com.entin.lighttasks.domain.entity.Months
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 
@@ -26,8 +25,25 @@ fun convertUnixTimestampToYearMonthDay(timestamp: Long): Triple<Int, Int, Int> {
     val parts = formattedDate.split("-")
 
     val year = parts[0].toInt()
-    val month = parts[1].toInt()-1
+    val month = parts[1].toInt() - 1
     val day = parts[2].toInt()
 
     return Triple(year, month, day)
 }
+
+fun getMonthName(monthSequenceNumber: Int): Int =
+    when (monthSequenceNumber) {
+        Months.January.number -> R.string.january
+        Months.February.number -> R.string.february
+        Months.March.number -> R.string.march
+        Months.April.number -> R.string.april
+        Months.May.number -> R.string.maj
+        Months.June.number -> R.string.june
+        Months.July.number -> R.string.july
+        Months.August.number -> R.string.august
+        Months.September.number -> R.string.september
+        Months.October.number -> R.string.october
+        Months.November.number -> R.string.november
+        Months.December.number -> R.string.december
+        else -> R.string.error
+    }

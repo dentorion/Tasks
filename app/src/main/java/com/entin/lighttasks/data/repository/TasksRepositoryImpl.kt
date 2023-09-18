@@ -2,9 +2,10 @@ package com.entin.lighttasks.data.repository
 
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.TaskGroup
+import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
@@ -105,6 +106,27 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Get images for task groups
      */
-    override suspend fun getTaskGroups(): List<TaskGroup> =
-        taskGroupsDao.getTaskGroups()
+    override suspend fun getTaskIconGroups(): List<IconTask> = taskGroupsDao.getTaskGroups()
+
+    /**
+     * Calendar. Get tasks by month, year
+     */
+    override fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>> =
+        when (constraints) {
+            is CalendarDatesConstraints.StartFinishInMonth -> {
+                if(constraints.iconGroup != null) {
+                    tasksDao.getTasksWithStartFinishExpireDatesWithIcon(constraints.start, constraints.finish, constraints.iconGroup)
+                } else {
+                    tasksDao.getTasksWithStartFinishExpireDates(constraints.start, constraints.finish)
+                }
+            }
+
+            is CalendarDatesConstraints.StartInMonth -> {
+                if(constraints.iconGroup != null) {
+                    tasksDao.getTasksWithStartExpireDateWithIcon(constraints.start, constraints.finish, constraints.iconGroup)
+                } else {
+                    tasksDao.getTasksWithStartExpireDate(constraints.start, constraints.finish)
+                }
+            }
+        }
 }

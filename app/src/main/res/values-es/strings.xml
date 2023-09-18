@@ -60,5 +60,37 @@
     <string name="close" >Cerca</string>
     <string name="expiration_date_format">Términos: %1$s - %2$s</string>
     <string name="no_name_title_task">Tarea sin título</string>
+    <string name="sort_calendar">Calendario</string>
+    <string name="sort_by_icon">Ordenar por icono</string>
+    <string name="sort_calendar_monday">lunes</string>
+    <string name="sort_calendar_tuesday">martes</string>
+    <string name="sort_calendar_wednesday">miércoles</string>
+    <string name="sort_calendar_thursday">jueves</string>
+    <string name="sort_calendar_friday">viernes</string>
+    <string name="sort_calendar_saturday">sábado</string>
+    <string name="sort_calendar_sunday">domingo</string>
+    <string name="sort_calendar_monday_short">Lu</string>
+    <string name="sort_calendar_tuesday_short">Ma</string>
+    <string name="sort_calendar_wednesday_short">Mi</string>
+    <string name="sort_calendar_thursday_short">Ju</string>
+    <string name="sort_calendar_friday_short">Vi</string>
+    <string name="sort_calendar_saturday_short">Sa</string>
+    <string name="sort_calendar_sunday_short">Do</string>
+    <string name="sort_by_reverse">Orden inverso</string>
+    <string name="today">Hoy</string>
+    <string name="january">enero</string>
+    <string name="february">febrero</string>
+    <string name="march">marzo</string>
+    <string name="april">abril</string>
+    <string name="maj">mayo</string>
+    <string name="june">junio</string>
+    <string name="july">julio</string>
+    <string name="august">agosto</string>
+    <string name="september">septiembre</string>
+    <string name="october">octubre</string>
+    <string name="november">noviembre</string>
+    <string name="december">diciembre</string>
+    <string name="error">error</string>
+    <string name="calendar_tasks_strict_in_month">Mes</string>
 
 </resources>
