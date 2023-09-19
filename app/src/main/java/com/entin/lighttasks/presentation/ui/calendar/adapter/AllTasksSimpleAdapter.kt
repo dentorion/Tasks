@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.ui.calendar.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,24 +96,18 @@ class AllTasksSimpleAdapter(
 
                         // FirstDate....Now
                         if (Date().time > task.expireDateFirst) {
-                            Log.e("STATUS", "FirstDate....Now")
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                         }
 
                         // Now....FirstDate
                         if (Date().time < task.expireDateFirst) {
-                            Log.e("STATUS", "Now....FirstDate")
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                         }
 
                         // Now
                         if (Date().day == Date(task.expireDateFirst).day) {
-                            Log.e(
-                                "STATUS",
-                                "Now: day:${Date().day} == ${Date(task.expireDateFirst).day}"
-                            )
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                         }

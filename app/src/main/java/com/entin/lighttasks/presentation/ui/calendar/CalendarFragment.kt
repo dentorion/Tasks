@@ -17,10 +17,10 @@ import com.entin.lighttasks.domain.entity.DayItem
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
+import com.entin.lighttasks.presentation.ui.calendar.adapter.AllTasksSimpleAdapter
 import com.entin.lighttasks.presentation.ui.calendar.adapter.DaysLineCalendarAdapter
 import com.entin.lighttasks.presentation.ui.calendar.adapter.IconSortAdapter
 import com.entin.lighttasks.presentation.ui.main.AllTasksFragmentDirections
-import com.entin.lighttasks.presentation.ui.calendar.adapter.AllTasksSimpleAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getMonthName
