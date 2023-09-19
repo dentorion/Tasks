@@ -51,7 +51,7 @@ class CalendarViewModel @Inject constructor(
     private val _iconGroupsChannel = Channel<List<IconTask>>()
     val iconGroupsChannel = _iconGroupsChannel.receiveAsFlow()
 
-    private val calendar = Calendar.getInstance()
+    private var calendar = Calendar.getInstance()
     private var month = getMonthNumber(calendar)
     private var year = getYearNumber(calendar)
 
@@ -201,6 +201,24 @@ class CalendarViewModel @Inject constructor(
         tasks.filter { task ->
             Timestamp(task.expireDateFirst).date == dayNumber
         }
+
+    fun setTodayFromOtherMonth() {
+        viewModelScope.launch(Dispatchers.IO) {
+            calendar = Calendar.getInstance()
+            month = getMonthNumber(calendar)
+            year = getYearNumber(calendar)
+            val startDate = getUnixTimeOfMonth(month, year, TimeBorder.START)
+            val finishDate = getUnixTimeOfMonth(month, year, TimeBorder.FINISH)
+            calendarDatesConstraints = when (calendarDatesConstraints) {
+                is CalendarDatesConstraints.StartFinishInMonth ->
+                    CalendarDatesConstraints.StartFinishInMonth(startDate, finishDate, sortIcon)
+
+                is CalendarDatesConstraints.StartInMonth ->
+                    CalendarDatesConstraints.StartInMonth(startDate, finishDate, sortIcon)
+            }
+            getTasksByConstraints()
+        }
+    }
 
     companion object {
         enum class TimeBorder {

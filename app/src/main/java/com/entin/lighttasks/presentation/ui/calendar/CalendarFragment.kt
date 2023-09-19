@@ -17,10 +17,10 @@ import com.entin.lighttasks.domain.entity.DayItem
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
-import com.entin.lighttasks.presentation.ui.calendar.adapter.CalendarListAdapter
+import com.entin.lighttasks.presentation.ui.calendar.adapter.DaysLineCalendarAdapter
 import com.entin.lighttasks.presentation.ui.calendar.adapter.IconSortAdapter
 import com.entin.lighttasks.presentation.ui.main.AllTasksFragmentDirections
-import com.entin.lighttasks.presentation.ui.calendar.adapter.SimpleAllTasksAdapter
+import com.entin.lighttasks.presentation.ui.calendar.adapter.AllTasksSimpleAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getMonthName
@@ -38,8 +38,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
     private var iconListAdapter: IconSortAdapter? = null
-    private var taskListAdapter: SimpleAllTasksAdapter? = null
-    private var daysListAdapter: CalendarListAdapter? = null
+    private var taskListAdapter: AllTasksSimpleAdapter? = null
+    private var daysListAdapter: DaysLineCalendarAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,7 +83,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     /** Calendar - List */
     private fun setupCalendarListRecyclerView() {
-        daysListAdapter = CalendarListAdapter { element, position ->
+        daysListAdapter = DaysLineCalendarAdapter { element, position ->
             onDayCalendarSelected(element, position)
         }
 
@@ -99,7 +99,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     /** Tasks - List */
     private fun setupTaskListRecyclerView() {
-        taskListAdapter = SimpleAllTasksAdapter(
+        taskListAdapter = AllTasksSimpleAdapter(
             openTaskEditScreen = ::openTaskEditScreen,
             openTaskDetailsDialog = ::openTaskDetailsDialog,
         )
@@ -167,12 +167,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     /** Go to today in calendar */
     private fun setupTodayButton() {
         binding.calendarDaysTodayButton.setOnClickListener {
-            daysListAdapter?.currentList?.first { it.isToday }?.let { today ->
+            daysListAdapter?.currentList?.firstOrNull { it.isToday }?.let { today ->
                 setTasks(today.listOfTasks)
                 daysListAdapter?.selectedItem = today
                 val indexOfSelectedIcon = daysListAdapter?.currentList?.indexOfFirst { it == today } ?: ZERO
                 daysListAdapter?.notifyDataSetChanged()
                 binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedIcon)
+            } ?: kotlin.run {
+                viewModel.setTodayFromOtherMonth()
             }
         }
     }

@@ -14,10 +14,10 @@ import com.entin.lighttasks.presentation.util.convertDpToPixel
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import java.util.Date
 
-class SimpleAllTasksAdapter(
+class AllTasksSimpleAdapter(
     private val openTaskEditScreen: (Task) -> Unit,
     private val openTaskDetailsDialog: (Task) -> Unit,
-) : ListAdapter<Task, SimpleAllTasksAdapter.TaskViewHolder>(DiffCallback()) {
+) : ListAdapter<Task, AllTasksSimpleAdapter.TaskViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = SimpleTaskItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
