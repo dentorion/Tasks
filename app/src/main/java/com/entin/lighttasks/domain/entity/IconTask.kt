@@ -1,5 +1,7 @@
 package com.entin.lighttasks.domain.entity
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -15,6 +17,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "taskGroups")
 data class IconTask(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "background_resource") val backgroundRes: Int,
+    @ColumnInfo(name = "background_resource") @DrawableRes val backgroundRes: Int,
     @ColumnInfo(name = "group_id") val groupId: Int,
 )
