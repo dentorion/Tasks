@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.ui.main.adapter
+package com.entin.lighttasks.presentation.ui.calendar.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SimpleTaskItemBinding
-import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel

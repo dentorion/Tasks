@@ -16,17 +16,21 @@ import com.entin.lighttasks.presentation.util.LAST_SECOND
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.THOUSAND
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.getDayOfWeek
+import com.entin.lighttasks.presentation.util.getLastDayOfMonth
+import com.entin.lighttasks.presentation.util.getMonthNumber
+import com.entin.lighttasks.presentation.util.getYearNumber
+import com.entin.lighttasks.presentation.util.isToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.YearMonth
 import java.time.ZoneOffset
 import java.util.Calendar
 import javax.inject.Inject
@@ -48,8 +52,8 @@ class CalendarViewModel @Inject constructor(
     val iconGroupsChannel = _iconGroupsChannel.receiveAsFlow()
 
     private val calendar = Calendar.getInstance()
-    private var month = getMonthNumber()
-    private var year = getYearNumber()
+    private var month = getMonthNumber(calendar)
+    private var year = getYearNumber(calendar)
 
     var sortIcon: Int? = state.get<Int>(CALENDAR_ICON_SORT)
         set(value) {
@@ -57,8 +61,8 @@ class CalendarViewModel @Inject constructor(
             state[CALENDAR_CONSTRAINTS] = value
 
             viewModelScope.launch(Dispatchers.IO) {
-                val startDate = getUnixTimeOfMonth(getMonthNumber(), getYearNumber(), TimeBorder.START)
-                val finishDate = getUnixTimeOfMonth(getMonthNumber(), getYearNumber(), TimeBorder.FINISH)
+                val startDate = getUnixTimeOfMonth(getMonthNumber(calendar), getYearNumber(calendar), TimeBorder.START)
+                val finishDate = getUnixTimeOfMonth(getMonthNumber(calendar), getYearNumber(calendar), TimeBorder.FINISH)
 
                 calendarDatesConstraints =
                     when (calendarDatesConstraints) {
@@ -129,8 +133,8 @@ class CalendarViewModel @Inject constructor(
             } else {
                 calendar.add(Calendar.MONTH, -ONE)
             }
-            month = getMonthNumber()
-            year = getYearNumber()
+            month = getMonthNumber(calendar)
+            year = getYearNumber(calendar)
             val startDate = getUnixTimeOfMonth(month, year, TimeBorder.START)
             val finishDate = getUnixTimeOfMonth(month, year, TimeBorder.FINISH)
 
@@ -147,7 +151,7 @@ class CalendarViewModel @Inject constructor(
 
     private suspend fun getTasksByConstraints() {
         repository.getTasksByConstraints(calendarDatesConstraints).first { listTasks ->
-            generateDayItemList(listTasks, calendarDatesConstraints)
+            generateDayItemList(listTasks)
             true
         }
     }
@@ -166,69 +170,37 @@ class CalendarViewModel @Inject constructor(
 
         TimeBorder.FINISH -> {
             LocalDateTime.of(
-                LocalDate.now().withYear(year).withMonth(month).withDayOfMonth(getLastDayOfMonth(month)),
+                LocalDate.now().withYear(year).withMonth(month)
+                    .withDayOfMonth(getLastDayOfMonth(month)),
                 LocalTime.of(LAST_HOUR, LAST_MINUTE, LAST_SECOND)
             ).toEpochSecond(ZoneOffset.UTC) * THOUSAND
         }
     }
 
-    private suspend fun generateDayItemList(
-        tasks: List<Task>, constraints: CalendarDatesConstraints
-    ) {
+    private suspend fun generateDayItemList(tasks: List<Task>) {
+        val size = getLastDayOfMonth(month)
+        val dayItemList = mutableListOf<DayItem>()
+        for (dayNumber in ONE..size) {
+            dayItemList.add(
+                DayItem(
+                    dayNumber = dayNumber,
+                    listOfTasks = getTasksByDayNumber(tasks, dayNumber),
+                    isToday = isToday(dayNumber, month, year),
+                    dayOfWeek = getDayOfWeek(dayNumber, month, year)
+                )
+            )
+        }
         _calendarChannel.send(
             CalendarEventContract.UpdateCalendarAndMonth(
-                listOfDays = listOf(
-                    DayItem(1, listOf(), false, DayOfWeek.MONDAY),
-                    DayItem(2, listOf(), false, DayOfWeek.TUESDAY),
-                    DayItem(3, listOf(), false, DayOfWeek.WEDNESDAY),
-                    DayItem(4, listOf(), false, DayOfWeek.THURSDAY),
-                    DayItem(5, listOf(), false, DayOfWeek.FRIDAY),
-                    DayItem(6, listOf(), false, DayOfWeek.SATURDAY),
-                    DayItem(7, listOf(), false, DayOfWeek.SUNDAY),
-
-                    DayItem(8, listOf(), false, DayOfWeek.MONDAY),
-                    DayItem(9, listOf(), false, DayOfWeek.TUESDAY),
-                    DayItem(10, listOf(), false, DayOfWeek.WEDNESDAY),
-                    DayItem(11, listOf(), false, DayOfWeek.THURSDAY),
-                    DayItem(12, tasks, true, DayOfWeek.FRIDAY),
-                    DayItem(13, listOf(), false, DayOfWeek.SATURDAY),
-                    DayItem(14, listOf(), false, DayOfWeek.SUNDAY),
-
-                    DayItem(15, listOf(), false, DayOfWeek.MONDAY),
-                    DayItem(16, listOf(), false, DayOfWeek.TUESDAY),
-                    DayItem(17, listOf(), false, DayOfWeek.WEDNESDAY),
-                    DayItem(18, listOf(), false, DayOfWeek.THURSDAY),
-                    DayItem(19, listOf(), false, DayOfWeek.FRIDAY),
-                    DayItem(20, listOf(), false, DayOfWeek.SATURDAY),
-                    DayItem(21, listOf(), false, DayOfWeek.SUNDAY),
-
-                    DayItem(22, listOf(), false, DayOfWeek.MONDAY),
-                    DayItem(23, listOf(), false, DayOfWeek.TUESDAY),
-                    DayItem(24, listOf(), false, DayOfWeek.WEDNESDAY),
-                    DayItem(25, listOf(), false, DayOfWeek.THURSDAY),
-                    DayItem(26, listOf(), false, DayOfWeek.FRIDAY),
-                    DayItem(27, listOf(), false, DayOfWeek.SATURDAY),
-                    DayItem(28, listOf(), false, DayOfWeek.SUNDAY),
-
-                    DayItem(29, listOf(), false, DayOfWeek.MONDAY),
-                    DayItem(30, listOf(), false, DayOfWeek.TUESDAY),
-                    DayItem(31, listOf(), false, DayOfWeek.WEDNESDAY),
-                ),
-                monthSequenceNumber = getMonthNumber()
+                listOfDays = dayItemList, monthSequenceNumber = getMonthNumber(calendar)
             )
         )
     }
 
-    private fun getMonthNumber() =
-        calendar.get(Calendar.MONTH) + ONE
-
-    private fun getYearNumber() =
-        calendar.get(Calendar.YEAR)
-
-    private fun getLastDayOfMonth(month: Int): Int {
-        val yearMonth = YearMonth.now().withMonth(month)
-        return yearMonth.lengthOfMonth()
-    }
+    private fun getTasksByDayNumber(tasks: List<Task>, dayNumber: Int): List<Task> =
+        tasks.filter { task ->
+            Timestamp(task.expireDateFirst).date == dayNumber
+        }
 
     companion object {
         enum class TimeBorder {

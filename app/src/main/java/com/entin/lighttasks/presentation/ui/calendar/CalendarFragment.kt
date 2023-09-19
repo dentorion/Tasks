@@ -20,8 +20,7 @@ import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutMa
 import com.entin.lighttasks.presentation.ui.calendar.adapter.CalendarListAdapter
 import com.entin.lighttasks.presentation.ui.calendar.adapter.IconSortAdapter
 import com.entin.lighttasks.presentation.ui.main.AllTasksFragmentDirections
-import com.entin.lighttasks.presentation.ui.main.adapter.SimpleAllTasksAdapter
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.ui.calendar.adapter.SimpleAllTasksAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getMonthName
@@ -201,28 +200,25 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
 
+    /** Set days in calendar */
     private fun setupDaysCalendar(listOfDays: List<DayItem>) {
-        if (daysListAdapter?.selectedItem == null) {
-            // First time
-            val today = listOfDays.first { it.isToday }
-            daysListAdapter?.selectedItem = today
-            daysListAdapter?.submitList(listOfDays)
-            val indexOfSelectedIcon = listOfDays.indexOf(today)
-            val marginElements = if (indexOfSelectedIcon >= ONE) ONE else ZERO
-            binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
-            setTasks(today.listOfTasks)
-        } else {
-            // Next time
-            val dayNumber = daysListAdapter?.selectedItem?.dayNumber ?: EMPTY_STRING
-            val dayName = daysListAdapter?.selectedItem?.dayOfWeek ?: EMPTY_STRING
-            val dayToSelect = listOfDays.first { it.dayNumber == dayNumber && it.dayOfWeek == dayName }
-            val indexOfSelectedDay = listOfDays.indexOf(dayToSelect)
-            daysListAdapter?.selectedItem = dayToSelect
-            daysListAdapter?.submitList(listOfDays)
-            val marginElements = if (indexOfSelectedDay >= ONE) ONE else ZERO
-            binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay - marginElements)
-            setTasks(dayToSelect.listOfTasks)
-        }
+        val selectedDay =
+            if (daysListAdapter?.selectedItem == null) {
+                // First time
+                listOfDays.firstOrNull { it.isToday } ?: listOfDays.first()
+            } else {
+                // Next time
+                listOfDays.firstOrNull {
+                    it.dayNumber == (daysListAdapter?.selectedItem?.dayNumber ?: ONE)
+                } ?: listOfDays.first()
+            }
+
+        daysListAdapter?.selectedItem = selectedDay
+        daysListAdapter?.submitList(listOfDays)
+        val indexOfSelectedDay = listOfDays.indexOf(selectedDay)
+        val marginElements = if (indexOfSelectedDay >= ONE) ONE else ZERO
+        binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay - marginElements)
+        setTasks(selectedDay.listOfTasks)
     }
 
     private fun setupMonthName(monthSequenceNumber: Int) {

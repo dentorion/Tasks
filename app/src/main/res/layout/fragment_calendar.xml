@@ -127,11 +127,11 @@
         android:id="@+id/calendar_helper"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_marginEnd="8dp"
         android:src="@drawable/ic_slide"
         app:layout_constraintBottom_toBottomOf="@+id/calendar_label_advanced"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/calendar_label_advanced" />
+        app:layout_constraintEnd_toEndOf="@+id/calendar_right_month"
+        app:layout_constraintTop_toTopOf="@+id/calendar_label_advanced"
+        app:layout_constraintVertical_bias="0.39999998" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendar_tasks_recyclerview"

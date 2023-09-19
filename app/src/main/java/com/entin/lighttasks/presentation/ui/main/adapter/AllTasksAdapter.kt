@@ -83,11 +83,9 @@ class AllTasksAdapter(
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
 
-                /** Range */
-
                 if(task.isTaskExpired) {
-
-                    if (task.isRange) {
+                    /** RANGE */
+                    if (task.isRange && !task.isEvent) {
 
                         // Now....FirstDate....SecondDate
                         if(Date().time < task.expireDateFirst) {
@@ -110,6 +108,8 @@ class AllTasksAdapter(
                                 val height = (progressPercentage * fullHeightPx / 100).toInt()
                                 layoutParams.height = height
                             }
+                            // hide alarm icon
+                            taskAlarm.visibility = View.GONE
                         }
 
                         // FirstDate....SecondDate....Now
@@ -122,8 +122,8 @@ class AllTasksAdapter(
                             }
                         }
                     }
-
-                    if (task.isEvent) {
+                    /** EVENT */
+                    if (task.isEvent && !task.isRange) {
 
                         // FirstDate....Now
                         if (Date().time > task.expireDateFirst) {
@@ -159,11 +159,10 @@ class AllTasksAdapter(
                         }
                     }
                 } else {
-                    /** Event */
-
-                    // Without date
+                    /** Without date (is_task_expired == false) */
                     taskExpiredBackground.visibility = View.GONE
                     taskExpiredIndicator.visibility = View.GONE
+                    taskAlarm.visibility = View.GONE
                 }
             }
         }

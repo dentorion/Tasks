@@ -3,6 +3,12 @@ package com.entin.lighttasks.presentation.util
 import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Months
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.ZoneId
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -47,3 +53,15 @@ fun getMonthName(monthSequenceNumber: Int): Int =
         Months.December.number -> R.string.december
         else -> R.string.error
     }
+
+fun isToday(day: Int, month: Int, year: Int): Boolean =
+    LocalDate.of(year, month, day).isEqual(LocalDate.now())
+
+fun getDayOfWeek(day: Int, month: Int, year: Int): DayOfWeek =
+    LocalDate.of(year, month, day).dayOfWeek
+
+fun getMonthNumber(calendar: Calendar) = calendar.get(Calendar.MONTH) + ONE
+
+fun getYearNumber(calendar: Calendar) = calendar.get(Calendar.YEAR)
+
+fun getLastDayOfMonth(month: Int): Int = YearMonth.now().withMonth(month).lengthOfMonth()
