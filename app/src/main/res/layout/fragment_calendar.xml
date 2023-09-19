@@ -32,36 +32,14 @@
         app:layout_constraintStart_toEndOf="@+id/calendar_label_advanced_points"
         app:layout_constraintTop_toTopOf="@+id/calendar_label_advanced_points" />
 
-    <ImageView
-        android:id="@+id/calendar_circle_share"
-        android:layout_width="55dp"
-        android:layout_height="0dp"
-        android:src="@drawable/ic_circle"
-        app:layout_constraintBottom_toBottomOf="@+id/calendar_icons_recyclerview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/calendar_icons_recyclerview" />
-
-    <ImageView
-        android:id="@+id/calendar_share"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginVertical="12dp"
-        android:src="@drawable/ic_share"
-        app:layout_constraintBottom_toBottomOf="@+id/calendar_circle_share"
-        app:layout_constraintEnd_toEndOf="@+id/calendar_circle_share"
-        app:layout_constraintStart_toStartOf="@+id/calendar_circle_share"
-        app:layout_constraintTop_toTopOf="@+id/calendar_circle_share" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendar_icons_recyclerview"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="22dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/calendar_circle_share"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendar_label_advanced"
         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/recycler_icon_sort_item" />
@@ -70,10 +48,9 @@
         android:id="@+id/calendar_label_advanced_points_date"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="22dp"
         android:src="@drawable/ic_three_dots_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendar_circle_share" />
+        tools:layout_editor_absoluteY="108dp" />
 
     <TextView
         android:id="@+id/calendar_label_sort_by_date"

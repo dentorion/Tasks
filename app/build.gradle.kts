@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 11
-        versionName = "11.0"
+        versionCode = 12
+        versionName = "Calendar"
     }
 
     buildTypes {
