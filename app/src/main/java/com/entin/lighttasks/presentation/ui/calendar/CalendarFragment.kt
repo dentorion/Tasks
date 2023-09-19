@@ -218,8 +218,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         daysListAdapter?.selectedItem = selectedDay
         daysListAdapter?.submitList(listOfDays)
         val indexOfSelectedDay = listOfDays.indexOf(selectedDay)
-        val marginElements = if (indexOfSelectedDay >= ONE) ONE else ZERO
-        binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay - marginElements)
+        binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay)
         setTasks(selectedDay.listOfTasks)
     }
 
