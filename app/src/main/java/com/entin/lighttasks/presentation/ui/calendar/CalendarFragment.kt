@@ -204,22 +204,26 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     /** Set days in calendar */
     private fun setupDaysCalendar(listOfDays: List<DayItem>) {
-        val selectedDay =
-            if (daysListAdapter?.selectedItem == null) {
-                // First time
-                listOfDays.firstOrNull { it.isToday } ?: listOfDays.first()
-            } else {
-                // Next time
-                listOfDays.firstOrNull {
-                    it.dayNumber == (daysListAdapter?.selectedItem?.dayNumber ?: ONE)
-                } ?: listOfDays.first()
-            }
+        daysListAdapter?.let { adapter ->
+            val selectedDay =
+                if (adapter.selectedItem == null) {
+                    // First time
+                    listOfDays.firstOrNull { it.isToday } ?: listOfDays.first()
+                } else {
+                    // Next time
+                    listOfDays.firstOrNull {
+                        it.dayNumber == (adapter.selectedItem?.dayNumber ?: ONE)
+                    } ?: listOfDays.first()
+                }
 
-        daysListAdapter?.selectedItem = selectedDay
-        daysListAdapter?.submitList(listOfDays)
-        val indexOfSelectedDay = listOfDays.indexOf(selectedDay)
-        binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay)
-        setTasks(selectedDay.listOfTasks)
+            adapter.apply {
+                selectedItem = selectedDay
+                adapter.submitList(listOfDays)
+            }
+            val indexOfSelectedDay = listOfDays.indexOf(selectedDay)
+            binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay)
+            setTasks(selectedDay.listOfTasks)
+        }
     }
 
     private fun setupMonthName(monthSequenceNumber: Int) {
