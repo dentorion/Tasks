@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.ui.addedit
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,10 @@ import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.LAST_HOUR
+import com.entin.lighttasks.presentation.util.LAST_MINUTE
+import com.entin.lighttasks.presentation.util.LAST_SECOND
+import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.TASK
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
@@ -22,13 +27,17 @@ import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.TASK_TITLE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
+import com.entin.lighttasks.presentation.util.getCurrentDay
+import com.entin.lighttasks.presentation.util.getCurrentMonth
+import com.entin.lighttasks.presentation.util.getCurrentYear
+import com.entin.lighttasks.presentation.util.getFinishDate
+import com.entin.lighttasks.presentation.util.getTimeMls
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -38,37 +47,37 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val state: SavedStateHandle,
-    private val repository: TasksRepository,
+    private val taskRepository: TasksRepository,
 ) : ViewModel() {
 
 
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
 
-    private val _Icon_taskChannel = Channel<List<IconTask>>()
-    val taskGroupsChannel = _Icon_taskChannel.receiveAsFlow()
+    private val _iconTaskChannel = Channel<List<IconTask>>()
+    val iconTaskChannel = _iconTaskChannel.receiveAsFlow()
 
     // If task is editing - task from SavedStateHandle
     val task: Task? = state.get<Task>(TASK)
 
-    // Today
-    private val defaultStartDateTime = Calendar.getInstance().apply {
-        set(Calendar.HOUR_OF_DAY, ZERO)
-        set(Calendar.MINUTE, ZERO)
-    }.timeInMillis
+    // Start date
+    private val defaultStartDateTime: Long = getTimeMls(
+        hours = ZERO,
+        minutes = ONE,
+        seconds = ONE,
+    )
 
-    // Tomorrow
-    private val defaultFinishDateTime = Calendar.getInstance().apply {
-        set(Calendar.HOUR_OF_DAY, 23)
-        set(Calendar.MINUTE, 59)
-    }.timeInMillis + ONE_DAY_MLS
+    // Finish date
+    val defaultFinishDateTime: Long = getTimeMls(
+        hours = LAST_HOUR,
+        minutes = LAST_MINUTE,
+        seconds = LAST_SECOND - ONE,
+    ) + ONE_DAY_MLS
 
     init {
-        /**
-         * Get all groups for task to show icons
-         */
+        /** Get all groups for task to show icons */
         viewModelScope.launch(Dispatchers.IO) {
-            _Icon_taskChannel.send(repository.getTaskIconGroups().shuffled())
+            _iconTaskChannel.send(taskRepository.getTaskIconGroups().shuffled())
         }
     }
 
@@ -144,6 +153,7 @@ class AddEditTaskViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             // First date > Second date in range task, that has date of expire
             if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
+                Log.e("GlobalErrors", "taskExpireFirstDate: $taskExpireFirstDate, taskExpireSecondDate: $taskExpireSecondDate")
                 errorDatesPicked()
             } else {
                 val expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
@@ -165,7 +175,7 @@ class AddEditTaskViewModel @Inject constructor(
                             isFinished = taskFinished,
                             isImportant = taskImportant,
                             createdAt = task.createdAt,
-                            editedAt = Date().time,
+                            editedAt = getTimeMls(),
                             group = taskGroup,
                             position = task.position,
                             expireDateFirst = expireDateFirst,
@@ -187,7 +197,7 @@ class AddEditTaskViewModel @Inject constructor(
                             isImportant = taskImportant,
                             group = taskGroup,
                             position = ZERO, // will be replaced in Repository
-                            createdAt = Date().time,
+                            createdAt = getTimeMls(),
                             editedAt = ZERO_LONG,
                             expireDateFirst = expireDateFirst,
                             expireDateSecond = expireDateSecond,
@@ -210,13 +220,13 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     private suspend fun updateTask(uTask: Task) {
-        repository.updateTask(uTask).apply {
+        taskRepository.updateTask(uTask).apply {
             if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
         }
     }
 
     private suspend fun saveNewTask(task: Task) {
-        repository.newTask(task).collect { result ->
+        taskRepository.newTask(task).collect { result ->
             if (result) {
                 _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
             } else {

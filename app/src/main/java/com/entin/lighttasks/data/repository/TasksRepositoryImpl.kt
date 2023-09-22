@@ -3,12 +3,16 @@ package com.entin.lighttasks.data.repository
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
+import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.LAST_HOUR
+import com.entin.lighttasks.presentation.util.LAST_MINUTE
+import com.entin.lighttasks.presentation.util.LAST_SECOND
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.getTimeMls
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -129,4 +133,23 @@ class TasksRepositoryImpl @Inject constructor(
                 }
             }
         }
+
+    /**
+     * WIDGET
+     */
+    override fun getCountTasksForWidget(): Flow<Int> {
+        val startDay = getTimeMls(
+            hours = ZERO,
+            minutes = ZERO,
+            seconds = ZERO,
+        )
+
+        val finishDay = getTimeMls(
+            hours = LAST_HOUR,
+            minutes = LAST_MINUTE,
+            seconds = LAST_SECOND,
+        )
+
+        return tasksDao.getCountTasksToday(startDay, finishDay)
+    }
 }

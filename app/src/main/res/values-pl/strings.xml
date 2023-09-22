@@ -91,4 +91,7 @@
     <string name="december">grudzień</string>
     <string name="error">błąd</string>
     <string name="calendar_tasks_strict_in_month">Miesiąc</string>
+    <string name="add_widget">Dodaj widżet</string>
+    <string name="app_widget_description">Widżet zadań na każdy dzień</string>
+    <string name="widget_tasks_count">Dzisiaj masz %1$d zadań</string>
 </resources>

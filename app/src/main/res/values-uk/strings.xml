@@ -92,4 +92,7 @@
     <string name="december">грудень</string>
     <string name="error">помилка</string>
     <string name="calendar_tasks_strict_in_month">місяць</string>
+    <string name="add_widget">Додайте віджет</string>
+    <string name="app_widget_description">Віджет задач на кожен день</string>
+    <string name="widget_tasks_count">" Завдань на сьогодні: %1$d"</string>
 </resources>

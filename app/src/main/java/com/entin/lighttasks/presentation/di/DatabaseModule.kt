@@ -23,6 +23,7 @@ object DatabaseModule {
     fun provideDataBase(
         @ApplicationContext context: Context,
         provider: Provider<TaskGroupsDao>,
+        providerTasks: Provider<TaskDao>,
     ): DataBase =
         Room.databaseBuilder(
             context,

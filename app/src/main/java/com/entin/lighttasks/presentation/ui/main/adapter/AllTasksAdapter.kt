@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.ui.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel
-import com.entin.lighttasks.presentation.util.convertPixelsToDp
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +68,6 @@ class AllTasksAdapter(
 //                    openTaskDetailsDialog(task)
                     true
                 }
-
                 taskTitle.text = checkForEmptyTitle(task.title, this.root.resources, task.id)
                 taskMessage.apply {
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
@@ -127,7 +124,6 @@ class AllTasksAdapter(
 
                         // FirstDate....Now
                         if (Date().time > task.expireDateFirst) {
-                            Log.e("STATUS", "FirstDate....Now")
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                             taskAlarm.apply {
@@ -138,7 +134,6 @@ class AllTasksAdapter(
 
                         // Now....FirstDate
                         if (Date().time < task.expireDateFirst) {
-                            Log.e("STATUS", "Now....FirstDate")
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                             taskAlarm.apply {
@@ -149,7 +144,6 @@ class AllTasksAdapter(
 
                         // Now
                         if (Date().day == Date(task.expireDateFirst).day) {
-                            Log.e("STATUS", "Now: day:${Date().day} == ${Date(task.expireDateFirst).day}")
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                             taskAlarm.apply {

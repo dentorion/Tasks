@@ -92,5 +92,8 @@
     <string name="december">diciembre</string>
     <string name="error">error</string>
     <string name="calendar_tasks_strict_in_month">Mes</string>
+    <string name="add_widget">Agregar widget</string>
+    <string name="app_widget_description">Widget de tareas para todos los días</string>
+    <string name="widget_tasks_count">Hoy tienes %1$d tareas</string>
 
 </resources>

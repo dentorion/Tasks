@@ -135,6 +135,9 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun newTask(task: Task): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun newTasks(tasks: List<Task>): List<Long>
+
     // Update task or list of tasks
 
     @Update
@@ -189,4 +192,12 @@ interface TaskDao {
     fun getTasksWithStartFinishExpireDatesWithIcon(
         startExpireDate: Long, finishExpireDate: Long, iconGroup: Int
     ): Flow<List<Task>>
+
+    /**
+     * WIDGET
+     */
+    @Query("SELECT COUNT(*) " +
+            "FROM tasks " +
+            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)")
+    fun getCountTasksToday(startExpireDate: Long, finishExpireDate: Long): Flow<Int>
 }

@@ -7,6 +7,7 @@
     <color name="color_main">#922A85</color>
     <color name="color_main_light_extra">#f6d3f2</color>
     <color name="color_stroke_checkbox">#EFB3E9</color>
+    <color name="widget_background">#D9EFB3E9</color>
 
     <color name="color_floating_btn">#FF5722</color>
     <color name="color_text">@color/color_main</color>
@@ -21,4 +22,8 @@
     <color name="mtrl_textinput_default_box_stroke_color">@color/color_stroke_checkbox</color>
     <color name="task_expire_background_indicator">#E4A6DE</color>
     <color name="expire_indicator">#E19DA6</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
 </resources>

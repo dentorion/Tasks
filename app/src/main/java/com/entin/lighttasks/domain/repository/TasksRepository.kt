@@ -35,4 +35,6 @@ interface TasksRepository {
     suspend fun getTaskIconGroups(): List<IconTask>
 
     fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>>
+
+    fun getCountTasksForWidget(): Flow<Int>
 }

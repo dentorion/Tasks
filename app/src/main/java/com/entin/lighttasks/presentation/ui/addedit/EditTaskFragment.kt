@@ -28,15 +28,20 @@ import com.entin.lighttasks.presentation.ui.addedit.adapter.IconTaskAdapter
 import com.entin.lighttasks.presentation.ui.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
-import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
+import com.entin.lighttasks.presentation.util.getCurrentDay
+import com.entin.lighttasks.presentation.util.getCurrentMonth
+import com.entin.lighttasks.presentation.util.getCurrentYear
+import com.entin.lighttasks.presentation.util.getFinishDate
 import com.entin.lighttasks.presentation.util.getSnackBar
+import com.entin.lighttasks.presentation.util.getStartDate
+import com.entin.lighttasks.presentation.util.getTimeMls
+import com.entin.lighttasks.presentation.util.replaceZeroDateWithNow
 import com.entin.lighttasks.presentation.util.toFormattedDateString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.Date
 
 
 /**
@@ -65,7 +70,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         return binding.root
     }
 
-    /** Category */
+    /**
+     * Category
+     */
     private fun setupCategoryRecyclerView() {
         groupAdapter = IconTaskAdapter(viewModel.taskGroup) { element, position ->
             onGroupIconSelected(element, position)
@@ -82,7 +89,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.taskGroupsChannel.collect { icons ->
+                viewModel.iconTaskChannel.collect { icons ->
                     val selectedIcon = icons.first { it.groupId == viewModel.taskGroup }
                     val indexOfSelectedIcon = icons.indexOf(selectedIcon)
                     groupAdapter?.submitList(icons)
@@ -187,26 +194,20 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         /** First Date picker */
         addEditTaskDatePickerFirst.setOnClickListener {
             val date = Calendar.getInstance().apply {
-                time = Date(replaceZeroDate(viewModel.taskExpireFirstDate))
+                timeInMillis = replaceZeroDateWithNow(viewModel.taskExpireFirstDate)
             }
             DatePickerDialog(
-                requireContext(), R.style.DatePickerStyle, null,
+                requireContext(),
+                R.style.DatePickerStyle,
+                null,
                 date.get(Calendar.YEAR),
                 date.get(Calendar.MONTH),
                 date.get(Calendar.DAY_OF_MONTH)
             ).also { dialog ->
                 dialog.apply {
-                    datePicker.minDate = Date().time
+                    datePicker.minDate = getTimeMls()
                     setOnDateSetListener { _, year, month, day ->
-                        val selectedDateCalendar = Calendar.getInstance().apply {
-                            set(Calendar.YEAR, year)
-                            set(Calendar.MONTH, month)
-                            set(Calendar.DAY_OF_MONTH, day)
-                            set(Calendar.HOUR_OF_DAY, ZERO)
-                            set(Calendar.MINUTE, ZERO)
-                            set(Calendar.SECOND, ZERO)
-                        }
-                        viewModel.taskExpireFirstDate = selectedDateCalendar.timeInMillis
+                        viewModel.taskExpireFirstDate = getStartDate(year, month, day)
                         setFirstDateOfExpire()
                     }
                     show()
@@ -215,11 +216,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
         setFirstDateOfExpire()
         /** Second Date picker */
-        addEditTaskDatePickerSecond.isVisible =
-            viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
+        addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
         addEditTaskDatePickerSecond.setOnClickListener {
             val date = Calendar.getInstance().apply {
-                time = Date(replaceZeroDate(viewModel.taskExpireSecondDate))
+                timeInMillis = replaceZeroDateWithNow(viewModel.taskExpireSecondDate)
             }
             DatePickerDialog(
                 requireContext(),
@@ -230,18 +230,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 date.get(Calendar.DAY_OF_MONTH),
             ).also { dialog ->
                 dialog.apply {
-                    datePicker.minDate =
-                        replaceZeroDate(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
+                    datePicker.minDate = replaceZeroDateWithNow(viewModel.taskExpireFirstDate) + ONE_DAY_MLS
                     setOnDateSetListener { _, year, month, day ->
-                        val selectedDateCalendar = Calendar.getInstance().apply {
-                            set(Calendar.YEAR, year)
-                            set(Calendar.MONTH, month)
-                            set(Calendar.DAY_OF_MONTH, day)
-                            set(Calendar.HOUR_OF_DAY, 23)
-                            set(Calendar.MINUTE, 59)
-                            set(Calendar.SECOND, 59)
-                        }
-                        viewModel.taskExpireSecondDate = selectedDateCalendar.timeInMillis
+                        viewModel.taskExpireSecondDate = getFinishDate(year, month, day)
                         setSecondDateOfExpire()
                     }
                     show()
@@ -257,10 +248,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     private fun setFirstDateOfExpire() {
         binding.addEditTaskDatePickerFirst.text = if (viewModel.taskExpireFirstDate == ZERO_LONG) {
-            Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, ZERO)
-                set(Calendar.MINUTE, ZERO)
-            }.timeInMillis.toFormattedDateString()
+            getStartDate(year = getCurrentYear(), month = getCurrentMonth(), day = getCurrentDay()).toFormattedDateString()
         } else {
             viewModel.taskExpireFirstDate.toFormattedDateString()
         }
@@ -269,21 +257,24 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun setSecondDateOfExpire() {
         binding.addEditTaskDatePickerSecond.text =
             if (viewModel.taskExpireSecondDate == ZERO_LONG) {
-                (Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 23)
-                    set(Calendar.MINUTE, 59)
-                }.timeInMillis + ONE_DAY_MLS).toFormattedDateString()
-            } else if (viewModel.taskExpireFirstDate == viewModel.taskExpireSecondDate) {
-                viewModel.taskExpireSecondDate = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 23)
-                    set(Calendar.MINUTE, 59)
-                }.timeInMillis + ONE_DAY_MLS
-
-                (Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 23)
-                    set(Calendar.MINUTE, 59)
-                }.timeInMillis + ONE_DAY_MLS).toFormattedDateString()
-            } else {
+                (getFinishDate(
+                    year = getCurrentYear(),
+                    month = getCurrentMonth(),
+                    day = getCurrentDay()) + ONE_DAY_MLS
+                ).toFormattedDateString()
+            }
+            else if (viewModel.taskExpireFirstDate == viewModel.taskExpireSecondDate) {
+                /**
+                 * User choose event type without changing dates, save.
+                 * After change type to range and if start was today, finish will be tomorrow by auto,
+                 * but if start was today + N days -> user have to reselect finish day manually.
+                 * That's why after reselecting from event to range we can pass finish as tomorrow.
+                 * But the best way to set finish date: start date + end of next day.
+                 */
+                viewModel.taskExpireSecondDate = viewModel.defaultFinishDateTime
+                viewModel.taskExpireSecondDate.toFormattedDateString()
+            }
+            else {
                 viewModel.taskExpireSecondDate.toFormattedDateString()
             }
     }
@@ -310,15 +301,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    private fun replaceZeroDate(date: Long): Long = if (date == ZERO_LONG) Date().time else date
-
-    // Event: navigate to AllTasksFragment with result
+    /**
+     * Event: navigate to AllTasksFragment with result
+     */
     private fun eventNavBackWithResult(event: Int) {
         binding.addEditTaskTitle.clearFocus()
-        setFragmentResult(
-            "operationMode",
-            bundleOf("mode" to event),
-        )
+        setFragmentResult("operationMode", bundleOf("mode" to event))
         findNavController().popBackStack()
     }
 
@@ -329,24 +317,18 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
                 when (event) {
-                    /**
-                     * Navigation back
-                     */
+                    /** Navigation back */
                     is EditTaskEventContract.NavBackWithResult -> {
                         eventNavBackWithResult(event.typeNewOrEditorExist)
                     }
-                    /**
-                     * Error blank title text show
-                     */
+                    /** Error blank title text show */
                     is EditTaskEventContract.ShowErrorBlankTitleText -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_empty_task_title_forbidden),
                             requireView(),
                         ).show()
                     }
-                    /**
-                     * Error dates picked show
-                     */
+                    /** Error dates picked show */
                     is EditTaskEventContract.ShowErrorDatesPicked -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_dates_picked),

@@ -1,40 +1,24 @@
+@file:Suppress("DEPRECATION")
+
 package com.entin.lighttasks.presentation.util
 
 import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Months
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
-import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.YearMonth
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
-fun Date.toFormattedString(): String {
-    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
-    return dateFormat.format(this)
-}
 
 fun Long.toFormattedDateString(): String {
     val date = Date(this)
     val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
     return dateFormat.format(date)
-}
-
-fun convertUnixTimestampToYearMonthDay(timestamp: Long): Triple<Int, Int, Int> {
-    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD, Locale.getDefault())
-    val date = Date(timestamp) // Convert seconds to milliseconds
-
-    val formattedDate = dateFormat.format(date)
-    val parts = formattedDate.split("-")
-
-    val year = parts[0].toInt()
-    val month = parts[1].toInt() - 1
-    val day = parts[2].toInt()
-
-    return Triple(year, month, day)
 }
 
 fun getMonthName(monthSequenceNumber: Int): Int =
@@ -65,3 +49,61 @@ fun getMonthNumber(calendar: Calendar) = calendar.get(Calendar.MONTH) + ONE
 fun getYearNumber(calendar: Calendar) = calendar.get(Calendar.YEAR)
 
 fun getLastDayOfMonth(month: Int): Int = YearMonth.now().withMonth(month).lengthOfMonth()
+
+fun replaceZeroDateWithNow(date: Long): Long =
+    if (date == ZERO_LONG) getTimeMls() else date
+
+fun getStartDate(
+    year: Int,
+    month: Int,
+    day: Int,
+): Long =
+    getTimeMls(
+        year = year - 1900,
+        month = month,
+        day = day,
+        hours = ZERO,
+        minutes = ONE,
+        seconds = ONE,
+    )
+
+fun getFinishDate(
+    year: Int,
+    month: Int,
+    day: Int,
+): Long =
+    getTimeMls(
+        year = year - 1900,
+        month = month,
+        day = day,
+        hours = LAST_HOUR,
+        minutes = LAST_MINUTE,
+        seconds = LAST_SECOND - ONE,
+    )
+
+fun getTimeMls(
+    year: Int = Date().year,
+    month: Int = Date().month,
+    day: Int = Date().date,
+    hours: Int = ZERO,
+    minutes: Int = ZERO,
+    seconds: Int = ZERO,
+): Long {
+    return Date().apply {
+        setYear(year)
+        setMonth(month)
+        date = day
+        setHours(hours)
+        setMinutes(minutes)
+        setSeconds(seconds)
+    }.time
+}
+
+fun getCurrentYear() =
+    Date().year + 1900
+
+fun getCurrentMonth() =
+    Date().month + ONE
+
+fun getCurrentDay() =
+    Date().date

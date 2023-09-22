@@ -9,7 +9,7 @@
 
     <item
         android:width="22dp"
-        android:height="22dp"
+        android:height="20dp"
         android:gravity="center"
         android:drawable="@drawable/ic_nothing" />
 

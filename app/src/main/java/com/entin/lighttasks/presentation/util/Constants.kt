@@ -55,3 +55,5 @@ const val NEW_LINE = "\n"
 const val LAST_HOUR = 23
 const val LAST_MINUTE = 59
 const val LAST_SECOND = 59
+const val ONE_DAY_MLS = 86400000
+const val ONE_WEEK_MLS = 604800000

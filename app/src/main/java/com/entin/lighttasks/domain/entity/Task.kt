@@ -5,11 +5,8 @@ import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
-import com.entin.lighttasks.presentation.util.ZERO_LONG
-import com.entin.lighttasks.presentation.util.toFormattedDateString
+import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.parcelize.Parcelize
-import java.util.Date
 
 /**
  * Domain model Task
@@ -21,7 +18,7 @@ import java.util.Date
 @Entity(tableName = "tasks")
 @Parcelize
 data class Task(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = ZERO,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "message") val message: String,
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
