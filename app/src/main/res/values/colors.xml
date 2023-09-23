@@ -8,6 +8,7 @@
     <color name="color_main_light_extra">#f6d3f2</color>
     <color name="color_stroke_checkbox">#EFB3E9</color>
     <color name="widget_background">#D9EFB3E9</color>
+    <color name="selected_icon_background">#D9B46FAD</color>
 
     <color name="color_floating_btn">#FF5722</color>
     <color name="color_text">@color/color_main</color>

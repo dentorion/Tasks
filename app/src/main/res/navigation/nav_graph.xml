@@ -100,5 +100,9 @@
         android:label="@string/sort_calendar" />
     <action
         android:id="@+id/action_global_calendarFragment"
-        app:destination="@id/calendarFragment" />
+        app:destination="@id/calendarFragment"
+        app:enterAnim="@anim/slide_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/slide_out" />
 </navigation>
