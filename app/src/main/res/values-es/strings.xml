@@ -11,7 +11,7 @@
     <string name="new_edit_fragment_field_message">Descripción</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
-    <string name="snack_bar_empty_task_title_forbidden">El título no puede estar vacía</string>
+    <string name="snack_bar_empty_task_title_forbidden">El título y el mensaje no pueden estar vacíos</string>
     <string name="snack_bar_dates_picked">Error de fecha</string>
     <string name="snack_bar_all_finished_tasks_cleared">Todas las tareas terminadas borradas</string>
     <string name="snack_bar_btn_undo_deleted">DESHACER</string>
@@ -95,5 +95,6 @@
     <string name="add_widget">Agregar widget</string>
     <string name="app_widget_description">Widget de tareas para todos los días</string>
     <string name="widget_tasks_count">Hoy tienes %1$d tareas</string>
+    <string name="snack_bar_task_not_saved">Error al guardar tarea</string>
 
 </resources>

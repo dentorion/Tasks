@@ -43,33 +43,69 @@ class TasksRepositoryImpl @Inject constructor(
         when (orderSort) {
             OrderSort.SORT_BY_DATE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByDateCreatedAsc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByDateCreatedAsc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 } else {
-                    tasksDao.getTasksSortedByDateCreatedDesc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByDateCreatedDesc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 }
             }
             OrderSort.SORT_BY_TITLE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByTitleAsc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByTitleAsc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 } else {
-                    tasksDao.getTasksSortedByTitleDesc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByTitleDesc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 }
             }
             OrderSort.SORT_BY_ICON -> {
                 if(isAsc) {
-                    tasksDao.getTasksSortedByIconAsc(hideFinished, orderSort.groupId, hideDatePick)
+                    tasksDao.getTasksSortedByIconAsc(
+                        hideFinished,
+                        orderSort.groupId,
+                        hideDatePick,
+                    )
                 } else {
-                    tasksDao.getTasksSortedByIconDesc(hideFinished, orderSort.groupId, hideDatePick)
+                    tasksDao.getTasksSortedByIconDesc(
+                        hideFinished,
+                        orderSort.groupId,
+                        hideDatePick,
+                    )
                 }
             }
             OrderSort.SORT_BY_IMPORTANT -> {
                 if(isAsc) {
-                    tasksDao.getTasksSortedByImportantAsc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByImportantAsc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 } else {
-                    tasksDao.getTasksSortedByImportantDesc(query, hideFinished, hideDatePick)
+                    tasksDao.getTasksSortedByImportantDesc(
+                        query,
+                        hideFinished,
+                        hideDatePick,
+                    )
                 }
             }
-            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
+            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(
+                query,
+                hideFinished,
+                hideDatePick,
+            )
         }
 
     /**
@@ -82,13 +118,11 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Updating queries
      */
-    override suspend fun updateAllTasks(list: List<Task>) {
+    override suspend fun updateAllTasks(list: List<Task>) =
         tasksDao.updateAllTasks(list)
-    }
 
-    override suspend fun updateTask(task: Task): Boolean {
-        return tasksDao.updateTask(task) > ZERO
-    }
+    override suspend fun updateTask(task: Task): Boolean =
+        tasksDao.updateTask(task) > ZERO
 
     /**
      * Delete queries
@@ -110,7 +144,8 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Get images for task groups
      */
-    override suspend fun getTaskIconGroups(): List<IconTask> = taskGroupsDao.getTaskGroups()
+    override suspend fun getTaskIconGroups(): List<IconTask> =
+        taskGroupsDao.getTaskGroups()
 
     /**
      * Calendar. Get tasks by month, year
@@ -119,17 +154,31 @@ class TasksRepositoryImpl @Inject constructor(
         when (constraints) {
             is CalendarDatesConstraints.StartFinishInMonth -> {
                 if(constraints.iconGroup != null) {
-                    tasksDao.getTasksWithStartFinishExpireDatesWithIcon(constraints.start, constraints.finish, constraints.iconGroup)
+                    tasksDao.getTasksWithStartFinishExpireDatesWithIcon(
+                        constraints.start,
+                        constraints.finish,
+                        constraints.iconGroup,
+                    )
                 } else {
-                    tasksDao.getTasksWithStartFinishExpireDates(constraints.start, constraints.finish)
+                    tasksDao.getTasksWithStartFinishExpireDates(
+                        constraints.start,
+                        constraints.finish,
+                    )
                 }
             }
 
             is CalendarDatesConstraints.StartInMonth -> {
                 if(constraints.iconGroup != null) {
-                    tasksDao.getTasksWithStartExpireDateWithIcon(constraints.start, constraints.finish, constraints.iconGroup)
+                    tasksDao.getTasksWithStartExpireDateWithIcon(
+                        constraints.start,
+                        constraints.finish,
+                        constraints.iconGroup,
+                    )
                 } else {
-                    tasksDao.getTasksWithStartExpireDate(constraints.start, constraints.finish)
+                    tasksDao.getTasksWithStartExpireDate(
+                        constraints.start,
+                        constraints.finish,
+                    )
                 }
             }
         }
@@ -137,19 +186,16 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * WIDGET
      */
-    override fun getCountTasksForWidget(): Flow<Int> {
-        val startDay = getTimeMls(
-            hours = ZERO,
-            minutes = ZERO,
-            seconds = ZERO,
+    override fun getCountTasksForWidget(): Flow<Int> =
+        tasksDao.getCountTasksToday(
+            getTimeMls(
+                hours = ZERO,
+                minutes = ZERO,
+                seconds = ZERO,
+            ), getTimeMls(
+                hours = LAST_HOUR,
+                minutes = LAST_MINUTE,
+                seconds = LAST_SECOND,
+            )
         )
-
-        val finishDay = getTimeMls(
-            hours = LAST_HOUR,
-            minutes = LAST_MINUTE,
-            seconds = LAST_SECOND,
-        )
-
-        return tasksDao.getCountTasksToday(startDay, finishDay)
     }
-}

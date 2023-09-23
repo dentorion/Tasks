@@ -8,7 +8,7 @@
     android:background="@drawable/background_main_new"
     android:paddingStart="12dp"
     android:paddingBottom="24dp"
-    tools:context=".presentation.ui.addedit.EditTaskFragment"
+    tools:context=".presentation.screens.addedit.EditTaskFragment"
     tools:ignore="RtlSymmetry">
 
     <ImageView

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_main_new"
     android:elevation="@dimen/common_dialog_elevation_constraint"
-    tools:context=".presentation.ui.main.AllTasksFragment">
+    tools:context=".presentation.screens.main.AllTasksFragment">
 
     <TextView
         android:id="@+id/preferences_version_app"

@@ -11,7 +11,7 @@
     <string name="new_edit_fragment_field_message">Опис</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
-    <string name="snack_bar_empty_task_title_forbidden">Заголовок не може бути порожнім</string>
+    <string name="snack_bar_empty_task_title_forbidden">Заголовок і повідомлення не можуть бути порожніми</string>
     <string name="snack_bar_dates_picked">Помилка в датах</string>
     <string name="snack_bar_all_finished_tasks_cleared">Завершені завдання очищені</string>
     <string name="snack_bar_btn_undo_deleted">"СКАСУВАТИ "</string>
@@ -95,4 +95,5 @@
     <string name="add_widget">Додайте віджет</string>
     <string name="app_widget_description">Віджет задач на кожен день</string>
     <string name="widget_tasks_count">" Завдань на сьогодні: %1$d"</string>
+    <string name="snack_bar_task_not_saved">Помилка збереження завдання</string>
 </resources>
