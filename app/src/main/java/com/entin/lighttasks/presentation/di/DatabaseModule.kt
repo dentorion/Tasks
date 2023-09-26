@@ -32,6 +32,7 @@ object DatabaseModule {
         )
             .addMigrations(DbMigration().migrationFrom1To2)
             .addMigrations(DbMigration().migrationFrom2To3)
+            .addMigrations(DbMigration().migrationFrom3To4)
             .addCallback(TaskGroupsCallback(provider))
             .fallbackToDestructiveMigration()
             .build()

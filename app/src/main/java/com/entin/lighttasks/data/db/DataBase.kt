@@ -10,7 +10,7 @@ import com.entin.lighttasks.domain.entity.IconTask
         Task::class,
         IconTask::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = false,
 )
 abstract class DataBase : RoomDatabase() {
