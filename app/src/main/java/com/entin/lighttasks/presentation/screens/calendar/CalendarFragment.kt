@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.screens.calendar
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,6 +49,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     ): View {
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
 
+        // Only portrait orientation for this fragment
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        viewModel.initData()
         setupIconGroupRecyclerView()
         setupCalendarListRecyclerView()
         setupTaskListRecyclerView()
@@ -63,7 +68,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     /** Group icon */
     private fun setupIconGroupRecyclerView() {
         iconListAdapter = SortByIconAdapter(
-            getSelectedIcon = ::getSelectedIcon
+            getSelectedIcon = ::getSelectedIcon,
         ) { element, position ->
             onGroupIconSelected(element, position)
         }
@@ -116,7 +121,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun onGroupIconSelected(element: IconTask?, position: Int?) {
         position?.let {
-            if(element == null) {
+            if (element == null) {
                 viewModel.sortIcon = null
                 binding.calendarIconsRecyclerview.smoothScrollToPosition(it)
             } else {
@@ -243,6 +248,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     override fun onDestroyView() {
+        // Allow any orientation in app
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         iconListAdapter = null
         _binding = null
         super.onDestroyView()

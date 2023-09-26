@@ -78,18 +78,17 @@ class AllTasksAdapter(
                 taskImportant.visibility = if (task.isImportant) View.VISIBLE else View.GONE
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
                 taskUrlTag.isVisible = task.attachedLink.isNotEmpty()
-                taskPhotoTag.isVisible = true
-                taskVoiceTag.isVisible = true
+                taskPhotoTag.isVisible = false
+                taskVoiceTag.isVisible = false
 
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
 
-                if(task.isTaskExpired) {
+                if (task.isTaskExpired) {
                     /** RANGE */
                     if (task.isRange && !task.isEvent) {
-
                         // Now....FirstDate....SecondDate
-                        if(Date().time < task.expireDateFirst) {
+                        if (Date().time < task.expireDateFirst) {
                             taskExpiredBackground.visibility = View.INVISIBLE
                             taskExpiredIndicator.visibility = View.INVISIBLE
                             taskAlarm.apply {
@@ -125,7 +124,6 @@ class AllTasksAdapter(
                     }
                     /** EVENT */
                     if (task.isEvent && !task.isRange) {
-
                         // FirstDate....Now
                         if (Date().time > task.expireDateFirst) {
                             taskExpiredBackground.visibility = View.INVISIBLE
@@ -165,7 +163,6 @@ class AllTasksAdapter(
             }
         }
     }
-
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         val newCurrentList = mutableListOf<Task>().apply { addAll(currentList) }

@@ -66,22 +66,21 @@ class CalendarViewModel @Inject constructor(
 
                 calendarDatesConstraints =
                     when (calendarDatesConstraints) {
-                    is CalendarDatesConstraints.StartFinishInMonth -> {
-                        if(value == null) {
-                            CalendarDatesConstraints.StartFinishInMonth(startDate, finishDate, null)
-                        } else {
-                            CalendarDatesConstraints.StartFinishInMonth(startDate, finishDate, value)
+                        is CalendarDatesConstraints.StartFinishInMonth -> {
+                            if (value == null) {
+                                CalendarDatesConstraints.StartFinishInMonth(startDate, finishDate, null)
+                            } else {
+                                CalendarDatesConstraints.StartFinishInMonth(startDate, finishDate, value)
+                            }
+                        }
+                        is CalendarDatesConstraints.StartInMonth -> {
+                            if (value == null) {
+                                CalendarDatesConstraints.StartInMonth(startDate, finishDate, null)
+                            } else {
+                                CalendarDatesConstraints.StartInMonth(startDate, finishDate, value)
+                            }
                         }
                     }
-                    is CalendarDatesConstraints.StartInMonth -> {
-                        if(value == null) {
-                            CalendarDatesConstraints.StartInMonth(startDate, finishDate, null)
-                        } else {
-                            CalendarDatesConstraints.StartInMonth(startDate, finishDate, value)
-                        }
-
-                    }
-                }
                 getTasksByConstraints()
             }
         }
@@ -91,7 +90,7 @@ class CalendarViewModel @Inject constructor(
             ?: CalendarDatesConstraints.StartInMonth(
                 getUnixTimeOfMonth(month, year, TimeBorder.START),
                 getUnixTimeOfMonth(month, year, TimeBorder.FINISH),
-                sortIcon
+                sortIcon,
             )
         set(value) {
             field = value
@@ -117,7 +116,7 @@ class CalendarViewModel @Inject constructor(
             }
         }
 
-    init {
+    fun initData() {
         viewModelScope.launch(Dispatchers.IO) {
             // Get all groups icons
             _iconGroupsChannel.send(repository.getTaskIconGroups())
@@ -159,12 +158,12 @@ class CalendarViewModel @Inject constructor(
     private fun getUnixTimeOfMonth(
         month: Int,
         year: Int,
-        timeBorder: TimeBorder
+        timeBorder: TimeBorder,
     ): Long = when (timeBorder) {
         TimeBorder.START -> {
             LocalDateTime.of(
                 LocalDate.now().withYear(year).withMonth(month).withDayOfMonth(ONE),
-                LocalTime.of(ZERO, ZERO, ZERO)
+                LocalTime.of(ZERO, ZERO, ZERO),
             ).toEpochSecond(ZoneOffset.UTC) * THOUSAND
         }
 
@@ -172,7 +171,7 @@ class CalendarViewModel @Inject constructor(
             LocalDateTime.of(
                 LocalDate.now().withYear(year).withMonth(month)
                     .withDayOfMonth(getLastDayOfMonth(month)),
-                LocalTime.of(LAST_HOUR, LAST_MINUTE, LAST_SECOND)
+                LocalTime.of(LAST_HOUR, LAST_MINUTE, LAST_SECOND),
             ).toEpochSecond(ZoneOffset.UTC) * THOUSAND
         }
     }
@@ -186,14 +185,15 @@ class CalendarViewModel @Inject constructor(
                     dayNumber = dayNumber,
                     listOfTasks = getTasksByDayNumber(tasks, dayNumber),
                     isToday = isToday(dayNumber, month, year),
-                    dayOfWeek = getDayOfWeek(dayNumber, month, year)
-                )
+                    dayOfWeek = getDayOfWeek(dayNumber, month, year),
+                ),
             )
         }
         _calendarChannel.send(
             CalendarEventContract.UpdateCalendarAndMonth(
-                listOfDays = dayItemList, monthSequenceNumber = getMonthNumber(calendar)
-            )
+                listOfDays = dayItemList,
+                monthSequenceNumber = getMonthNumber(calendar),
+            ),
         )
     }
 
