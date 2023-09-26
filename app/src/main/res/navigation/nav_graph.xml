@@ -43,7 +43,8 @@
     <dialog
         android:id="@+id/deleteTask"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog"
-        android:label="DeleteTask">
+        android:label="DeleteTask"
+        tools:layout="@layout/delete_task_dialog">
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task" />
@@ -54,11 +55,13 @@
     <dialog
         android:id="@+id/deleteFinishedDialog"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.DeleteFinishedTasksDialog"
-        android:label="DeleteFinishedDialog" />
+        android:label="DeleteFinishedDialog"
+        tools:layout="@layout/clear_finished_dialog" />
     <dialog
         android:id="@+id/changeLanguageDialog"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.ChangeLanguageDialog"
-        android:label="ChangeLanguageDialog" />
+        android:label="ChangeLanguageDialog"
+        tools:layout="@layout/change_language_dialog" />
     <action
         android:id="@+id/action_global_deleteFinishedDialog"
         app:destination="@id/deleteFinishedDialog" />
@@ -68,14 +71,16 @@
     <fragment
         android:id="@+id/preferencesFragment"
         android:name="com.entin.lighttasks.presentation.screens.preferencies.PreferencesFragment"
-        android:label="@string/action_bar_item_title_preferences" />
+        android:label="@string/action_bar_item_title_preferences"
+        tools:layout="@layout/fragment_preferences" />
     <action
         android:id="@+id/action_global_preferencesFragment"
         app:destination="@id/preferencesFragment" />
     <dialog
         android:id="@+id/sortTasksByIconDialog"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.SortTasksByIconDialog"
-        android:label="SortTasksByIconDialog">
+        android:label="SortTasksByIconDialog"
+        tools:layout="@layout/sort_task_dialog">
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task" />
@@ -86,7 +91,8 @@
     <dialog
         android:id="@+id/taskDetailsDialog"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.TaskDetailsDialog"
-        android:label="TaskDetailsDialog">
+        android:label="TaskDetailsDialog"
+        tools:layout="@layout/task_details_dialog">
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task" />
@@ -97,7 +103,8 @@
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.entin.lighttasks.presentation.screens.calendar.CalendarFragment"
-        android:label="@string/sort_calendar" />
+        android:label="@string/sort_calendar"
+        tools:layout="@layout/fragment_calendar" />
     <action
         android:id="@+id/action_global_calendarFragment"
         app:destination="@id/calendarFragment"
@@ -105,4 +112,21 @@
         app:exitAnim="@anim/fade_out"
         app:popEnterAnim="@anim/fade_in"
         app:popExitAnim="@anim/slide_out" />
+    <dialog
+        android:id="@+id/linkAddToTaskDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog"
+        android:label="LinkAddToTaskDialog"
+        tools:layout="@layout/link_attached_dialog" />
+    <fragment
+        android:id="@+id/urlWebView"
+        android:name="com.entin.lighttasks.presentation.screens.webview.UrlWebView"
+        android:label=""
+        tools:layout="@layout/web_view" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_urlWebView"
+        app:destination="@id/urlWebView" />
 </navigation>

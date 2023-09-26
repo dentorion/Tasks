@@ -43,69 +43,39 @@ class TasksRepositoryImpl @Inject constructor(
         when (orderSort) {
             OrderSort.SORT_BY_DATE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByDateCreatedAsc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByDateCreatedAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByDateCreatedDesc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByDateCreatedDesc(query, hideFinished, hideDatePick)
                 }
             }
+
             OrderSort.SORT_BY_TITLE -> {
                 if (isAsc) {
-                    tasksDao.getTasksSortedByTitleAsc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByTitleAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByTitleDesc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByTitleDesc(query, hideFinished, hideDatePick)
                 }
             }
+
             OrderSort.SORT_BY_ICON -> {
                 if(isAsc) {
-                    tasksDao.getTasksSortedByIconAsc(
-                        hideFinished,
-                        orderSort.groupId,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByIconAsc(hideFinished, orderSort.groupId, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByIconDesc(
-                        hideFinished,
-                        orderSort.groupId,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByIconDesc(hideFinished, orderSort.groupId, hideDatePick)
                 }
             }
+
             OrderSort.SORT_BY_IMPORTANT -> {
-                if(isAsc) {
-                    tasksDao.getTasksSortedByImportantAsc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                if (isAsc) {
+                    tasksDao.getTasksSortedByImportantAsc(query, hideFinished, hideDatePick)
                 } else {
-                    tasksDao.getTasksSortedByImportantDesc(
-                        query,
-                        hideFinished,
-                        hideDatePick,
-                    )
+                    tasksDao.getTasksSortedByImportantDesc(query, hideFinished, hideDatePick)
                 }
             }
-            OrderSort.SORT_BY_MANUAL -> tasksDao.getTasksSortedByManualAsc(
-                query,
-                hideFinished,
-                hideDatePick,
-            )
+
+            OrderSort.SORT_BY_MANUAL -> {
+                tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
+            }
         }
 
     /**
@@ -155,14 +125,11 @@ class TasksRepositoryImpl @Inject constructor(
             is CalendarDatesConstraints.StartFinishInMonth -> {
                 if(constraints.iconGroup != null) {
                     tasksDao.getTasksWithStartFinishExpireDatesWithIcon(
-                        constraints.start,
-                        constraints.finish,
-                        constraints.iconGroup,
+                        constraints.start, constraints.finish, constraints.iconGroup
                     )
                 } else {
                     tasksDao.getTasksWithStartFinishExpireDates(
-                        constraints.start,
-                        constraints.finish,
+                        constraints.start, constraints.finish
                     )
                 }
             }
@@ -170,14 +137,11 @@ class TasksRepositoryImpl @Inject constructor(
             is CalendarDatesConstraints.StartInMonth -> {
                 if(constraints.iconGroup != null) {
                     tasksDao.getTasksWithStartExpireDateWithIcon(
-                        constraints.start,
-                        constraints.finish,
-                        constraints.iconGroup,
+                        constraints.start, constraints.finish, constraints.iconGroup
                     )
                 } else {
                     tasksDao.getTasksWithStartExpireDate(
-                        constraints.start,
-                        constraints.finish,
+                        constraints.start, constraints.finish
                     )
                 }
             }
@@ -188,14 +152,7 @@ class TasksRepositoryImpl @Inject constructor(
      */
     override fun getCountTasksForWidget(): Flow<Int> =
         tasksDao.getCountTasksToday(
-            getTimeMls(
-                hours = ZERO,
-                minutes = ZERO,
-                seconds = ZERO,
-            ), getTimeMls(
-                hours = LAST_HOUR,
-                minutes = LAST_MINUTE,
-                seconds = LAST_SECOND,
-            )
+            getTimeMls(hours = ZERO, minutes = ZERO, seconds = ZERO),
+            getTimeMls(hours = LAST_HOUR, minutes = LAST_MINUTE, seconds = LAST_SECOND)
         )
     }

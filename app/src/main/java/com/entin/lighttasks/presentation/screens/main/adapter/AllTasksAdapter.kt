@@ -3,6 +3,7 @@ package com.entin.lighttasks.presentation.screens.main.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
@@ -76,6 +77,9 @@ class AllTasksAdapter(
                 taskFinished.isChecked = task.isFinished
                 taskImportant.visibility = if (task.isImportant) View.VISIBLE else View.GONE
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
+                taskUrlTag.isVisible = task.attachedLink.isNotEmpty()
+                taskPhotoTag.isVisible = true
+                taskVoiceTag.isVisible = true
 
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()

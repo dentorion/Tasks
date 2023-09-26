@@ -1,125 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_main_new"
-    android:elevation="@dimen/common_dialog_elevation_constraint"
-    android:padding="@dimen/common_dialog_padding_constraint"
-    tools:layout_editor_absoluteY="25dp">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/dialog_task_details_task_circle"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:alpha="@dimen/trash_basket_opacity_delete"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_created"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/ic_circle" />
-
-    <ImageView
-        android:id="@+id/dialog_task_details_icon_to_show"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:adjustViewBounds="true"
-        android:alpha="@dimen/small_icon_opacity_size_item"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="4dp"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/dialog_task_details_task_circle"
-        app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
-        app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
-        app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
-        app:srcCompat="@drawable/ic_circle" />
-
-    <TextView
-        android:id="@+id/dialog_task_details_created"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:textColor="@color/gray"
-        android:textSize="10sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_expired"
-        app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle"
-        tools:text="Created at 28.04.20023" />
-
-    <TextView
-        android:id="@+id/dialog_task_details_expired"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:textColor="@color/gray"
-        android:textSize="10sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_title"
-        app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_created"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/dialog_task_details_created"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_created"
-        tools:text="Expired: 12.04.2023 - 26.06.2023" />
-
-    <TextView
-        android:id="@+id/dialog_task_details_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:textColor="@color/color_main"
-        android:textSize="@dimen/text_size_delete"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_expired"
-        tools:text="Title of, that can be 35 characters" />
-
-    <TextView
-        android:id="@+id/dialog_task_details_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textColor="@color/gray"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_cancel_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_title"
-        tools:text="Title of, that can be 35 characters" />
-
-    <TextView
-        android:id="@+id/dialog_task_details_cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/important_background"
+        android:background="@drawable/background_main_new"
+        android:elevation="@dimen/common_dialog_elevation_constraint"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
-        android:text="@string/close"
-        android:textAllCaps="true"
-        android:textColor="@color/color_main"
-        android:textSize="@dimen/text_size_delete"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_message" />
+        android:paddingVertical="24dp"
+        tools:layout_editor_absoluteY="25dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/dialog_task_details_task_circle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="@dimen/trash_basket_opacity_delete"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_open_web_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle" />
+
+        <ImageView
+            android:id="@+id/dialog_task_details_icon_to_show"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:adjustViewBounds="true"
+            android:alpha="@dimen/small_icon_opacity_size_item"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
+            app:srcCompat="@drawable/ic_circle" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_created"
+            android:layout_width="387dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:paddingHorizontal="4dp"
+            android:textAllCaps="false"
+            android:textColor="@color/gray"
+            android:textSize="9sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_expired"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_open_web_button"
+            tools:text="Created at 28.04.20023" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_expired"
+            android:layout_width="387dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="4dp"
+            android:textAllCaps="false"
+            android:textColor="@color/gray"
+            android:textSize="9sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_created"
+            tools:text="Expired: 12.04.2023 - 26.06.2023" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_title"
+            android:layout_width="387dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_expired"
+            tools:text="Title of, that can be 35 characters" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_message"
+            android:layout_width="387dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minHeight="120dp"
+            android:textColor="@color/gray"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_cancel_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_title"
+            tools:text="Title of, that can be 35 characters" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/important_background"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="@string/close"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_message" />
+
+        <TextView
+            android:id="@+id/dialog_task_details_open_web_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/important_background"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="URL OPEN"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_task_details_created"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

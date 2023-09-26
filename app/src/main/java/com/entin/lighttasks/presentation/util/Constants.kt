@@ -41,6 +41,9 @@ const val TASK_IS_RANGE = "isRange"
 const val CALENDAR_CONSTRAINTS = "calendarConstraints"
 const val CALENDAR_ICON_SORT = "iconSort"
 
+const val LINK_ATTACHED = "linkAttached"
+const val LINK_ATTACHED_VALUE = "linkAttachedValue"
+
 
 /**
  * Utils

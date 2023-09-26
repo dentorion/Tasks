@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_main_new"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="24dp">
+
+        <ImageView
+            android:id="@+id/dialog_task_details_task_circle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="@dimen/trash_basket_opacity_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle" />
+
+        <ImageView
+            android:id="@+id/dialog_task_details_icon_to_show"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:adjustViewBounds="true"
+            android:alpha="@dimen/small_icon_opacity_size_item"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
+            app:tint="@color/color_main" />
+
+        <TextView
+            android:id="@+id/dialog_link_attached_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/close"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="@dimen/text_size_delete"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_link_attached_open_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/link_attached_value_layout" />
+
+        <TextView
+            android:id="@+id/dialog_link_attached_open_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/open"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="@dimen/text_size_delete"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_cancel_button"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_link_attached_save_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dialog_link_attached_cancel_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_link_attached_cancel_button"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/link_attached_value_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/attached_link"
+            android:saveEnabled="false"
+            android:textColorHint="@color/color_text"
+            app:boxBackgroundColor="@color/color_main_light_extra"
+            app:boxStrokeColor="@color/color_text"
+            app:boxStrokeErrorColor="@color/color_important"
+            app:counterEnabled="true"
+            app:counterMaxLength="172"
+            app:counterTextColor="@color/color_text"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/color_text"
+            app:errorTextColor="@color/color_important"
+            app:helperTextTextColor="@color/color_text"
+            app:hintTextColor="@color/color_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/link_attached_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLength="35"
+                android:maxLines="1"
+                android:textColor="@color/color_text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/link_attached_value_incorrect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="INCORRECT URL FORMAT"
+            android:textAllCaps="true"
+            android:textColor="@color/color_important"
+            android:textSize="4pt"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle"
+            tools:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/link_attached_value_example"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="http://web-site.com"
+            android:textAllCaps="true"
+            android:textColor="@color/gray"
+            android:textSize="4pt"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/dialog_link_attached_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/save"
+            android:textAllCaps="true"
+            android:textColor="@color/color_main"
+            android:textSize="@dimen/text_size_delete"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_open_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dialog_link_attached_open_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_link_attached_open_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

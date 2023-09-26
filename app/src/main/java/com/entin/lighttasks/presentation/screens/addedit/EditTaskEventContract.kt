@@ -10,5 +10,10 @@ sealed class EditTaskEventContract {
     object ShowErrorBlankTitleAndMessage : EditTaskEventContract()
     object ShowErrorDatesPicked : EditTaskEventContract()
     object TaskNotSaved : EditTaskEventContract()
+    data class RefreshTagsVisibility(
+        val url: Boolean = false,
+        val photo: Boolean = false,
+        val voice: Boolean = false
+    ) : EditTaskEventContract()
     data class NavBackWithResult(val typeNewOrEditorExist: Int) : EditTaskEventContract()
 }

@@ -11,6 +11,7 @@ import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
+import com.entin.lighttasks.presentation.util.LINK_ATTACHED
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.TASK
 import com.entin.lighttasks.presentation.util.TASK_EDIT
@@ -41,10 +42,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
-    private val state: SavedStateHandle,
+    val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
 ) : ViewModel() {
-
 
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
@@ -69,14 +69,14 @@ class AddEditTaskViewModel @Inject constructor(
         seconds = LAST_SECOND - ONE,
     ) + ONE_DAY_MLS
 
-    init {
-        /** Get all groups for task to show icons */
-        viewModelScope.launch(Dispatchers.IO) {
-            _iconTaskChannel.send(taskRepository.getTaskIconGroups().shuffled())
+    var linkAttached = state.get<String>(LINK_ATTACHED) ?: task?.attachedLink ?: EMPTY_STRING
+        set(value) {
+            viewModelScope.launch {
+                _editTaskChannel.send(EditTaskEventContract.RefreshTagsVisibility(url = value.isNotEmpty()))
+                field = value.trim()
+                state[LINK_ATTACHED] = value.trim()
+            }
         }
-    }
-
-    fun getTaskId(): Int? = task?.id
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: task?.title ?: EMPTY_STRING
         set(value) {
@@ -144,6 +144,15 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
+    fun getTaskId(): Int? = task?.id
+
+    /** Get all groups for task to show icons */
+    fun getIcons() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _iconTaskChannel.send(taskRepository.getTaskIconGroups().shuffled())
+        }
+    }
+
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -185,6 +194,7 @@ class AddEditTaskViewModel @Inject constructor(
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
                             isRange = isRange,
+                            attachedLink = linkAttached,
                         ),
                     )
                 }
@@ -206,6 +216,7 @@ class AddEditTaskViewModel @Inject constructor(
                             isTaskExpired = isTaskExpired,
                             isEvent = isEvent,
                             isRange = isRange,
+                            attachedLink = linkAttached,
                         ),
                     )
                 }
@@ -223,17 +234,25 @@ class AddEditTaskViewModel @Inject constructor(
 
     private suspend fun updateTask(uTask: Task) {
         taskRepository.updateTask(uTask).apply {
+            state[TASK] = null
             if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
         }
     }
 
     private suspend fun saveNewTask(task: Task) {
         taskRepository.newTask(task).collect { result ->
+            state[TASK] = null
             if (result) {
                 _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
             } else {
                 _editTaskChannel.send(EditTaskEventContract.TaskNotSaved)
             }
+        }
+    }
+
+    fun setLink(url: String?) {
+        url?.let {
+            linkAttached = it
         }
     }
 

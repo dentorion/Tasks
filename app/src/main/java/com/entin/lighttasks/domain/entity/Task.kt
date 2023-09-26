@@ -32,4 +32,5 @@ data class Task(
     @ColumnInfo(name = "is_task_expired") val isTaskExpired: Boolean,
     @ColumnInfo(name = "is_event") val isEvent: Boolean,
     @ColumnInfo(name = "is_range") val isRange: Boolean,
+    @ColumnInfo(name = "attached_link") val attachedLink: String,
 ) : Parcelable

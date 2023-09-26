@@ -11,6 +11,8 @@
     <string name="new_edit_fragment_field_message">Description</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
+    <string name="attached_link">link url</string>
+
     <string name="snack_bar_empty_task_title_forbidden">Title and message can\'t be empty</string>
     <string name="snack_bar_dates_picked">Date error</string>
     <string name="snack_bar_task_not_saved">Task saving error</string>
@@ -67,6 +69,7 @@
     <string name="options_show_events">Hide events</string>
     <string name="add_edit_task_add_date_label">Add time limit</string>
     <string name="close">Close</string>
+    <string name="save">Save</string>
     <string name="expiration_date_format">Expiration date: %1$s - %2$s</string>
     <string name="no_name_title_task">Untitled task</string>
     <string name="sort_calendar">Calendar</string>
@@ -106,4 +109,7 @@
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">Tasks widget for every day</string>
     <string name="widget_tasks_count">Tasks for today: %1$d</string>
+    <string name="open" >Open</string>
+
+    <string name="created_date_format">Created: %1$s</string>
 </resources>

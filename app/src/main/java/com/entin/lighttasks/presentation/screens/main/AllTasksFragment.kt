@@ -44,7 +44,6 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     @OptIn(ExperimentalCoroutinesApi::class)
     private val viewModel: AllTasksViewModel by activityViewModels()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(
         listener = this,
         navigateToDeleteDialog = ::openDeleteDialog,

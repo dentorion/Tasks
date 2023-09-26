@@ -11,6 +11,7 @@
     <string name="new_edit_fragment_field_message">Опис</string>
     <string name="new_edit_fragment_btn_ok">OK</string>
 
+    <string name="attached_link">url посилання</string>
     <string name="snack_bar_empty_task_title_forbidden">Заголовок і повідомлення не можуть бути порожніми</string>
     <string name="snack_bar_dates_picked">Помилка в датах</string>
     <string name="snack_bar_all_finished_tasks_cleared">Завершені завдання очищені</string>
@@ -91,9 +92,12 @@
     <string name="november">листопад</string>
     <string name="december">грудень</string>
     <string name="error">помилка</string>
-    <string name="calendar_tasks_strict_in_month">місяць</string>
+    <string name="calendar_tasks_strict_in_month">Місяць</string>
     <string name="add_widget">Додайте віджет</string>
     <string name="app_widget_description">Віджет задач на кожен день</string>
     <string name="widget_tasks_count">" Завдань на сьогодні: %1$d"</string>
     <string name="snack_bar_task_not_saved">Помилка збереження завдання</string>
+    <string name="save">Зберегти</string>
+    <string name="open" >Відкрити</string>
+    <string name="created_date_format">Створено: %1$s</string>
 </resources>

@@ -100,4 +100,12 @@
         <item name="appWidgetPadding">1dp</item>
     </style>
 
+    <style name="NoPaddingDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowEnterAnimation">@anim/up_slide</item>
+        <item name="android:windowExitAnimation">@anim/down_slide</item>
+    </style>
+
 </resources>
