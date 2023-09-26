@@ -10,6 +10,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.entin.lighttasks.R
+import com.entin.lighttasks.databinding.LinkAttachedDialogBinding
+import com.entin.lighttasks.databinding.SortTaskDialogBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
@@ -19,6 +21,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SortTasksByIconDialog : DialogFragment() {
+
+    private var _binding: SortTaskDialogBinding? = null
+    private val binding get() = _binding!!
     private val args: SortTasksByIconDialogArgs by navArgs()
     private val vmLocal: AllTasksViewModel by activityViewModels()
 
@@ -26,25 +31,31 @@ class SortTasksByIconDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        val rootView = inflater.inflate(R.layout.sort_task_dialog, container, false)
+    ): View {
+        isCancelable = false
+        _binding = SortTaskDialogBinding.inflate(inflater, container, false)
 
         val task: Task = args.task
-
         val icon = getIconTaskDrawable(task)
-        rootView.findViewById<ImageView>(R.id.dialog_sort_task_icon_to_show).setImageResource(icon)
 
-        rootView.findViewById<TextView>(R.id.dialog_sort_task_cancel_button).setOnClickListener {
-            dismiss()
-        }
+        with(binding) {
+            dialogSortTaskIconToShow.setImageResource(icon)
 
-        rootView.findViewById<TextView>(R.id.dialog_sort_task_ok_button).setOnClickListener {
-            task.let {
-                vmLocal.onTaskSortByIcon(task)
+            dialogSortTaskCancelButton.setOnClickListener {
+                dismiss()
             }
-            dismiss()
+
+            dialogSortTaskOkButton.setOnClickListener {
+                vmLocal.onTaskSortByIcon(task)
+                dismiss()
+            }
         }
 
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
