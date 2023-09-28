@@ -165,7 +165,9 @@ class DbMigration {
                         "is_task_expired INTEGER NOT NULL, " +
                         "is_event INTEGER NOT NULL, " +
                         "is_range INTEGER NOT NULL, " +
-                        "attached_link TEXT NOT NULL)",
+                        "attached_link, TEXT NOT NULL, " +
+                        "attached_photo TEXT NOT NULL, " +
+                        "attached_voice TEXT NOT NULL)",
             )
             database.execSQL(
                 "INSERT INTO tasksNew (id, title, message, is_finished, is_important, created_at, edited_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range, attached_link, attached_photo, attached_voice) " +
