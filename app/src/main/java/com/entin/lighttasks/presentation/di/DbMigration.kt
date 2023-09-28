@@ -143,7 +143,7 @@ class DbMigration {
     }
 
     /**
-     * Migration From 3 to 4 version
+     * Migration From 4 to 5 version
      */
     val migrationFrom4To5 = object : Migration(4, 5) {
         override fun migrate(database: SupportSQLiteDatabase) {
