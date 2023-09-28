@@ -99,4 +99,6 @@
     <string name="save">Guardar</string>
     <string name="open" >Otworzyć</string>
     <string name="created_date_format">Utworzono: %1$s</string>
+    <string name="take_photo">Zrobić zdjęcie</string>
+    <string name="delete_photo" >Usunąć zdjęcie</string>
 </resources>

@@ -3,6 +3,7 @@ package com.entin.lighttasks.presentation.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.ImageCache
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val repository: TasksRepository,
+    private val imageCache: ImageCache,
 ) : ViewModel() {
 
     private val _tasksEvent = Channel<MainActivityEvent>()
@@ -29,6 +31,14 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val count = repository.getCountTasksForWidget().first()
             _tasksEvent.send(MainActivityEvent.CountTasksWidget(count))
+        }
+    }
+
+    fun deleteUnusedPhotos() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getActualPhotoNames().first().apply {
+                imageCache.deleteUnusedPhotos(this)
+            }
         }
     }
 }

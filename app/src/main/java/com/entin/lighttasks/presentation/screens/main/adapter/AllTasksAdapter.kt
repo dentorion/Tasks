@@ -78,8 +78,8 @@ class AllTasksAdapter(
                 taskImportant.visibility = if (task.isImportant) View.VISIBLE else View.GONE
                 taskGroupIcon.setImageResource(getIconTaskDrawable(task))
                 taskUrlTag.isVisible = task.attachedLink.isNotEmpty()
-                taskPhotoTag.isVisible = false
-                taskVoiceTag.isVisible = false
+                taskPhotoTag.isVisible = task.attachedPhoto.isNotEmpty()
+                taskVoiceTag.isVisible = task.attachedVoice.isNotEmpty()
 
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()

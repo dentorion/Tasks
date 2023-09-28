@@ -83,7 +83,7 @@
 
             <View
                 android:id="@+id/task_expired_background"
-                android:layout_width="15dp"
+                android:layout_width="8dp"
                 android:layout_height="wrap_content"
                 android:background="@color/task_expire_background_indicator"
                 android:visibility="invisible"
@@ -96,7 +96,7 @@
                 android:id="@+id/task_expired_indicator"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/color_main_light_extra"
+                android:background="@color/color_text"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/task_expired_background"
                 app:layout_constraintEnd_toEndOf="@+id/task_expired_background"

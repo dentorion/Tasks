@@ -112,4 +112,6 @@
     <string name="open" >Open</string>
 
     <string name="created_date_format">Created: %1$s</string>
+    <string name="take_photo">Take photo</string>
+    <string name="delete_photo" >Delete photo</string>
 </resources>

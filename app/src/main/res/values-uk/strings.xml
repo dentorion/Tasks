@@ -100,4 +100,6 @@
     <string name="save">Зберегти</string>
     <string name="open" >Відкрити</string>
     <string name="created_date_format">Створено: %1$s</string>
+    <string name="take_photo">Сфотографувати</string>
+    <string name="delete_photo" >Видалити фото</string>
 </resources>

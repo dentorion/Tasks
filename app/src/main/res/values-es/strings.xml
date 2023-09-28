@@ -100,5 +100,7 @@
     <string name="save">Zapisz</string>
     <string name="open" >Abrir</string>
     <string name="created_date_format">Creado: %1$s</string>
+    <string name="take_photo">Tomar foto</string>
+    <string name="delete_photo" >Borrar foto</string>
 
 </resources>

@@ -148,6 +148,12 @@ class TasksRepositoryImpl @Inject constructor(
         }
 
     /**
+     * Get all actual photo names from all tasks
+     */
+    override fun getActualPhotoNames(): Flow<List<String>> =
+        tasksDao.getActualPhotoNames()
+
+    /**
      * WIDGET
      */
     override fun getCountTasksForWidget(): Flow<Int> =

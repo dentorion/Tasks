@@ -98,12 +98,27 @@ dependencies {
         implementation(gson)
     }
 
+    // Camera
+    Dependencies.camera.apply {
+        implementation(core)
+        implementation(camera2)
+        implementation(lifecycle)
+        implementation(view)
+        implementation(extensions)
+    }
+
     // DATA STORE
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    Dependencies.dataStore.apply {
+        implementation(dataStore)
+    }
 
     // Recyclerview
     Dependencies.recyclerview.apply {
         implementation(recyclerview)
+    }
+
+    Dependencies.coil.apply {
+        api(coil)
     }
 }
 

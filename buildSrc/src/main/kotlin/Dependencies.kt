@@ -10,6 +10,7 @@ object Dependencies {
     val base = Base
     val hilt = Hilt
     val navigation = Navigation
+    val camera = Camera
     val lifecycle = LifeCycle
     val viewBindingDelegate = ViewBindingDelegate
     val gson = Gson

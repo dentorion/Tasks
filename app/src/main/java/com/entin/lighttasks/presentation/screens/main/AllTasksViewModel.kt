@@ -10,6 +10,7 @@ import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.ImageCache
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -121,11 +123,10 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
-
     fun onUndoDeleteClick(task: Task) {
         diAppScope.launch {
             repository.newTask(task).collect { result ->
-                if (result) _tasksEvent.send(AllTasksEvent.Smile)
+                if (result) _tasksEvent.send(AllTasksEvent.RestoreTaskWithoutPhoto)
             }
         }
     }
@@ -141,7 +142,6 @@ class AllTasksViewModel @Inject constructor(
     }
 
     // Messages
-
     fun onEditResultShow(result: Int) = viewModelScope.launch {
         when (result) {
             TASK_NEW -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.NEW))
@@ -149,6 +149,7 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
+    // Delete task with status finished
     fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch {
         repository.deleteFinishedTasks()
         callBackDismiss()

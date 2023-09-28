@@ -193,7 +193,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         AllTasksFragmentDirections.actionGlobalChangeLanguageDialog(),
                     )
 
-                    is AllTasksEvent.Smile -> Toast.makeText(
+                    is AllTasksEvent.RestoreTaskWithoutPhoto -> Toast.makeText(
                         requireContext(),
                         getString(R.string.be_careful),
                         Toast.LENGTH_SHORT,

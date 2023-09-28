@@ -36,7 +36,7 @@ sealed class AllTasksEvent {
     data class ShowAddEditTaskMessage(val type: AddEditTaskMessage) : AllTasksEvent()
 
     // Show snackBar if task was deleted and returned with UNDO button show snackBar smile
-    object Smile : AllTasksEvent()
+    object RestoreTaskWithoutPhoto : AllTasksEvent()
 }
 
 /**

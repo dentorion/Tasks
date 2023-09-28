@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.RecyclerRadioButtonItemBinding
 import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class IconTaskAdapter(
     private val taskGroupId: Int,
@@ -47,8 +48,7 @@ class IconTaskAdapter(
                 } else {
                     position == selectedPosition
                 }
-                icon.setBackgroundResource(radioItemElement.backgroundRes)
-
+                icon.setBackgroundResource(getIconTaskDrawable(radioItemElement.groupId))
                 this.icon.setOnClickListener {
                     selectedPosition = adapterPosition
                     onClick(radioItemElement, position)

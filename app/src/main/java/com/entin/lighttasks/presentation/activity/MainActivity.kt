@@ -32,10 +32,12 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
 
     private var countWidget: Int = ZERO
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+        viewModel.deleteUnusedPhotos()
         observeState()
         setupNavigationAndActionBar()
         setContentView(binding.root)

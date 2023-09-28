@@ -128,10 +128,10 @@
             android:id="@+id/add_edit_task_url_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:background="@drawable/tag_rose"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
-            android:layout_marginStart="12dp"
             android:text="URL"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -225,10 +225,11 @@
             android:id="@+id/imageView"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginStart="16dp"
             android:src="@drawable/ic_slide"
-            app:layout_constraintBottom_toTopOf="@+id/add_edit_task_category_recyclerview"
-            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_voice_tag"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_voice_tag"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_voice_tag" />
 
         <ImageView
             android:id="@+id/add_edit_task_circle_share"

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_new"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:paddingHorizontal="0dp"
+    android:paddingVertical="0dp"
+    tools:layout_editor_absoluteY="25dp">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/dialog_photo_attached_view_finder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="@color/color_main_light_extra"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:scaleType="fitCenter" />
+
+    <ImageView
+        android:id="@+id/dialog_task_details_task_circle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="12dp"
+        android:alpha="@dimen/trash_basket_opacity_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_circle" />
+
+    <ImageView
+        android:id="@+id/dialog_task_details_icon_to_show"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="14dp"
+        android:adjustViewBounds="true"
+        android:alpha="@dimen/small_icon_opacity_size_item"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="4dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_camera_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_task_details_task_circle"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
+        app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
+        app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
+        app:tint="@color/color_main" />
+
+    <TextView
+        android:id="@+id/dialog_photo_attached_value_incorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@color/color_main"
+        android:gravity="center"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:text="TAKE PHOTO FOR TASK"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="4pt"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/dialog_photo_attached_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/tag_rose"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:text="@string/close"
+        android:textAllCaps="true"
+        android:textColor="@color/color_main"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_photo_attached_take_photo_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_photo_attached_take_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tag_rose"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:text="@string/take_photo"
+        android:textAllCaps="true"
+        android:textColor="@color/color_main"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_photo_attached_cancel_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialog_photo_attached_cancel_button"
+        app:layout_constraintTop_toTopOf="@+id/dialog_photo_attached_cancel_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

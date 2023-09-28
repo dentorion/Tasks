@@ -37,4 +37,6 @@ interface TasksRepository {
     fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>>
 
     fun getCountTasksForWidget(): Flow<Int>
+
+    fun getActualPhotoNames(): Flow<List<String>>
 }

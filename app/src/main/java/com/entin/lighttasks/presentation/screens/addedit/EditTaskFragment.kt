@@ -27,6 +27,8 @@ import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Co
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ZERO_LONG
@@ -57,9 +59,22 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val viewModel: AddEditTaskViewModel by viewModels()
     private var groupAdapter: IconTaskAdapter? = null
 
+    // Link add dialog
     @OptIn(ExperimentalCoroutinesApi::class)
     private val linkAddEditDialog by lazy {
         LinkAddToTaskDialog()
+    }
+
+    // Photo add dialog
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val photoAddEditDialog by lazy {
+        PhotoAddToTaskDialog()
+    }
+
+    // Photo show dialog
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val photoShowDialog by lazy {
+        PhotoShowDialog()
     }
 
     override fun onCreateView(
@@ -117,6 +132,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFields() {
         with(binding) {
+            /** Photo Attached */
+            addEditTaskPhoto.setOnClickListener {
+                if (!photoAddEditDialog.isVisible) {
+                    photoAddEditDialog.show(childFragmentManager, PhotoAddToTaskDialog::class.simpleName)
+                }
+            }
             /** Link Attached */
             addEditTaskLink.setOnClickListener {
                 if (!linkAddEditDialog.isVisible) {
@@ -134,9 +155,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Tag photo */
             addEditTaskPhotoTag.apply{
-                isVisible = false
+                isVisible = viewModel.photoAttached.isNotEmpty()
                 setOnClickListener {
-
+                    if (!photoShowDialog.isVisible) {
+                        photoShowDialog.show(childFragmentManager, PhotoShowDialog::class.simpleName)
+                    }
                 }
             }
             /** Tag voice */
@@ -391,6 +414,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
                     is EditTaskEventContract.RefreshTagsVisibility -> {
                         setTagUrlVisibility(event.url)
+                        setTagPhotoVisibility(event.photo)
                     }
                 }
             }
@@ -399,6 +423,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     private fun setTagUrlVisibility(value: Boolean) {
         binding.addEditTaskUrlTag.isVisible = value
+    }
+
+    private fun setTagPhotoVisibility(value: Boolean) {
+        binding.addEditTaskPhotoTag.isVisible = value
     }
 
     override fun onDestroyView() {

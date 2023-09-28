@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
@@ -13,6 +13,7 @@ import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
 import com.entin.lighttasks.presentation.util.LINK_ATTACHED
 import com.entin.lighttasks.presentation.util.ONE
+import com.entin.lighttasks.presentation.util.PHOTO_ATTACHED
 import com.entin.lighttasks.presentation.util.TASK
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
@@ -26,6 +27,7 @@ import com.entin.lighttasks.presentation.util.TASK_IS_RANGE
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.TASK_TITLE
+import com.entin.lighttasks.presentation.util.VOICE_ATTACHED
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.getTimeMls
@@ -68,15 +70,6 @@ class AddEditTaskViewModel @Inject constructor(
         minutes = LAST_MINUTE,
         seconds = LAST_SECOND - ONE,
     ) + ONE_DAY_MLS
-
-    var linkAttached = state.get<String>(LINK_ATTACHED) ?: task?.attachedLink ?: EMPTY_STRING
-        set(value) {
-            viewModelScope.launch {
-                _editTaskChannel.send(EditTaskEventContract.RefreshTagsVisibility(url = value.isNotEmpty()))
-                field = value.trim()
-                state[LINK_ATTACHED] = value.trim()
-            }
-        }
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: task?.title ?: EMPTY_STRING
         set(value) {
@@ -144,6 +137,51 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
+    var linkAttached = state.get<String>(LINK_ATTACHED) ?: task?.attachedLink ?: EMPTY_STRING
+        set(value) {
+            viewModelScope.launch {
+                _editTaskChannel.send(
+                    EditTaskEventContract.RefreshTagsVisibility(
+                        url = value.isNotEmpty(),
+                        photo = photoAttached.isNotEmpty(),
+                        voice = false,
+                    )
+                )
+                field = value.trim()
+                state[LINK_ATTACHED] = value.trim()
+            }
+        }
+
+    var photoAttached = state.get<String>(PHOTO_ATTACHED) ?: task?.attachedPhoto ?: EMPTY_STRING
+        set(value) {
+            viewModelScope.launch {
+                _editTaskChannel.send(
+                    EditTaskEventContract.RefreshTagsVisibility(
+                        url = linkAttached.isNotEmpty(),
+                        photo = value.isNotEmpty(),
+                        voice = false,
+                    )
+                )
+                field = value
+                state[PHOTO_ATTACHED] = value
+            }
+        }
+
+    var voiceAttached = state.get<String>(VOICE_ATTACHED) ?: task?.attachedVoice ?: EMPTY_STRING
+        set(value) {
+            viewModelScope.launch {
+                _editTaskChannel.send(
+                    EditTaskEventContract.RefreshTagsVisibility(
+                        url = linkAttached.isNotEmpty(),
+                        photo = photoAttached.isNotEmpty(),
+                        voice = value.isNotEmpty(),
+                    )
+                )
+                field = value
+                state[VOICE_ATTACHED] = value
+            }
+        }
+
     fun getTaskId(): Int? = task?.id
 
     /** Get all groups for task to show icons */
@@ -195,6 +233,8 @@ class AddEditTaskViewModel @Inject constructor(
                             isEvent = isEvent,
                             isRange = isRange,
                             attachedLink = linkAttached,
+                            attachedPhoto = photoAttached,
+                            attachedVoice = voiceAttached,
                         ),
                     )
                 }
@@ -217,6 +257,8 @@ class AddEditTaskViewModel @Inject constructor(
                             isEvent = isEvent,
                             isRange = isRange,
                             attachedLink = linkAttached,
+                            attachedPhoto = photoAttached,
+                            attachedVoice = voiceAttached,
                         ),
                     )
                 }

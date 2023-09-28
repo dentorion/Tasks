@@ -194,6 +194,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     /**
+     * List of actual photo names
+     */
+    @Query("SELECT attached_photo FROM tasks WHERE attached_photo IS NOT NULL")
+    fun getActualPhotoNames(): Flow<List<String>>
+
+    /**
      * WIDGET
      */
     @Query("SELECT COUNT(*) " +

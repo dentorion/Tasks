@@ -21,6 +21,7 @@ const val LANGUAGE_UKRAINE_SHOT = "uk"
  */
 
 const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
+const val DATE_FORMAT_IMAGE_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
 
 /**
  * Fields name for AddEditTaskViewModel
@@ -42,7 +43,14 @@ const val CALENDAR_CONSTRAINTS = "calendarConstraints"
 const val CALENDAR_ICON_SORT = "iconSort"
 
 const val LINK_ATTACHED = "linkAttached"
-const val LINK_ATTACHED_VALUE = "linkAttachedValue"
+const val PHOTO_ATTACHED = "photoAttached"
+const val VOICE_ATTACHED = "voiceAttached"
+
+/**
+ * String
+ */
+const val IMG_PREFIX = "IMG_"
+const val IMG_JPG = ".jpg"
 
 
 /**

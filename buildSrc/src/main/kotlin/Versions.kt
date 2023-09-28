@@ -125,6 +125,9 @@ object Versions {
      */
     const val helper = "2.2.2"
 
+    /** Camera */
+    const val camera = "1.2.2"
+
     /** Lottie */
     const val lottieVersion = "6.1.0"
 

@@ -133,7 +133,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendar_days_recyclerview"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
