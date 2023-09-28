@@ -10,9 +10,9 @@
     </item>
 
     <item
-        android:width="35dp"
-        android:height="35dp"
+        android:width="25dp"
+        android:height="25dp"
         android:gravity="center"
-        android:drawable="@drawable/ic_link_white" />
+        android:drawable="@drawable/ic_camera_photo_white" />
 
 </layer-list>

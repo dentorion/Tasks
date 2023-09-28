@@ -42,9 +42,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="12dp"
-            android:background="@drawable/widget_background"
+            android:background="@drawable/photo_add_button_selector"
             android:padding="4dp"
-            android:src="@drawable/ic_camera_photo"
             app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_finished_checkbox"
             app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox" />
