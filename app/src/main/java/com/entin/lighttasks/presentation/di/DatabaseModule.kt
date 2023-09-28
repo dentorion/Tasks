@@ -35,7 +35,6 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom3To4)
             .addMigrations(DbMigration().migrationFrom4To5)
             .addCallback(TaskGroupsCallback(provider))
-            .fallbackToDestructiveMigration()
             .build()
 
     @Singleton
