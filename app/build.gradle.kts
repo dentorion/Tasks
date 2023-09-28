@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 14
-        versionName = "URL Link"
+        versionCode = 15
+        versionName = "Photo note"
     }
 
     buildTypes {

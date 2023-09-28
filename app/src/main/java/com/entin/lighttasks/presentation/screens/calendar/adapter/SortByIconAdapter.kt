@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.RecyclerIconSortItemBinding
 import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class SortByIconAdapter(
     private val getSelectedIcon: () -> Int,
@@ -24,7 +25,7 @@ class SortByIconAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-            )
+            ),
         )
 
     override fun onBindViewHolder(holder: RadioButtonViewHolder, position: Int) {
@@ -39,7 +40,7 @@ class SortByIconAdapter(
         fun bind(
             radioItemElement: IconTask,
             position: Int,
-            adapterPosition: Int
+            adapterPosition: Int,
         ) {
             binding.apply {
                 icon.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
@@ -47,10 +48,10 @@ class SortByIconAdapter(
                 } else {
                     position == selectedPosition
                 }
-                icon.setBackgroundResource(radioItemElement.backgroundRes)
+                icon.setBackgroundResource(getIconTaskDrawable(radioItemElement.groupId))
 
                 this.icon.setOnClickListener {
-                    if(selectedPosition != adapterPosition) {
+                    if (selectedPosition != adapterPosition) {
                         selectedPosition = adapterPosition
                         onClick(radioItemElement, position)
                     } else {
