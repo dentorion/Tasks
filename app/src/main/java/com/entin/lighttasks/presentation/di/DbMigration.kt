@@ -141,4 +141,38 @@ class DbMigration {
             database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
         }
     }
+
+    /**
+     * Migration From 3 to 4 version
+     */
+    val migrationFrom4To5 = object : Migration(4, 5) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Tasks
+
+            database.execSQL(
+                "CREATE TABLE tasksNew (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "title TEXT NOT NULL, " +
+                        "message TEXT NOT NULL, " +
+                        "is_finished INTEGER NOT NULL, " +
+                        "is_important INTEGER NOT NULL, " +
+                        "created_at INTEGER NOT NULL, " +
+                        "edited_at INTEGER NOT NULL, " +
+                        "task_group INTEGER NOT NULL, " +
+                        "position INTEGER NOT NULL, " +
+                        "expire_date_first INTEGER NOT NULL, " +
+                        "expire_date_second INTEGER NOT NULL, " +
+                        "is_task_expired INTEGER NOT NULL, " +
+                        "is_event INTEGER NOT NULL, " +
+                        "is_range INTEGER NOT NULL, " +
+                        "attached_link TEXT NOT NULL)",
+            )
+            database.execSQL(
+                "INSERT INTO tasksNew (id, title, message, is_finished, is_important, created_at, edited_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range, attached_link, attached_photo, attached_voice) " +
+                        "SELECT id, title, message, is_finished, is_important, created_at, edited_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range, attached_link, '', '' FROM tasks",
+            )
+            database.execSQL("DROP TABLE tasks")
+            database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
+        }
+    }
 }
