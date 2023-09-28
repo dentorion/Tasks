@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -42,19 +43,7 @@ class PhotoAddToTaskDialog : DialogFragment() {
     lateinit var imageCache: ImageCache
 
     /** Permissions */
-    private val activityResultLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        var permissionGranted = true
-        permissions.entries.forEach {
-            if (it.key in REQUIRED_PERMISSIONS && !it.value) permissionGranted = false
-        }
-        if (!permissionGranted) {
-            Log.e("CAMERA", "ERROR")
-        } else {
-            startCamera()
-        }
-    }
+    private var activityResultLauncher: ActivityResultLauncher<Array<String>>? = null
 
     override fun onStart() {
         super.onStart()
@@ -78,6 +67,8 @@ class PhotoAddToTaskDialog : DialogFragment() {
         isCancelable = false
         _binding = PhotoAttachedDialogBinding.inflate(inflater, container, false)
 
+        setActivityResultLauncher()
+
         with(binding) {
             /** Close */
             dialogPhotoAttachedCancelButton.setOnClickListener {
@@ -89,12 +80,12 @@ class PhotoAddToTaskDialog : DialogFragment() {
             if (hasPermissions(requireContext())) {
                 startCamera()
             } else {
-                activityResultLauncher.launch(REQUIRED_PERMISSIONS)
+                activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
             }
 
             dialogPhotoAttachedTakePhotoButton.setOnClickListener {
                 if (!hasPermissions(requireContext())) {
-                    activityResultLauncher.launch(REQUIRED_PERMISSIONS)
+                    activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
                 } else {
                     if (buttonTakePhotoMakesPhotoAndSave) {
                         takePhoto()
@@ -160,6 +151,24 @@ class PhotoAddToTaskDialog : DialogFragment() {
         dialog?.window?.setLayout(newWidth, newHeight)
     }
 
+    private fun setActivityResultLauncher() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            var permissionGranted = true
+            permissions.entries.forEach {
+                if (it.key in REQUIRED_PERMISSIONS && !it.value) permissionGranted = false
+            }
+            if (!permissionGranted) {
+                buttonTakePhotoMakesPhotoAndSave = false
+                //TODO: Show dialog information about need permissions
+                Log.e("CAMERA", "ERROR")
+            } else {
+                startCamera()
+            }
+        }
+    }
+
     companion object {
         const val WIDTH_FULL_SCREEN = 0.8
         const val WIDTH_LANDSCAPE_MODE = 0.72
@@ -178,6 +187,7 @@ class PhotoAddToTaskDialog : DialogFragment() {
     }
 
     override fun onDestroyView() {
+        activityResultLauncher = null
         _binding = null
         super.onDestroyView()
     }
