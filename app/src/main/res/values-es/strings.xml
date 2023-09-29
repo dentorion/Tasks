@@ -97,7 +97,7 @@
     <string name="app_widget_description">Widget de tareas para todos los días</string>
     <string name="widget_tasks_count">Hoy tienes %1$d tareas</string>
     <string name="snack_bar_task_not_saved">Error al guardar tarea</string>
-    <string name="save">Zapisz</string>
+    <string name="save">Guardar</string>
     <string name="open" >Abrir</string>
     <string name="created_date_format">Creado: %1$s</string>
     <string name="take_photo">Tomar foto</string>

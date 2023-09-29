@@ -10,8 +10,8 @@
     </item>
 
     <item
-        android:width="30dp"
-        android:height="27dp"
+        android:width="25dp"
+        android:height="22dp"
         android:left="28dp"
         android:gravity="center"
         android:drawable="@drawable/ic_calendar_event" />

@@ -96,7 +96,7 @@
     <string name="app_widget_description">Widżet zadań na każdy dzień</string>
     <string name="widget_tasks_count">" Zadań na dzisiaj: %1$d"</string>
     <string name="snack_bar_task_not_saved">Błąd zapisywania zadania</string>
-    <string name="save">Guardar</string>
+    <string name="save">Zapisz</string>
     <string name="open" >Otworzyć</string>
     <string name="created_date_format">Utworzono: %1$s</string>
     <string name="take_photo">Zrobić zdjęcie</string>

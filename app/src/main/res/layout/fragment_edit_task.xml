@@ -215,9 +215,10 @@
                 android:ems="4"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:lines="10"
-                android:maxLength="500"
-                android:textColor="@color/color_text" />
+                android:lines="12"
+                android:maxLength="1500"
+                android:textColor="@color/color_text"
+                android:textSize="12sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
@@ -376,7 +377,7 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@color/color_main"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/add_edit_task_date_picker_second"
             app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
             app:layout_constraintHorizontal_bias="0.5"
@@ -397,7 +398,7 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@color/color_main"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
             app:layout_constraintHorizontal_bias="0.5"
