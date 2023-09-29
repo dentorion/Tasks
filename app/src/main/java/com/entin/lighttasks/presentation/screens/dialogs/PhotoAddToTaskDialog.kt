@@ -137,7 +137,7 @@ class PhotoAddToTaskDialog : DialogFragment() {
         }
         // Save new image tom internal storage
         imageCache.saveImage(
-            imageName = imageCache.generateImageName(),
+            imageName = imageCache.generateName(),
             image = image,
             dismiss = { dismiss() },
             setNameToTask = { name -> viewModel.photoAttached = name }
