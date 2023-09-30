@@ -14,7 +14,7 @@
         android:id="@+id/dialog_photo_attached_view_finder"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:backgroundTint="@color/color_main_light_extra"
+        android:backgroundTint="@color/main_light_extra"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,14 +48,14 @@
         app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
         app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
         app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
-        app:tint="@color/color_main" />
+        app:tint="@color/main" />
 
     <TextView
         android:id="@+id/dialog_photo_attached_value_incorrect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:background="@color/color_main"
+        android:background="@color/main"
         android:gravity="center"
         android:paddingHorizontal="6dp"
         android:paddingVertical="2dp"
@@ -79,7 +79,7 @@
         android:paddingVertical="8dp"
         android:text="@string/close"
         android:textAllCaps="true"
-        android:textColor="@color/color_main"
+        android:textColor="@color/main"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +96,7 @@
         android:paddingVertical="8dp"
         android:text="@string/take_photo"
         android:textAllCaps="true"
-        android:textColor="@color/color_main"
+        android:textColor="@color/main"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/dialog_photo_attached_cancel_button"

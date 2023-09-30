@@ -66,7 +66,7 @@ class DaysLineCalendarAdapter(
                                     R.drawable.ic_circle_day_selected,
                                     context.theme,
                                 )
-                                setTextColor(resources.getColor(R.color.color_main))
+                                setTextColor(resources.getColor(R.color.main))
                             }
                         }
 
@@ -77,7 +77,7 @@ class DaysLineCalendarAdapter(
                                 R.drawable.ic_circle_calendar_count_tasks_selected,
                                 context.theme,
                             )
-                            setTextColor(resources.getColor(R.color.color_main))
+                            setTextColor(resources.getColor(R.color.main))
                         }
                         dayItemCircleThatDay.visibility = View.VISIBLE
                     }
@@ -109,7 +109,7 @@ class DaysLineCalendarAdapter(
                                             R.drawable.ic_circle_day_weekend,
                                             context.theme,
                                         )
-                                        setTextColor(resources.getColor(R.color.color_main_light_extra))
+                                        setTextColor(resources.getColor(R.color.main_light_extra))
                                     }
                                 }
                             }
@@ -137,7 +137,7 @@ class DaysLineCalendarAdapter(
                                             R.drawable.ic_circle_day_unselected,
                                             context.theme,
                                         )
-                                        setTextColor(resources.getColor(R.color.task_expire_background_indicator))
+                                        setTextColor(resources.getColor(R.color.main_light))
                                     }
                                 }
                             }
@@ -150,7 +150,7 @@ class DaysLineCalendarAdapter(
                                 R.drawable.ic_circle_calendar_count_tasks_unselected,
                                 context.theme,
                             )
-                            setTextColor(resources.getColor(R.color.task_expire_background_indicator))
+                            setTextColor(resources.getColor(R.color.main_light))
                         }
                         dayItemCircleThatDay.visibility = View.INVISIBLE
                     }
@@ -173,7 +173,7 @@ class DaysLineCalendarAdapter(
                     setTextColor(
                         when(dayItem.dayOfWeek) {
                             DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> {
-                                resources.getColor(R.color.color_important)
+                                resources.getColor(R.color.red)
                             }
                             else -> {
                                 resources.getColor(R.color.gray)

@@ -2,11 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Tasks" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/color_main</item>
+        <item name="colorPrimary">@color/main</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/color_main_light_extra</item>
-        <item name="colorOnSurface">@color/color_main</item>
-        <item name="android:textColor">@color/color_main</item>
+        <item name="android:statusBarColor">@color/main_light_extra</item>
+        <item name="colorOnSurface">@color/main</item>
+        <item name="android:textColor">@color/main</item>
 
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
         <item name="snackbarStyle">@style/MySnackBarStyle</item>
@@ -16,12 +16,12 @@
     <!-- MENU ITEMS ACTION BAR -->
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="colorSurface">@color/color_main_light_extra</item>
+        <item name="colorSurface">@color/main_light_extra</item>
         <item name="checkboxStyle">@style/HideFinishedTasks</item>
     </style>
 
     <style name="HideFinishedTasks" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="buttonTint">@color/color_main</item>
+        <item name="buttonTint">@color/main</item>
     </style>
 
     <!-- ACTION BAR -->
@@ -31,8 +31,8 @@
     </style>
 
     <style name="ThemeOverlay.App.Toolbar" parent="">
-        <item name="colorPrimary">@color/color_main_light_extra</item>
-        <item name="colorOnPrimary">@color/color_main</item>
+        <item name="colorPrimary">@color/main_light_extra</item>
+        <item name="colorOnPrimary">@color/main</item>
     </style>
 
     <!-- RADIO BUTTON -->
@@ -41,48 +41,48 @@
     </style>
 
     <style name="ThemeOverlay.App.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
-        <item name="colorControlActivated">@color/color_stroke_checkbox</item>
-        <item name="colorOnSurface">@color/color_stroke_checkbox</item>
+        <item name="colorControlActivated">@color/main_light</item>
+        <item name="colorOnSurface">@color/main_light</item>
     </style>
 
     <!-- SNACK BAR -->
     <style name="MySnackBarStyle" parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:backgroundTint">@color/color_main_light_extra</item>
+        <item name="android:backgroundTint">@color/main_light_extra</item>
     </style>
 
     <!-- FLOATING BUTTON -->
     <style name="FloatBtn">
-        <item name="backgroundTint">@color/color_main</item>
+        <item name="backgroundTint">@color/main</item>
         <item name="rippleColor">@color/white</item>
     </style>
 
     <!-- ALERT DIALOG BUTTON -->
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textColor">@color/main</item>
     </style>
 
     <!-- SPLASH SCREEN -->
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">@color/color_main_light_extra</item>
+        <item name="android:statusBarColor">@color/main_light_extra</item>
     </style>
 
     <!-- DATE PICKER -->
 
     <style name="DatePickerStyle" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="android:windowBackground">@color/color_main_light_extra</item>
-        <item name="android:textColorPrimary">@color/color_text</item>
-        <item name="colorAccent">@color/color_stroke_checkbox</item>
+        <item name="android:windowBackground">@color/main_light_extra</item>
+        <item name="android:textColorPrimary">@color/main</item>
+        <item name="colorAccent">@color/main_light</item>
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColorSecondaryInverse">@color/color_text</item>
+        <item name="android:textColorSecondaryInverse">@color/main</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DatePickerButtonStyle</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/DatePickerButtonStyle</item>
     </style>
 
     <style name="DatePickerButtonStyle" parent="android:Widget.Material.Button.Borderless">
-        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textColor">@color/main</item>
     </style>
 
     <style name="Theme.Tasks.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">

@@ -29,6 +29,7 @@ import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLay
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
+import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ZERO_LONG
@@ -77,6 +78,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         PhotoShowDialog()
     }
 
+    // Voice add Dialog
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val voiceAddEditDialog by lazy {
+        VoiceAddToTaskDialog()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -118,6 +125,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    /**
+     * On list of icons get
+     */
     private fun onIconsGet(icons: List<IconTask>) {
         val selectedIcon = icons.first { it.groupId == viewModel.taskGroup }
         val indexOfSelectedIcon = icons.indexOf(selectedIcon)
@@ -132,43 +142,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFields() {
         with(binding) {
-            /** Photo Attached */
-            addEditTaskPhoto.setOnClickListener {
-                if (!photoAddEditDialog.isVisible) {
-                    photoAddEditDialog.show(childFragmentManager, PhotoAddToTaskDialog::class.simpleName)
-                }
-            }
-            /** Link Attached */
-            addEditTaskLink.setOnClickListener {
-                if (!linkAddEditDialog.isVisible) {
-                    linkAddEditDialog.show(childFragmentManager, LinkAddToTaskDialog::class.simpleName)
-                }
-            }
-            /** Tag url */
-            addEditTaskUrlTag.apply{
-                setTagUrlVisibility(viewModel.linkAttached.isNotEmpty())
-                setOnClickListener {
-                    findNavController().navigate(
-                        EditTaskFragmentDirections.actionGlobalUrlWebView(viewModel.linkAttached)
-                    )
-                }
-            }
-            /** Tag photo */
-            addEditTaskPhotoTag.apply{
-                isVisible = viewModel.photoAttached.isNotEmpty()
-                setOnClickListener {
-                    if (!photoShowDialog.isVisible) {
-                        photoShowDialog.show(childFragmentManager, PhotoShowDialog::class.simpleName)
-                    }
-                }
-            }
-            /** Tag voice */
-            addEditTaskVoiceTag.apply{
-                isVisible = false
-                setOnClickListener {
-
-                }
-            }
             /** Title */
             viewModel.task?.let {
                 addEditTaskTitle.setText(
@@ -308,6 +281,50 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 }
             }
             setSecondDateOfExpire()
+            /** Photo Attached */
+            addEditTaskPhoto.setOnClickListener {
+                if (!photoAddEditDialog.isVisible) {
+                    photoAddEditDialog.show(childFragmentManager, PhotoAddToTaskDialog::class.simpleName)
+                }
+            }
+            /** Link Attached */
+            addEditTaskLink.setOnClickListener {
+                linkAddEditDialog.isVisible
+                if (!linkAddEditDialog.isVisible) {
+                    linkAddEditDialog.show(childFragmentManager, LinkAddToTaskDialog::class.simpleName)
+                }
+            }
+            /** Voice Attached */
+            addEditTaskVoice.setOnClickListener {
+                if (!voiceAddEditDialog.isVisible) {
+                    voiceAddEditDialog.show(childFragmentManager, VoiceAddToTaskDialog::class.simpleName)
+                }
+            }
+            /** Tag url */
+            addEditTaskUrlTag.apply{
+                setTagUrlVisibility(viewModel.linkAttached.isNotEmpty())
+                setOnClickListener {
+                    findNavController().navigate(
+                        EditTaskFragmentDirections.actionGlobalUrlWebView(viewModel.linkAttached)
+                    )
+                }
+            }
+            /** Tag photo */
+            addEditTaskPhotoTag.apply{
+                isVisible = viewModel.photoAttached.isNotEmpty()
+                setOnClickListener {
+                    if (!photoShowDialog.isVisible) {
+                        photoShowDialog.show(childFragmentManager, PhotoShowDialog::class.simpleName)
+                    }
+                }
+            }
+            /** Tag voice */
+            addEditTaskVoiceTag.apply{
+                isVisible = false
+                setOnClickListener {
+
+                }
+            }
             /** OK Button */
             addEditTaskOkButton.setOnClickListener {
                 viewModel.saveTaskBtnClicked()

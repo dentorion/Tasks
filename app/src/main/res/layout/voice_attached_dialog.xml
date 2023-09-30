@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_main_new"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="24dp">
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_circle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="@dimen/trash_basket_opacity_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_icon_to_show"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:adjustViewBounds="true"
+            android:alpha="@dimen/small_icon_opacity_size_item"
+            android:src="@drawable/ic_soundwave_2"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_circle"
+            app:tint="@color/main" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/close"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_play_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_play_button" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@color/main"
+            android:gravity="center"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:text="TAKE PHOTO FOR TASK"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="4pt"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_circle"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/save"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_cancel_button"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_stop_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_cancel_button" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_mic_label"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_record_button"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_play_label"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_play_label"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_record_button"
+            app:srcCompat="@drawable/ic_mic"
+            app:tint="@color/rose" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_record_button"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_label"
+            app:srcCompat="@drawable/ic_record_circle"
+            app:tint="@color/rose" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_play_label"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_play_button"
+            app:srcCompat="@drawable/ic_sound_player"
+            app:tint="@color/rose" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_play_button"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_voice_attached_pause_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dialog_voice_attached_play_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_record_button"
+            app:srcCompat="@drawable/ic_play_circle"
+            app:tint="@color/gray_light" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_pause_button"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_voice_attached_stop_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dialog_voice_attached_play_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_play_button"
+            app:srcCompat="@drawable/ic_pause_circle"
+            app:tint="@color/gray_light" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_stop_button"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_pause_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dialog_voice_attached_pause_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_pause_button"
+            app:srcCompat="@drawable/ic_stop_circle"
+            app:tint="@color/gray_light" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_timer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/voice_recorder_timer"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="15:45"
+            android:textAllCaps="true"
+            android:textColor="@color/rose"
+            android:textSize="8pt"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_record_button"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_stop_button"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_pause_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_record_button"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
