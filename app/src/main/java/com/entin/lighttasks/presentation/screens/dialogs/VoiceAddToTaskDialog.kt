@@ -21,6 +21,7 @@ import androidx.fragment.app.viewModels
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.VoiceAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
+import com.entin.lighttasks.presentation.util.AudioPlayer
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.VoiceCache
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
@@ -42,6 +43,9 @@ class VoiceAddToTaskDialog : DialogFragment() {
 
     @Inject
     lateinit var voiceCache: VoiceCache
+
+    @Inject
+    lateinit var audioPlayer: AudioPlayer
 
     private fun setDialogWidth(width: Double) {
         val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
@@ -128,6 +132,24 @@ class VoiceAddToTaskDialog : DialogFragment() {
         }
 
         with(binding) {
+            /** Play sound */
+            binding.dialogVoiceAttachedPlayButton.setOnClickListener {
+                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
+                    audioPlayer.play(voiceCache.recordState.value!!.fileName)
+                }
+            }
+            /** Pause sound */
+            binding.dialogVoiceAttachedPauseButton.setOnClickListener {
+                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
+                    audioPlayer.pause()
+                }
+            }
+            /** Stop sound */
+            binding.dialogVoiceAttachedStopButton.setOnClickListener {
+                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
+                    audioPlayer.stop()
+                }
+            }
             /** Start recording */
             dialogVoiceAttachedRecordButton.setOnClickListener {
                 if (!hasPermissions(requireContext())) {

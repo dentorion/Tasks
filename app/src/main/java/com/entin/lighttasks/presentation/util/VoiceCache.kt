@@ -93,21 +93,6 @@ class VoiceCache @Inject constructor(
         }
     }
 
-    /**
-     * Listen to audio file
-     */
-    fun play(name: String) {
-
-    }
-
-    fun pause() {
-
-    }
-
-    fun stop() {
-
-    }
-
     /** Set timer */
     private fun setTimer(isRunning: Boolean) {
         if (isRunning) {
@@ -179,7 +164,7 @@ class VoiceCache @Inject constructor(
         data class RecorderState(
             val isRecording: Boolean = false,
             val timer: String = INITIAL_TIMER_VALUE,
-            val fileName: String? = null,
+            val fileName: String = EMPTY_STRING,
         )
     }
 }
