@@ -103,7 +103,7 @@ class VoiceAddToTaskDialog : DialogFragment() {
             /** Timer indicator */
             binding.dialogVoiceAttachedTimer.text = state.timer
             /** Get file name to save in task */
-            fileNameToSaveInTask = state.fileName ?: EMPTY_STRING
+            fileNameToSaveInTask = state.fileName
             /** Buttons: play, pause, stop enable */
             if (!state.isRecording && !state.fileName.isNullOrEmpty()) {
                 binding.dialogVoiceAttachedPlayButton.setColorFilter(
@@ -132,24 +132,6 @@ class VoiceAddToTaskDialog : DialogFragment() {
         }
 
         with(binding) {
-            /** Play sound */
-            binding.dialogVoiceAttachedPlayButton.setOnClickListener {
-                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
-                    audioPlayer.play(voiceCache.recordState.value!!.fileName)
-                }
-            }
-            /** Pause sound */
-            binding.dialogVoiceAttachedPauseButton.setOnClickListener {
-                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
-                    audioPlayer.pause()
-                }
-            }
-            /** Stop sound */
-            binding.dialogVoiceAttachedStopButton.setOnClickListener {
-                if(voiceCache.recordState.value?.isRecording != true && voiceCache.recordState.value?.fileName != EMPTY_STRING) {
-                    audioPlayer.stop()
-                }
-            }
             /** Start recording */
             dialogVoiceAttachedRecordButton.setOnClickListener {
                 if (!hasPermissions(requireContext())) {
@@ -164,6 +146,26 @@ class VoiceAddToTaskDialog : DialogFragment() {
                     }
                 }
             }
+
+            /** Play sound */
+            binding.dialogVoiceAttachedPlayButton.setOnClickListener {
+                if (voiceCache.recordState.value?.isRecording != true && fileNameToSaveInTask != EMPTY_STRING) {
+                    audioPlayer.play(fileNameToSaveInTask)
+                }
+            }
+            /** Pause sound */
+            binding.dialogVoiceAttachedPauseButton.setOnClickListener {
+                if (voiceCache.recordState.value?.isRecording != true && fileNameToSaveInTask != EMPTY_STRING) {
+                    audioPlayer.pause()
+                }
+            }
+            /** Stop sound */
+            binding.dialogVoiceAttachedStopButton.setOnClickListener {
+                if (voiceCache.recordState.value?.isRecording != true && fileNameToSaveInTask != EMPTY_STRING) {
+                    audioPlayer.stop()
+                }
+            }
+
             /** Close dialog */
             dialogVoiceAttachedCancelButton.setOnClickListener {
                 voiceCache.clear()

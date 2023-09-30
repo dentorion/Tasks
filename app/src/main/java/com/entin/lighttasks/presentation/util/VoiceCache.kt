@@ -46,7 +46,6 @@ class VoiceCache @Inject constructor(
             setAudioEncodingBitRate(BIT_RATE)
             setAudioSamplingRate(SAMPLE_RATE)
             setOutputFile(FileOutputStream(getFile(fileName)).fd)
-            setMaxDuration(MAX_DURATION_1_SEC)
             try {
                 prepare()
             } catch (e: IOException) {
@@ -63,9 +62,7 @@ class VoiceCache @Inject constructor(
         initMediaRecorder()
         setTimer(isRunning = true)
         mediaRecorder?.start()
-        _recordState.value = RecorderState(
-            isRecording = true, timer = secondsToTextValue(timer), fileName = fileName
-        )
+        _recordState.value = _recordState.value?.copy(isRecording = true, fileName = fileName)
     }
 
     /**
@@ -77,9 +74,7 @@ class VoiceCache @Inject constructor(
             setTimer(isRunning = false)
             release()
         }
-        _recordState.value = RecorderState(
-            isRecording = false, timer = secondsToTextValue(timer), fileName = fileName
-        )
+        _recordState.value = _recordState.value?.copy(isRecording = false)
     }
 
     /**
@@ -157,8 +152,7 @@ class VoiceCache @Inject constructor(
         private const val ONE_SEC = 1000L
         private const val SAMPLE_RATE = 96000
         private const val BIT_RATE = 16 * 44100
-        private const val MAX_DURATION_1_SEC = 60000
-        private const val MAX_DURATION_2_SEC = 120000
+        private const val MAX_DURATION = 120000
         private const val INITIAL_TIMER_VALUE = "00:00"
 
         data class RecorderState(
