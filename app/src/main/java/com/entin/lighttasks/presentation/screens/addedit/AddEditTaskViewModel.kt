@@ -144,7 +144,7 @@ class AddEditTaskViewModel @Inject constructor(
                     EditTaskEventContract.RefreshTagsVisibility(
                         url = value.isNotEmpty(),
                         photo = photoAttached.isNotEmpty(),
-                        voice = false,
+                        voice = voiceAttached.isNotEmpty(),
                     )
                 )
                 field = value.trim()
@@ -159,7 +159,7 @@ class AddEditTaskViewModel @Inject constructor(
                     EditTaskEventContract.RefreshTagsVisibility(
                         url = linkAttached.isNotEmpty(),
                         photo = value.isNotEmpty(),
-                        voice = false,
+                        voice = voiceAttached.isNotEmpty(),
                     )
                 )
                 field = value

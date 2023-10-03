@@ -70,9 +70,10 @@ class VoiceCache @Inject constructor(
      */
     fun stopRecording() {
         mediaRecorder?.apply {
-            stop()
-            setTimer(isRunning = false)
+            tryClose()
+            reset()
             release()
+            setTimer(isRunning = false)
         }
         _recordState.value = _recordState.value?.copy(isRecording = false)
     }
@@ -122,11 +123,21 @@ class VoiceCache @Inject constructor(
      * Clear MediaRecorder
      */
     fun clear() {
+        if(_recordState.value?.isRecording == true) { tryClose() }
         mediaRecorder = null
         timer = ZERO_LONG
         fileName = EMPTY_STRING
-        _recordState.value = RecorderState()
         job?.cancel()
+        job = null
+    }
+
+    /** To avoid problem with quick start and stop recording */
+    private fun tryClose() {
+        try {
+            mediaRecorder?.stop()
+        } catch (stopException: RuntimeException) {
+            Log.e("Global", "stopException")
+        }
     }
 
     /**
@@ -152,8 +163,7 @@ class VoiceCache @Inject constructor(
         private const val ONE_SEC = 1000L
         private const val SAMPLE_RATE = 96000
         private const val BIT_RATE = 16 * 44100
-        private const val MAX_DURATION = 120000
-        private const val INITIAL_TIMER_VALUE = "00:00"
+        const val INITIAL_TIMER_VALUE = "00:00"
 
         data class RecorderState(
             val isRecording: Boolean = false,

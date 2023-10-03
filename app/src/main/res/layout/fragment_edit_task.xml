@@ -364,7 +364,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_calendar_range"
                 app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_calendar_range"
                 app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_calendar_range" />
-
         </RadioGroup>
 
         <TextView
@@ -380,6 +379,7 @@
             android:textAllCaps="true"
             android:textColor="@color/main"
             android:textSize="12sp"
+            app:layout_goneMarginBottom="0dp"
             app:layout_constraintBottom_toTopOf="@+id/add_edit_task_date_picker_second"
             app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
             app:layout_constraintHorizontal_bias="0.5"

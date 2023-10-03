@@ -53,7 +53,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_play_label"
-            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_play_button" />
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_progress" />
 
         <TextView
             android:id="@+id/dialog_voice_attached_label"
@@ -172,7 +172,7 @@
             android:gravity="center"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="15:45"
+            android:text="00:00"
             android:textAllCaps="true"
             android:textColor="@color/rose"
             android:textSize="8pt"
@@ -183,6 +183,21 @@
             app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_pause_button"
             app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_record_button"
             tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/dialog_voice_attached_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/main"
+            android:progressBackgroundTint="@color/main_light"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_timer"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_mic_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_pause_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

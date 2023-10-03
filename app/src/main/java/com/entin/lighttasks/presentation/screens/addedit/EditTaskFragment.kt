@@ -289,7 +289,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Link Attached */
             addEditTaskLink.setOnClickListener {
-                linkAddEditDialog.isVisible
                 if (!linkAddEditDialog.isVisible) {
                     linkAddEditDialog.show(childFragmentManager, LinkAddToTaskDialog::class.simpleName)
                 }
@@ -320,9 +319,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Tag voice */
             addEditTaskVoiceTag.apply{
-                isVisible = false
+                isVisible = viewModel.voiceAttached.isNotEmpty()
                 setOnClickListener {
-
+                    if (!voiceAddEditDialog.isVisible) {
+                        voiceAddEditDialog.show(childFragmentManager, VoiceAddToTaskDialog::class.simpleName)
+                    }
                 }
             }
             /** OK Button */
@@ -381,8 +382,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskDatePickerCalendarEvent.isVisible = viewModel.isTaskExpired
             addEditTaskDatePickerCalendarRange.isVisible = viewModel.isTaskExpired
             // Date pickers with date as title
-            addEditTaskDatePickerFirst.isVisible =
-                viewModel.isTaskExpired && (viewModel.isRange || viewModel.isEvent)
+            addEditTaskDatePickerFirst.isVisible = viewModel.isTaskExpired && (viewModel.isRange || viewModel.isEvent)
             addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && viewModel.isRange
         }
     }
