@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
             app:layout_constraintStart_toStartOf="@+id/dialog_task_details_task_circle"
             app:layout_constraintTop_toTopOf="@+id/dialog_task_details_task_circle"
-            app:tint="@color/color_main" />
+            app:tint="@color/main" />
 
         <TextView
             android:id="@+id/dialog_link_attached_cancel_button"
@@ -51,7 +51,7 @@
             android:paddingVertical="8dp"
             android:text="@string/close"
             android:textAllCaps="true"
-            android:textColor="@color/color_main"
+            android:textColor="@color/main"
             android:textSize="@dimen/text_size_delete"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/dialog_link_attached_open_button"
@@ -70,7 +70,7 @@
             android:paddingVertical="8dp"
             android:text="@string/open"
             android:textAllCaps="true"
-            android:textColor="@color/color_main"
+            android:textColor="@color/main"
             android:textSize="@dimen/text_size_delete"
             android:textStyle="bold"
             android:visibility="invisible"
@@ -89,18 +89,18 @@
             android:layout_marginTop="24dp"
             android:hint="@string/attached_link"
             android:saveEnabled="false"
-            android:textColorHint="@color/color_text"
-            app:boxBackgroundColor="@color/color_main_light_extra"
-            app:boxStrokeColor="@color/color_text"
-            app:boxStrokeErrorColor="@color/color_important"
+            android:textColorHint="@color/main"
+            app:boxBackgroundColor="@color/main_light_extra"
+            app:boxStrokeColor="@color/main"
+            app:boxStrokeErrorColor="@color/red"
             app:counterEnabled="true"
             app:counterMaxLength="172"
-            app:counterTextColor="@color/color_text"
+            app:counterTextColor="@color/main"
             app:endIconMode="clear_text"
-            app:endIconTint="@color/color_text"
-            app:errorTextColor="@color/color_important"
-            app:helperTextTextColor="@color/color_text"
-            app:hintTextColor="@color/color_main"
+            app:endIconTint="@color/main"
+            app:errorTextColor="@color/red"
+            app:helperTextTextColor="@color/main"
+            app:hintTextColor="@color/main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dialog_task_details_task_circle">
@@ -112,7 +112,7 @@
                 android:inputType="text"
                 android:maxLength="35"
                 android:maxLines="1"
-                android:textColor="@color/color_text" />
+                android:textColor="@color/main" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,7 +123,7 @@
             android:layout_marginTop="2dp"
             android:text="INCORRECT URL FORMAT"
             android:textAllCaps="true"
-            android:textColor="@color/color_important"
+            android:textColor="@color/red"
             android:textSize="4pt"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/dialog_task_details_task_circle"
@@ -156,7 +156,7 @@
             android:paddingVertical="8dp"
             android:text="@string/save"
             android:textAllCaps="true"
-            android:textColor="@color/color_main"
+            android:textColor="@color/main"
             android:textSize="@dimen/text_size_delete"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_open_button"

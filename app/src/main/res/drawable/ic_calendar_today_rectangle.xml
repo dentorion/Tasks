@@ -6,7 +6,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/color_stroke_checkbox" />
+        android:color="@color/main_light" />
 
-    <solid android:color="@color/color_main_light_extra" />
+    <solid android:color="@color/main_light_extra" />
 </shape>

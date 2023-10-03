@@ -79,9 +79,9 @@ class ImageCache @Inject constructor(
     /**
      * Image name
      */
-    fun generateImageName() = "$IMG_PREFIX${
-        SimpleDateFormat(DATE_FORMAT_IMAGE_NAME, Locale.US).format(System.currentTimeMillis())
-    }$IMG_JPG"
+    fun generateName() = "$IMG_PREFIX${
+        SimpleDateFormat(DATE_FORMAT_NAME, Locale.US).format(System.currentTimeMillis())
+    }$FORMAT_JPG"
 
     /**
      * Get photo file procedure

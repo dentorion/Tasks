@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/dialog_choose_language"
         android:textAllCaps="true"
-        android:textColor="@color/color_main"
+        android:textColor="@color/main"
         android:textSize="@dimen/text_size_language"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/dialog_change_language_circle_english"

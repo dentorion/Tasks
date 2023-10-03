@@ -4,7 +4,7 @@
     <item android:width="50dp">
         <shape android:shape="rectangle">
             <corners android:radius="6dp" />
-            <solid android:color="@color/color_stroke_checkbox" />
+            <solid android:color="@color/rose" />
         </shape>
     </item>
 

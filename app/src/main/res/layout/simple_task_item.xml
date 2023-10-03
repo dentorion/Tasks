@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_item"
-            android:background="@color/color_stroke_checkbox">
+            android:background="@color/main_light">
 
             <TextView
                 android:id="@+id/task_title"
@@ -31,7 +31,7 @@
                 android:layout_marginEnd="32dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/color_text"
+                android:textColor="@color/main"
                 android:textSize="@dimen/text_size_task_title_item"
                 app:layout_constraintBottom_toTopOf="@+id/task_message"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
                 android:id="@+id/task_important"
                 android:layout_width="3dp"
                 android:layout_height="wrap_content"
-                android:background="@color/color_important"
+                android:background="@color/red"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
                 android:id="@+id/task_expired_background"
                 android:layout_width="8dp"
                 android:layout_height="wrap_content"
-                android:background="@color/task_expire_background_indicator"
+                android:background="@color/main_light"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +96,7 @@
                 android:id="@+id/task_expired_indicator"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/color_text"
+                android:background="@color/main"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/task_expired_background"
                 app:layout_constraintEnd_toEndOf="@+id/task_expired_background"

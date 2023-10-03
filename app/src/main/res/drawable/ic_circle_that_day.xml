@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <stroke android:color="@color/color_stroke_checkbox" android:width="2dp" />
+    <stroke android:color="@color/main_light" android:width="2dp" />
 
     <solid
-        android:color="@color/color_main" />
+        android:color="@color/main" />
 
     <size
         android:width="120dp"

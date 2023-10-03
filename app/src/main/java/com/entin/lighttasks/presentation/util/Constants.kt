@@ -21,7 +21,7 @@ const val LANGUAGE_UKRAINE_SHOT = "uk"
  */
 
 const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
-const val DATE_FORMAT_IMAGE_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
+const val DATE_FORMAT_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
 
 /**
  * Fields name for AddEditTaskViewModel
@@ -47,11 +47,16 @@ const val PHOTO_ATTACHED = "photoAttached"
 const val VOICE_ATTACHED = "voiceAttached"
 
 /**
- * String
+ * Photo
  */
 const val IMG_PREFIX = "IMG_"
-const val IMG_JPG = ".jpg"
+const val FORMAT_JPG = ".jpg"
 
+/**
+ * Audio
+ */
+const val AUDIO_PREFIX = "AUDIO_"
+const val FORMAT_MP3 = ".mp3"
 
 /**
  * Utils
