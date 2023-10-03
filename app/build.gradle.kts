@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 15
-        versionName = "Photo note"
+        versionCode = 16
+        versionName = "Voice note"
     }
 
     buildTypes {
