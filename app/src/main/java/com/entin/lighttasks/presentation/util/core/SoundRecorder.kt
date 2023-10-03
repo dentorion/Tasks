@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.util
+package com.entin.lighttasks.presentation.util.core
 
 import android.app.Application
 import android.media.MediaRecorder
@@ -6,6 +6,12 @@ import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.entin.lighttasks.presentation.util.AUDIO_PREFIX
+import com.entin.lighttasks.presentation.util.DATE_FORMAT_NAME
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.FORMAT_MP3
+import com.entin.lighttasks.presentation.util.ONE
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VoiceCache @Inject constructor(
+class SoundRecorder @Inject constructor(
     private val application: Application,
 ) {
     private var mediaRecorder: MediaRecorder? = null
@@ -118,6 +124,21 @@ class VoiceCache @Inject constructor(
         val secondsStr = String.format("%02d", remainingSeconds)
         return "$minutesStr:$secondsStr"
     }
+    /**
+     * Delete all unused photos from internal store
+     */
+    fun deleteUnusedSoundRecords(listAudioRecordNames: List<String>) {
+        val allAudioRecords = getVoiceFileDir().listFiles()
+            ?.filter {
+                it.canRead() && it.isFile && it.name.startsWith(AUDIO_PREFIX)
+            }?.map {
+                it.name
+            } ?: listOf()
+
+        allAudioRecords.subtract(listAudioRecordNames.toSet()).toList().forEach {
+            delete(it)
+        }
+    }
 
     /**
      * Clear MediaRecorder
@@ -125,6 +146,7 @@ class VoiceCache @Inject constructor(
     fun clear() {
         if(_recordState.value?.isRecording == true) { tryClose() }
         mediaRecorder = null
+        _recordState.value = RecorderState()
         timer = ZERO_LONG
         fileName = EMPTY_STRING
         job?.cancel()

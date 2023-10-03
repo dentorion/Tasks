@@ -101,4 +101,7 @@
     <string name="created_date_format">Utworzono: %1$s</string>
     <string name="take_photo">Zrobić zdjęcie</string>
     <string name="delete_photo" >Usunąć zdjęcie</string>
+    <string name="add_link">Dodaj adres internetowy</string>
+    <string name="add_photo">Dodaj zdjęcie</string>
+    <string name="add_audio">Dodaj dźwięk</string>
 </resources>

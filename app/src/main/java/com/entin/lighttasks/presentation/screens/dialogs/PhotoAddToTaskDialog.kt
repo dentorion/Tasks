@@ -23,7 +23,7 @@ import androidx.fragment.app.viewModels
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.PhotoAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
-import com.entin.lighttasks.presentation.util.ImageCache
+import com.entin.lighttasks.presentation.util.core.PhotoMaker
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +40,7 @@ class PhotoAddToTaskDialog : DialogFragment() {
     private var buttonTakePhotoMakesPhotoAndSave: Boolean = false
 
     @Inject
-    lateinit var imageCache: ImageCache
+    lateinit var photoMaker: PhotoMaker
 
     /** Permissions */
     private var activityResultLauncher: ActivityResultLauncher<Array<String>>? = null
@@ -133,11 +133,11 @@ class PhotoAddToTaskDialog : DialogFragment() {
     private fun onSuccessPhoto(image: ImageProxy) {
         // Delete prev image if exist
         if (viewModel.photoAttached.isNotEmpty()) {
-            imageCache.deleteImage(viewModel.photoAttached)
+            photoMaker.deleteImage(viewModel.photoAttached)
         }
         // Save new image tom internal storage
-        imageCache.saveImage(
-            imageName = imageCache.generateName(),
+        photoMaker.saveImage(
+            imageName = photoMaker.generateName(),
             image = image,
             dismiss = { dismiss() },
             setNameToTask = { name -> viewModel.photoAttached = name }

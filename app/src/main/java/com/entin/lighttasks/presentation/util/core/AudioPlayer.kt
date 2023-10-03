@@ -1,11 +1,11 @@
-package com.entin.lighttasks.presentation.util
+package com.entin.lighttasks.presentation.util.core
 
 import android.app.Application
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,16 +27,20 @@ class AudioPlayer @Inject constructor(
      * Listen to audio file
      */
     fun play(name: String) {
-        if(_playState.value?.isPause == true) {
+        // Play after pause clicked
+        if (_playState.value?.isPause == true) {
             player?.start()
-        } else if(_playState.value?.isPlaying == false) {
+            _playState.value = _playState.value?.copy(isPlaying = true, isPause = false, isStop = false)
+        }
+        // Play with creation media player
+        else {
             MediaPlayer.create(application.applicationContext, getFile(name).toUri()).apply {
                 player = this
-                start()
+                player?.start()
+                _playState.value = _playState.value?.copy(isPlaying = true, isPause = false, isStop = false, progress = ZERO)
             }
         }
         setTimer(isRunning = true)
-        _playState.value = _playState.value?.copy(isPlaying = true, isPause = false, isStop = false)
         player?.setOnCompletionListener {
             stop()
         }
@@ -54,8 +58,6 @@ class AudioPlayer @Inject constructor(
         if(_playState.value?.isPlaying == true || _playState.value?.isPause == true) {
             player?.stop()
             setTimer(isRunning = false)
-            player?.reset()
-            player?.release()
             _playState.value = _playState.value?.copy(isPlaying = false, isPause = false, isStop = true, progress = ZERO)
         }
     }
@@ -69,6 +71,7 @@ class AudioPlayer @Inject constructor(
         player = null
         job?.cancel()
         job = null
+        _playState.value = PlayState()
     }
 
     /** Set timer */

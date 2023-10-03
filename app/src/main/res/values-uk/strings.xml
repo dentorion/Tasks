@@ -102,4 +102,7 @@
     <string name="created_date_format">Створено: %1$s</string>
     <string name="take_photo">Сфотографувати</string>
     <string name="delete_photo" >Видалити фото</string>
+    <string name="add_link">Додайте веб-адресу</string>
+    <string name="add_photo">Додайте фото</string>
+    <string name="add_audio">Додайте аудіо</string>
 </resources>

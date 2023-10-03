@@ -1,10 +1,14 @@
-package com.entin.lighttasks.presentation.util
+package com.entin.lighttasks.presentation.util.core
 
 import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.camera.core.ImageProxy
 import coil.request.Disposable
+import com.entin.lighttasks.presentation.util.DATE_FORMAT_NAME
+import com.entin.lighttasks.presentation.util.FORMAT_JPG
+import com.entin.lighttasks.presentation.util.IMG_PREFIX
+import com.entin.lighttasks.presentation.util.ZERO
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -14,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ImageCache @Inject constructor(
+class PhotoMaker @Inject constructor(
     private val application: Application,
 ) {
 

@@ -153,6 +153,9 @@ class TasksRepositoryImpl @Inject constructor(
     override fun getActualPhotoNames(): Flow<List<String>> =
         tasksDao.getActualPhotoNames()
 
+    override fun getActualAudioRecordsNames(): Flow<List<String>> =
+        tasksDao.getActualAudioRecordsNames()
+
     /**
      * WIDGET
      */

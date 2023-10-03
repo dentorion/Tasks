@@ -102,5 +102,8 @@
     <string name="created_date_format">Creado: %1$s</string>
     <string name="take_photo">Tomar foto</string>
     <string name="delete_photo" >Borrar foto</string>
+    <string name="add_link">Agregar URL web</string>
+    <string name="add_photo">Añadir foto</string>
+    <string name="add_audio">Agregar audio</string>
 
 </resources>

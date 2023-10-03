@@ -114,4 +114,8 @@
     <string name="created_date_format">Created: %1$s</string>
     <string name="take_photo">Take photo</string>
     <string name="delete_photo" >Delete photo</string>
+    <string name="add_link">Add web url</string>
+    <string name="add_photo">Add photo</string>
+    <string name="add_audio">Add audio</string>
+    <string name="zero_time" translatable="false">00:00</string>
 </resources>

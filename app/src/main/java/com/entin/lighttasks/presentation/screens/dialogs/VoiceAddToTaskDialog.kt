@@ -22,11 +22,10 @@ import androidx.lifecycle.MediatorLiveData
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.VoiceAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
-import com.entin.lighttasks.presentation.util.AudioPlayer
+import com.entin.lighttasks.presentation.util.core.AudioPlayer
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
-import com.entin.lighttasks.presentation.util.VoiceCache
+import com.entin.lighttasks.presentation.util.core.SoundRecorder
 import com.entin.lighttasks.presentation.util.ZERO
-import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +45,7 @@ class VoiceAddToTaskDialog : DialogFragment() {
     private var activityResultLauncher: ActivityResultLauncher<Array<String>>? = null
 
     @Inject
-    lateinit var voiceCache: VoiceCache
+    lateinit var soundRecorder: SoundRecorder
 
     @Inject
     lateinit var audioPlayer: AudioPlayer
@@ -73,6 +72,7 @@ class VoiceAddToTaskDialog : DialogFragment() {
         hideSystemUI()
 
         fileNameToSaveInTask = viewModel.voiceAttached
+        Log.e("STATE_COMMON", "fileNameToSaveInTask set: $fileNameToSaveInTask")
     }
 
     override fun onStart() {
@@ -100,7 +100,7 @@ class VoiceAddToTaskDialog : DialogFragment() {
             activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
         }
 
-        commonState.addSource(voiceCache.recordState) { value ->
+        commonState.addSource(soundRecorder.recordState) { value ->
             audioPlayer.stop()
             commonState.value = commonState.value?.copy(
                 isRecording = value.isRecording,
@@ -132,7 +132,9 @@ class VoiceAddToTaskDialog : DialogFragment() {
                 binding.dialogVoiceAttachedRecordButton.setColorFilter(getColor(requireContext(), color))
 
                 /** Get file name to save in task */
-                fileNameToSaveInTask = commonState.fileName
+                if(commonState.fileName != EMPTY_STRING) {
+                    fileNameToSaveInTask = commonState.fileName
+                }
 
                 /** Play button */
                 dialogVoiceAttachedPlayButton.setColorFilter(
@@ -160,11 +162,11 @@ class VoiceAddToTaskDialog : DialogFragment() {
                 if (!hasPermissions(requireContext())) {
                     activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
                 } else {
-                    if (voiceCache.recordState.value?.isRecording == true) {
-                        voiceCache.stopRecording()
+                    if (soundRecorder.recordState.value?.isRecording == true) {
+                        soundRecorder.stopRecording()
                         buttonsCloseSaveVisibility(isActive = true)
                     } else {
-                        voiceCache.startRecording()
+                        soundRecorder.startRecording()
                         buttonsCloseSaveVisibility(isActive = false)
                     }
                 }
@@ -193,15 +195,21 @@ class VoiceAddToTaskDialog : DialogFragment() {
 
             /** Close dialog */
             dialogVoiceAttachedCancelButton.setOnClickListener {
-                voiceCache.clear()
+                commonState.removeSource(soundRecorder.recordState)
+                commonState.removeSource(audioPlayer.playState)
+                soundRecorder.clear()
                 audioPlayer.clear()
+                fileNameToSaveInTask = EMPTY_STRING
                 dismiss()
             }
             /** Save */
             dialogVoiceAttachedSaveButton.setOnClickListener {
                 viewModel.voiceAttached = fileNameToSaveInTask
-                voiceCache.clear()
+                commonState.removeSource(soundRecorder.recordState)
+                commonState.removeSource(audioPlayer.playState)
+                soundRecorder.clear()
                 audioPlayer.clear()
+                fileNameToSaveInTask = EMPTY_STRING
                 dismiss()
             }
         }
@@ -248,11 +256,11 @@ class VoiceAddToTaskDialog : DialogFragment() {
 
     override fun onDestroyView() {
         _binding = null
-        fileNameToSaveInTask = EMPTY_STRING
-        commonState.removeSource(voiceCache.recordState)
+        commonState.removeSource(soundRecorder.recordState)
         commonState.removeSource(audioPlayer.playState)
-        voiceCache.clear()
+        soundRecorder.clear()
         audioPlayer.clear()
+        fileNameToSaveInTask = EMPTY_STRING
         super.onDestroyView()
     }
 

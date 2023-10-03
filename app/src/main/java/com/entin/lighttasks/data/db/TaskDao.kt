@@ -200,6 +200,12 @@ interface TaskDao {
     fun getActualPhotoNames(): Flow<List<String>>
 
     /**
+     * List of actual audio records names
+     */
+    @Query("SELECT attached_voice FROM tasks WHERE attached_voice IS NOT NULL")
+    fun getActualAudioRecordsNames(): Flow<List<String>>
+
+    /**
      * WIDGET
      */
     @Query("SELECT COUNT(*) " +

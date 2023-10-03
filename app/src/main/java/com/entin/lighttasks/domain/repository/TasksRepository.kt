@@ -39,4 +39,6 @@ interface TasksRepository {
     fun getCountTasksForWidget(): Flow<Int>
 
     fun getActualPhotoNames(): Flow<List<String>>
+
+    fun getActualAudioRecordsNames(): Flow<List<String>>
 }

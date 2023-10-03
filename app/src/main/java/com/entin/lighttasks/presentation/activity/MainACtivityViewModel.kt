@@ -3,7 +3,8 @@ package com.entin.lighttasks.presentation.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.domain.repository.TasksRepository
-import com.entin.lighttasks.presentation.util.ImageCache
+import com.entin.lighttasks.presentation.util.core.PhotoMaker
+import com.entin.lighttasks.presentation.util.core.SoundRecorder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val repository: TasksRepository,
-    private val imageCache: ImageCache,
+    private val photoMaker: PhotoMaker,
+    private val soundRecorder: SoundRecorder,
 ) : ViewModel() {
 
     private val _tasksEvent = Channel<MainActivityEvent>()
@@ -37,7 +39,15 @@ class MainActivityViewModel @Inject constructor(
     fun deleteUnusedPhotos() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getActualPhotoNames().first().apply {
-                imageCache.deleteUnusedPhotos(this)
+                photoMaker.deleteUnusedPhotos(this)
+            }
+        }
+    }
+
+    fun deleteUnusedSoundRecords() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getActualAudioRecordsNames().first().apply {
+                soundRecorder.deleteUnusedSoundRecords(this)
             }
         }
     }
