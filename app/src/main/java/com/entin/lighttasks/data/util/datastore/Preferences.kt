@@ -6,10 +6,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.SortPreferences
+import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -40,7 +42,8 @@ class Preferences @Inject constructor(
             )
             val sortASC = preferences[Keys.KEY_SORT_ASC] ?: true
             val hideDatePick = preferences[Keys.KEY_SORT_HIDE_DATE_PICK] ?: false
-            SortPreferences(sortOrder, hideFinished, sortASC, hideDatePick)
+            val sectionId = preferences[Keys.KEY_SORT_BY_SECTION] ?: ZERO
+            SortPreferences(sortOrder, hideFinished, sortASC, hideDatePick, sectionId)
         }
 
     /**
@@ -83,10 +86,17 @@ class Preferences @Inject constructor(
         }
     }
 
+    suspend fun updateSection(section: Int) {
+        context.dataStore.edit { settings ->
+            settings[Keys.KEY_SORT_BY_SECTION] = section
+        }
+    }
+
     private object Keys {
         val KEY_SORT_HIDE_FINISHED = booleanPreferencesKey("finished_show")
         val KEY_SORT_HIDE_DATE_PICK = booleanPreferencesKey("date_pick_show")
         val KEY_SORT_ASC = booleanPreferencesKey("sort_asc")
         val KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL = stringPreferencesKey("sort_show")
+        val KEY_SORT_BY_SECTION = intPreferencesKey("sort_section")
     }
 }

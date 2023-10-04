@@ -35,4 +35,5 @@ data class Task(
     @ColumnInfo(name = "attached_link") val attachedLink: String,
     @ColumnInfo(name = "attached_photo") val attachedPhoto: String,
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
+    @ColumnInfo(name = "section_id") val sectionId: Int,
 ) : Parcelable

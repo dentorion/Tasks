@@ -235,6 +235,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedLink = linkAttached,
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
+                            sectionId = ZERO,
                         ),
                     )
                 }
@@ -259,6 +260,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedLink = linkAttached,
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
+                            sectionId = ZERO,
                         ),
                     )
                 }

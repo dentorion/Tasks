@@ -18,6 +18,7 @@ interface TasksRepository {
         hideFinished: Boolean,
         isAsc: Boolean,
         hideDatePick: Boolean,
+        sectionId: Int,
     ): Flow<List<Task>>
 
     fun getMaxPosition(): Flow<Int>

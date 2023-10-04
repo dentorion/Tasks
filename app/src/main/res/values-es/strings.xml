@@ -105,5 +105,6 @@
     <string name="add_link">Agregar URL web</string>
     <string name="add_photo">Añadir foto</string>
     <string name="add_audio">Agregar audio</string>
+    <string name="sections">Categorías de tareas</string>
 
 </resources>

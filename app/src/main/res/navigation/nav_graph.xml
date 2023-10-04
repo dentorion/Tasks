@@ -8,7 +8,7 @@
         android:id="@+id/allTasksFragment"
         android:name="com.entin.lighttasks.presentation.screens.main.AllTasksFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_all_tasks">
+        tools:layout="@layout/all_tasks">
         <action
             android:id="@+id/action_allTasksFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment"
@@ -121,7 +121,7 @@
         android:id="@+id/urlWebView"
         android:name="com.entin.lighttasks.presentation.screens.webview.UrlWebView"
         android:label=""
-        tools:layout="@layout/web_view" >
+        tools:layout="@layout/web_view">
         <argument
             android:name="url"
             app:argType="string" />
@@ -129,4 +129,12 @@
     <action
         android:id="@+id/action_global_urlWebView"
         app:destination="@id/urlWebView" />
+    <fragment
+        android:id="@+id/sectionFragment"
+        android:name="com.entin.lighttasks.presentation.screens.section.SectionFragment"
+        android:label="@string/sections"
+        tools:layout="@layout/section_preferences" />
+    <action
+        android:id="@+id/action_global_sectionFragment"
+        app:destination="@id/sectionFragment" />
 </navigation>

@@ -8,10 +8,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
+import com.entin.lighttasks.domain.entity.SortPreferences
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
+import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,23 +47,25 @@ class AllTasksViewModel @Inject constructor(
     private var hideDatePickedTasks: Boolean = true
     private var isASCSorting: Boolean = true
     private var sortType: OrderSort = OrderSort.SORT_BY_DATE
+    private var sectionId: Int = ZERO
 
     private val searchFlow = combine(
         searchValue.asFlow(),
         flowSortingPreferences,
     ) { search, prefs ->
         Pair(search, prefs)
-    }.flatMapLatest { request ->
+    }.flatMapLatest { request: Pair<String, SortPreferences> ->
         repository.getAllTasksWithSorting(
             query = request.first,
             orderSort = request.second.sortByTitleDateImportantManual,
             hideFinished = request.second.hideFinished,
             isAsc = request.second.sortASC,
             hideDatePick = request.second.hideDatePickedTasks,
+            sectionId = request.second.sectionId,
         )
     }
 
-    val tasks: LiveData<List<Task>> = searchFlow.asLiveData()
+    var tasks: LiveData<List<Task>> = searchFlow.asLiveData()
 
     init {
         viewModelScope.launch {
@@ -70,6 +74,7 @@ class AllTasksViewModel @Inject constructor(
                 sortType = it.sortByTitleDateImportantManual
                 isASCSorting = it.sortASC
                 hideDatePickedTasks = it.hideDatePickedTasks
+                sectionId = it.sectionId
             }
         }
     }
@@ -174,9 +179,22 @@ class AllTasksViewModel @Inject constructor(
     }
 
     // Calendar open
-    fun openCalendar() {
+    fun navToCalendar() {
         viewModelScope.launch(Dispatchers.IO) {
             _tasksEvent.send(AllTasksEvent.NavToCalendar)
+        }
+    }
+
+    // Section preferences open
+    fun navToSectionPreferences() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _tasksEvent.send(AllTasksEvent.NavToSectionPreferences)
+        }
+    }
+
+    fun onSectionClick(sectionId: Int) {
+        viewModelScope.launch {
+            preferences.updateSection(sectionId)
         }
     }
 }

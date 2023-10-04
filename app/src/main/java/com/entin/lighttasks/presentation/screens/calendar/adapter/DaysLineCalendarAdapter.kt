@@ -196,8 +196,7 @@ class DaysLineCalendarAdapter(
     private fun selectItem(value: DayItem, position: Int?) {
         when {
             value == selectedItem -> {
-//                onClick(null, position)
-//                selectedItem = null
+                // Selection should be ever
             }
 
             value != selectedItem -> {

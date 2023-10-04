@@ -71,6 +71,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_sections"
+        android:title="@string/sections"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_preferences"
         android:title="@string/action_bar_item_title_preferences"
         app:showAsAction="never" />

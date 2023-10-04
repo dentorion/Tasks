@@ -104,4 +104,5 @@
     <string name="add_link">Dodaj adres internetowy</string>
     <string name="add_photo">Dodaj zdjęcie</string>
     <string name="add_audio">Dodaj dźwięk</string>
+    <string name="sections">Kategorie zadań</string>
 </resources>

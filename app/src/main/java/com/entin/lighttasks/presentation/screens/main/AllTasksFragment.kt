@@ -19,14 +19,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.FragmentAllTasksBinding
+import com.entin.lighttasks.databinding.AllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.EDIT
 import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.NEW
 import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
+import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
+import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,9 +39,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
+class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
-    private var _binding: FragmentAllTasksBinding? = null
+    private var _binding: AllTasksBinding? = null
     private val binding get() = _binding!!
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,6 +55,10 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         updateDb = ::updateAllTasks
     )
 
+    private val sectionAdapter: SectionAdapter = SectionAdapter { section ->
+        sectionSelected(section)
+    }
+
     private var searchView: SearchView? = null
 
     private var allTasks = mutableListOf<Task>()
@@ -61,7 +68,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentAllTasksBinding.inflate(inflater, container, false)
+        _binding = AllTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -203,11 +210,13 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
                         AllTasksFragmentDirections.actionGlobalPreferencesFragment(),
                     )
 
+                    is AllTasksEvent.NavToSectionPreferences -> findNavController().navigate(
+                        AllTasksFragmentDirections.actionGlobalSectionFragment(),
+                    )
+
                     is AllTasksEvent.NavToCalendar -> findNavController().navigate(
                         AllTasksFragmentDirections.actionGlobalCalendarFragment(),
                     )
-
-                    else -> {}
                 }
             }.launchIn(lifecycleScope)
     }
@@ -217,6 +226,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onTaskClick(task: Task) {
         viewModel.onTaskClick(task)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun sectionSelected(section: Section?) {
+        viewModel.onSectionClick(section?.id ?: ZERO)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -323,7 +337,7 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
             }
 
             R.id.action_sort_calendar -> {
-                viewModel.openCalendar()
+                viewModel.navToCalendar()
                 true
             }
 
@@ -350,6 +364,11 @@ class AllTasksFragment : Fragment(R.layout.fragment_all_tasks), OnClickOnEmpty {
 
             R.id.action_change_language -> {
                 viewModel.navToChangeLanguage()
+                true
+            }
+
+            R.id.action_sections -> {
+                viewModel.navToSectionPreferences()
                 true
             }
 

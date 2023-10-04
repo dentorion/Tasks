@@ -7,6 +7,7 @@ import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
@@ -16,6 +17,7 @@ import com.entin.lighttasks.presentation.util.getTimeMls
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,6 +41,7 @@ class TasksRepositoryImpl @Inject constructor(
         hideFinished: Boolean,
         isAsc: Boolean,
         hideDatePick: Boolean,
+        sectionId: Int,
     ): Flow<List<Task>> =
         when (orderSort) {
             OrderSort.SORT_BY_DATE -> {
@@ -76,6 +79,8 @@ class TasksRepositoryImpl @Inject constructor(
             OrderSort.SORT_BY_MANUAL -> {
                 tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
             }
+        }.map {list ->
+            list.filter { it.sectionId == sectionId }
         }
 
     /**
