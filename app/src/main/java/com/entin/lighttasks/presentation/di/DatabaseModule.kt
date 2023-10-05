@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.entin.lighttasks.data.db.DataBase
 import com.entin.lighttasks.data.db.DataBase.Companion.DATABASE_NAME
+import com.entin.lighttasks.data.db.SectionsDao
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
 import dagger.Module
@@ -36,6 +37,10 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom4To5)
             .addCallback(TaskGroupsCallback(provider))
             .build()
+
+    @Singleton
+    @Provides
+    fun provideSectionDao(db: DataBase): SectionsDao = db.getSectionDAO()
 
     @Singleton
     @Provides

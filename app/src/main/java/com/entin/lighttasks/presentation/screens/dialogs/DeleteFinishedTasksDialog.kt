@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import com.entin.lighttasks.R
+import androidx.fragment.app.viewModels
 import com.entin.lighttasks.databinding.ClearFinishedDialogBinding
-import com.entin.lighttasks.databinding.LinkAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +17,7 @@ class DeleteFinishedTasksDialog : DialogFragment() {
 
     private var _binding: ClearFinishedDialogBinding? = null
     private val binding get() = _binding!!
-    private val vm: AllTasksViewModel by activityViewModels()
+    private val viewModel: AllTasksViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +33,7 @@ class DeleteFinishedTasksDialog : DialogFragment() {
             }
 
             dialogClearFinishedOkButton.setOnClickListener {
-                vm.deleteFinishedTasks() {
+                viewModel.deleteFinishedTasks() {
                     dismiss()
                 }
             }

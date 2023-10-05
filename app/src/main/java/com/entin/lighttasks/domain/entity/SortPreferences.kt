@@ -4,6 +4,6 @@ data class SortPreferences(
     val sortByTitleDateImportantManual: OrderSort,
     val hideFinished: Boolean,
     val sortASC: Boolean,
-    val hideDatePickedTasks: Boolean,
+    val hideEvents: Boolean,
     val sectionId: Int,
 )

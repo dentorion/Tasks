@@ -73,7 +73,6 @@
             app:layout_constraintTop_toBottomOf="@+id/ic_welcome"
             tools:visibility="visible" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

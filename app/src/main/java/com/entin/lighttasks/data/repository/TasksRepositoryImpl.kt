@@ -1,5 +1,6 @@
 package com.entin.lighttasks.data.repository
 
+import android.util.Log
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
@@ -80,6 +81,7 @@ class TasksRepositoryImpl @Inject constructor(
                 tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
             }
         }.map {list ->
+            Log.e("EBANINA", "Repository: sectionId to show: $sectionId")
             list.filter { it.sectionId == sectionId }
         }
 

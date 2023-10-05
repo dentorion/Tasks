@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,9 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -37,6 +39,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
@@ -45,9 +48,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     private val binding get() = _binding!!
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val viewModel: AllTasksViewModel by activityViewModels()
+    private val viewModel: AllTasksViewModel by viewModels()
 
-    private val tasksAdapterList: AllTasksAdapter = AllTasksAdapter(
+    private val tasksAdapter: AllTasksAdapter = AllTasksAdapter(
         listener = this,
         navigateToDeleteDialog = ::openDeleteDialog,
         navigateToSortDialog = ::openSortDialog,
@@ -55,13 +58,13 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         updateDb = ::updateAllTasks
     )
 
-    private val sectionAdapter: SectionAdapter = SectionAdapter { section ->
-        sectionSelected(section)
-    }
+    private var sectionAdapter: SectionAdapter? = null
 
     private var searchView: SearchView? = null
 
     private var allTasks = mutableListOf<Task>()
+
+    private var sectionId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,13 +79,17 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
+        observePrefs()
 
-        setupRecyclerItemTouchListener()
+        setupTasksRecyclerView()
+
+        setupTasksRecyclerViewItemTouchListener()
 
         setupFabCircleButton()
 
         allTasksObserver()
+
+        sectionObserver()
 
         setupResultListener()
 
@@ -91,10 +98,36 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         setHasOptionsMenu(true)
     }
 
-    private fun setupRecyclerView() {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observePrefs() {
+        viewModel.prefsChannel.asLiveData().observe(viewLifecycleOwner) {
+            setupSectionsRecyclerView(it.sectionId)
+            Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
+        }
+
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                val sectionId = viewModel.flowSortingPreferences.first().sectionId
+//                setupSectionsRecyclerView(sectionId)
+//                Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
+//            }
+//        }
+
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewModel.flowSortingPreferences
+//                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+//                .first {
+//                    setupSectionsRecyclerView(it.sectionId)
+//                    Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
+//                    true
+//                }
+//        }
+    }
+
+    private fun setupTasksRecyclerView() {
         with(binding) {
             tasksRecyclerView.apply {
-                adapter = tasksAdapterList
+                adapter = tasksAdapter
                 hasFixedSize()
                 setItemViewCacheSize(0)
                 layoutManager = LinearLayoutManager(
@@ -106,11 +139,28 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
+    private fun setupSectionsRecyclerView(sectionId: Int) {
+        sectionAdapter = SectionAdapter(sectionId) { section ->
+            sectionSelected(section)
+        }
+
+        with(binding) {
+            tasksRecyclerSection.apply {
+                adapter = sectionAdapter
+                layoutManager = LinearLayoutManager(
+                    requireContext(),
+                    LinearLayoutManager.HORIZONTAL,
+                    false,
+                )
+            }
+        }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun setupRecyclerItemTouchListener() {
+    private fun setupTasksRecyclerViewItemTouchListener() {
         ItemTouchHelper(
             ItemTouchHelperCallback(
-                tasksAdapterList = tasksAdapterList,
+                tasksAdapterList = tasksAdapter,
                 viewModel = viewModel,
             ),
         ).attachToRecyclerView(binding.tasksRecyclerView)
@@ -128,8 +178,19 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun sectionObserver() {
+        viewModel.sections.observe(viewLifecycleOwner) { listSections ->
+            setSections(listSections)
+        }
+    }
+
     private fun setTasks(listTask: List<Task>) {
-        tasksAdapterList.submitList(listTask)
+        tasksAdapter.submitList(listTask)
+    }
+
+    private fun setSections(listSections: List<Section>) {
+        sectionAdapter?.submitList(listSections)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -292,8 +353,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
         // Find search element in bar
         val searchItem = menu.findItem(R.id.action_search)
+
         // Get Search Field in bar
         searchView = searchItem.actionView as SearchView
+
         // If App's RAM was cleared take last
         val pendingQuery = viewModel.searchValue.value
         if (!pendingQuery.isNullOrEmpty()) {
@@ -308,7 +371,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             val params = viewModel.flowSortingPreferences.first()
 
-            menu.findItem(R.id.action_sort_by_finished).isChecked = params.hideFinished
+            menu.findItem(R.id.action_hide_finished).isChecked = params.hideFinished
+            menu.findItem(R.id.action_hide_events).isChecked = params.hideEvents
+
+            sectionId = params.sectionId
         }
     }
 
@@ -330,20 +396,20 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                 true
             }
 
-            R.id.action_sort_by_finished -> {
-                item.isChecked = !item.isChecked
-                viewModel.updateShowFinishedTask(item.isChecked)
-                true
-            }
-
             R.id.action_sort_calendar -> {
                 viewModel.navToCalendar()
                 true
             }
 
-            R.id.action_hide_date_pick -> {
+            R.id.action_hide_events -> {
                 item.isChecked = !item.isChecked
-                viewModel.updateShowDatePickedTask(item.isChecked)
+                viewModel.updateShowEvents(item.isChecked)
+                true
+            }
+
+            R.id.action_hide_finished -> {
+                item.isChecked = !item.isChecked
+                viewModel.updateShowFinishedTask(item.isChecked)
                 true
             }
 

@@ -8,12 +8,13 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.SortPreferences
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
-import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,24 +31,25 @@ import javax.inject.Named
 @HiltViewModel
 class AllTasksViewModel @Inject constructor(
     state: SavedStateHandle,
-    private val repository: TasksRepository,
+    private val taskRepository: TasksRepository,
+    private val sectionsRepository: SectionsRepository,
     private val preferences: Preferences,
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
-
     val searchValue = state.getLiveData("searchValue", "")
     val flowSortingPreferences = preferences.preferencesFlow
 
+    /** Events for AllTaskFragment */
     private val _tasksEvent = Channel<AllTasksEvent>()
     val tasksEvent = _tasksEvent.receiveAsFlow()
 
+    /** Preferences */
+    private val _prefsChannel = Channel<MainFragmentState>()
+    val prefsChannel = _prefsChannel.receiveAsFlow()
+
     var isManualSorting: Boolean = false
         private set
-
-    private var hideDatePickedTasks: Boolean = true
     private var isASCSorting: Boolean = true
-    private var sortType: OrderSort = OrderSort.SORT_BY_DATE
-    private var sectionId: Int = ZERO
 
     private val searchFlow = combine(
         searchValue.asFlow(),
@@ -55,41 +57,50 @@ class AllTasksViewModel @Inject constructor(
     ) { search, prefs ->
         Pair(search, prefs)
     }.flatMapLatest { request: Pair<String, SortPreferences> ->
-        repository.getAllTasksWithSorting(
+        taskRepository.getAllTasksWithSorting(
             query = request.first,
             orderSort = request.second.sortByTitleDateImportantManual,
             hideFinished = request.second.hideFinished,
             isAsc = request.second.sortASC,
-            hideDatePick = request.second.hideDatePickedTasks,
+            hideDatePick = request.second.hideEvents,
             sectionId = request.second.sectionId,
         )
     }
-
     var tasks: LiveData<List<Task>> = searchFlow.asLiveData()
 
+    private val sectionFlow = sectionsRepository.getAllSections()
+    var sections: LiveData<List<Section>> = sectionFlow.asLiveData()
+
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             flowSortingPreferences.collect {
                 isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
-                sortType = it.sortByTitleDateImportantManual
                 isASCSorting = it.sortASC
-                hideDatePickedTasks = it.hideDatePickedTasks
-                sectionId = it.sectionId
+
+                _prefsChannel.send(
+                    MainFragmentState(
+                        isManualSorting = isManualSorting,
+                        isASCSorting = isASCSorting,
+                        sortType = it.sortByTitleDateImportantManual,
+                        hideDatePickedTasks = it.hideEvents,
+                        sectionId = it.sectionId
+                    )
+                )
             }
         }
     }
 
     // SORTING Tasks
 
-    fun updateShowFinishedTask(hideFinished: Boolean) {
+    fun updateShowFinishedTask(showFinished: Boolean) {
         viewModelScope.launch {
-            preferences.updateFinishedSort(hideFinished)
+            preferences.updateShowFinished(showFinished)
         }
     }
 
-    fun updateShowDatePickedTask(hideDatePicked: Boolean) {
+    fun updateShowEvents(showEvents: Boolean) {
         viewModelScope.launch {
-            preferences.updateShowDatePickedTask(hideDatePicked)
+            preferences.updateShowEvents(showEvents)
         }
     }
 
@@ -115,20 +126,20 @@ class AllTasksViewModel @Inject constructor(
 
     fun onFinishedTaskClick(task: Task, isChecked: Boolean) {
         viewModelScope.launch {
-            repository.updateTask(task.copy(isFinished = isChecked))
+            taskRepository.updateTask(task.copy(isFinished = isChecked))
         }
     }
 
     fun onTaskSwipedDelete(task: Task) {
         diAppScope.launch {
-            repository.deleteTask(task)
+            taskRepository.deleteTask(task)
             _tasksEvent.send(AllTasksEvent.ShowUndoDeleteTaskMessage(task))
         }
     }
 
     fun onUndoDeleteClick(task: Task) {
         diAppScope.launch {
-            repository.newTask(task).collect { result ->
+            taskRepository.newTask(task).collect { result ->
                 if (result) _tasksEvent.send(AllTasksEvent.RestoreTaskWithoutPhoto)
             }
         }
@@ -154,7 +165,7 @@ class AllTasksViewModel @Inject constructor(
 
     // Delete task with status finished
     fun deleteFinishedTasks(callBackDismiss: () -> Unit) = viewModelScope.launch {
-        repository.deleteFinishedTasks()
+        taskRepository.deleteFinishedTasks()
         callBackDismiss()
         _tasksEvent.send(AllTasksEvent.ShowDellFinishedTasks)
     }
@@ -171,7 +182,7 @@ class AllTasksViewModel @Inject constructor(
 
     // Update list after manual changing position of Task
     fun updateAllTasks(list: List<Task>) = diAppScope.launch {
-        repository.updateAllTasks(list)
+        taskRepository.updateAllTasks(list)
     }
 
     fun onTaskSortByIcon(task: Task) {
@@ -196,5 +207,15 @@ class AllTasksViewModel @Inject constructor(
         viewModelScope.launch {
             preferences.updateSection(sectionId)
         }
+    }
+
+    companion object {
+        data class MainFragmentState(
+            val isManualSorting: Boolean,
+            val isASCSorting: Boolean,
+            val sortType: OrderSort,
+            val hideDatePickedTasks: Boolean,
+            val sectionId: Int
+        )
     }
 }

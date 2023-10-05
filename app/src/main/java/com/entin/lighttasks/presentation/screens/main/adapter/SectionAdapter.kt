@@ -1,9 +1,9 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +13,23 @@ import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class SectionAdapter(
+    private val initialSection: Int,
     private val onClick: (element: Section?) -> Unit,
 ) : ListAdapter<Section, SectionAdapter.SectionViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
     var selectedItem: Section? = null
         private set
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<Section>,
+        currentList: MutableList<Section>
+    ) {
+        super.onCurrentListChanged(previousList, currentList)
+        if(selectedItem == null) {
+            selectedItem = currentList.firstOrNull { section -> section.id == initialSection }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder =
         SectionViewHolder(
@@ -43,8 +54,10 @@ class SectionAdapter(
             position: Int,
         ) {
             binding.apply {
+                Log.e("EBANINA", "Selected section: ${selectedItem.toString()}, initialSection: $initialSection")
+                val context = root.context
                 sectionRoot.apply {
-                    if (section == selectedItem) {
+                    if (selectedItem == section) {
                         setBackgroundResource(R.drawable.section_selected_background)
                     } else {
                         setBackgroundResource(R.drawable.section_background)
@@ -52,8 +65,13 @@ class SectionAdapter(
                     setOnClickListener { selectItem(section, position) }
                 }
                 sectionTitle.text = section.title
-                sectionIcon.setImageResource(getIconTaskDrawable(section.group))
-                sectionIcon.isVisible = section.isImportant
+                val color = if (section.isImportant) {
+                    R.color.dark_red
+                } else {
+                    R.color.white
+                }
+                sectionTitle.setTextColor(context.getColor(color))
+                sectionIcon.setImageResource(getIconTaskDrawable(section.icon))
             }
         }
     }

@@ -10,12 +10,11 @@ import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class IconTaskAdapter(
-    private val taskGroupId: Int,
+    private val defaultSelectedIcon: Int,
     private val onClick: (element: IconTask, position: Int?) -> Unit,
 ) : ListAdapter<IconTask, IconTaskAdapter.RadioButtonViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
-
     var selectedPosition = RecyclerView.NO_POSITION
         private set
 
@@ -38,20 +37,20 @@ class IconTaskAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            radioItemElement: IconTask,
+            icon: IconTask,
             position: Int,
             adapterPosition: Int
         ) {
             binding.apply {
-                icon.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
-                    radioItemElement.groupId == taskGroupId
+                this.icon.isChecked = if (selectedPosition == RecyclerView.NO_POSITION) {
+                    icon.groupId == defaultSelectedIcon
                 } else {
                     position == selectedPosition
                 }
-                icon.setBackgroundResource(getIconTaskDrawable(radioItemElement.groupId))
+                this.icon.setBackgroundResource(getIconTaskDrawable(icon.groupId))
                 this.icon.setOnClickListener {
                     selectedPosition = adapterPosition
-                    onClick(radioItemElement, position)
+                    onClick(icon, position)
                     notifyDataSetChanged()
                 }
             }

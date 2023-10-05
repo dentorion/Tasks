@@ -1,8 +1,11 @@
 package com.entin.lighttasks.presentation.di
 
+import com.entin.lighttasks.data.db.SectionsDao
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.repository.SectionsRepositoryImpl
 import com.entin.lighttasks.data.repository.TasksRepositoryImpl
+import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import dagger.Module
 import dagger.Provides
@@ -30,11 +33,19 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRepository(
+    fun provideTasksRepository(
         taskDao: TaskDao,
         taskGroupsDao: TaskGroupsDao,
     ): TasksRepository {
         return TasksRepositoryImpl(taskDao, taskGroupsDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSectionsRepository(
+        sectionsDao: SectionsDao,
+    ): SectionsRepository {
+        return SectionsRepositoryImpl(sectionsDao)
     }
 
     @Singleton

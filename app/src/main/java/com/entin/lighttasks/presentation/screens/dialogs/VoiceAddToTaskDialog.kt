@@ -72,7 +72,6 @@ class VoiceAddToTaskDialog : DialogFragment() {
         hideSystemUI()
 
         fileNameToSaveInTask = viewModel.voiceAttached
-        Log.e("STATE_COMMON", "fileNameToSaveInTask set: $fileNameToSaveInTask")
     }
 
     override fun onStart() {

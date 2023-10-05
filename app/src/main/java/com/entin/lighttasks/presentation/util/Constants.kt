@@ -39,6 +39,11 @@ const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
 
+const val SECTION = "section"
+const val SECTION_TITLE = "sectionTitle"
+const val SECTION_GROUP = "sectionGroup"
+const val SECTION_IMPORTANT = "sectionImportant"
+
 const val CALENDAR_CONSTRAINTS = "calendarConstraints"
 const val CALENDAR_ICON_SORT = "iconSort"
 

@@ -49,15 +49,15 @@
     </item>
 
     <item
-        android:id="@+id/action_sort_by_finished"
+        android:id="@+id/action_hide_events"
         android:checkable="true"
-        android:title="@string/options_hide_finished"
+        android:title="@string/options_show_events"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_hide_date_pick"
+        android:id="@+id/action_hide_finished"
         android:checkable="true"
-        android:title="@string/options_show_events"
+        android:title="@string/options_hide_finished"
         app:showAsAction="never" />
 
     <item

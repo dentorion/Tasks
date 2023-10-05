@@ -105,4 +105,5 @@
     <string name="add_photo">Dodaj zdjęcie</string>
     <string name="add_audio">Dodaj dźwięk</string>
     <string name="sections">Kategorie zadań</string>
+    <string name="dialog_delete_section">Usunąć grupę?</string>
 </resources>

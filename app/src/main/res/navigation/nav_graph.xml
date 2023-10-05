@@ -133,8 +133,16 @@
         android:id="@+id/sectionFragment"
         android:name="com.entin.lighttasks.presentation.screens.section.SectionFragment"
         android:label="@string/sections"
-        tools:layout="@layout/section_preferences" />
+        tools:layout="@layout/section_preferences" >
+        <action
+            android:id="@+id/action_sectionFragment_to_createEditSectionDialog"
+            app:destination="@id/createEditSectionDialog" />
+    </fragment>
     <action
         android:id="@+id/action_global_sectionFragment"
         app:destination="@id/sectionFragment" />
+    <dialog
+        android:id="@+id/createEditSectionDialog"
+        android:name="com.entin.lighttasks.presentation.screens.section.CreateEditSectionDialog"
+        android:label="CreateEditSectionDialog" />
 </navigation>

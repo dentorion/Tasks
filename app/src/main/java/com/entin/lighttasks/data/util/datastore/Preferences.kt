@@ -35,13 +35,10 @@ class Preferences @Inject constructor(
     val preferencesFlow: Flow<SortPreferences> = context.dataStore.data.catch {
             emit(emptyPreferences())
         }.map { preferences ->
-            val hideFinished = preferences[Keys.KEY_SORT_HIDE_FINISHED] ?: false
-            val sortOrder = OrderSort.valueOf(
-                preferences[Keys.KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL]
-                    ?: OrderSort.SORT_BY_DATE.name
-            )
+            val hideFinished = preferences[Keys.KEY_SORT_SHOW_FINISHED] ?: false
+            val sortOrder = OrderSort.valueOf(preferences[Keys.KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL] ?: OrderSort.SORT_BY_DATE.name)
             val sortASC = preferences[Keys.KEY_SORT_ASC] ?: true
-            val hideDatePick = preferences[Keys.KEY_SORT_HIDE_DATE_PICK] ?: false
+            val hideDatePick = preferences[Keys.KEY_SORT_SHOW_EVENTS] ?: false
             val sectionId = preferences[Keys.KEY_SORT_BY_SECTION] ?: ZERO
             SortPreferences(sortOrder, hideFinished, sortASC, hideDatePick, sectionId)
         }
@@ -58,18 +55,18 @@ class Preferences @Inject constructor(
     /**
      * Update result list filter by finished flag
      */
-    suspend fun updateFinishedSort(hideFinished: Boolean) {
+    suspend fun updateShowFinished(showFinished: Boolean) {
         context.dataStore.edit { settings ->
-            settings[Keys.KEY_SORT_HIDE_FINISHED] = hideFinished
+            settings[Keys.KEY_SORT_SHOW_FINISHED] = showFinished
         }
     }
 
     /**
      * Update result list filter by date pick flag
      */
-    suspend fun updateShowDatePickedTask(hideDatePick: Boolean) {
+    suspend fun updateShowEvents(showEvents: Boolean) {
         context.dataStore.edit { settings ->
-            settings[Keys.KEY_SORT_HIDE_DATE_PICK] = hideDatePick
+            settings[Keys.KEY_SORT_SHOW_EVENTS] = showEvents
         }
     }
 
@@ -93,8 +90,8 @@ class Preferences @Inject constructor(
     }
 
     private object Keys {
-        val KEY_SORT_HIDE_FINISHED = booleanPreferencesKey("finished_show")
-        val KEY_SORT_HIDE_DATE_PICK = booleanPreferencesKey("date_pick_show")
+        val KEY_SORT_SHOW_FINISHED = booleanPreferencesKey("finished_hide")
+        val KEY_SORT_SHOW_EVENTS = booleanPreferencesKey("events_hide")
         val KEY_SORT_ASC = booleanPreferencesKey("sort_asc")
         val KEY_SORT_BY_TITLE_DATE_IMPORTANCE_MANUAL = stringPreferencesKey("sort_show")
         val KEY_SORT_BY_SECTION = intPreferencesKey("sort_section")

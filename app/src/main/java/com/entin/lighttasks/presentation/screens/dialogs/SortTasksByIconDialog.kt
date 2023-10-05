@@ -4,13 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.LinkAttachedDialogBinding
 import com.entin.lighttasks.databinding.SortTaskDialogBinding
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
@@ -25,7 +21,7 @@ class SortTasksByIconDialog : DialogFragment() {
     private var _binding: SortTaskDialogBinding? = null
     private val binding get() = _binding!!
     private val args: SortTasksByIconDialogArgs by navArgs()
-    private val vmLocal: AllTasksViewModel by activityViewModels()
+    private val viewModel: AllTasksViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +42,7 @@ class SortTasksByIconDialog : DialogFragment() {
             }
 
             dialogSortTaskOkButton.setOnClickListener {
-                vmLocal.onTaskSortByIcon(task)
+                viewModel.onTaskSortByIcon(task)
                 dismiss()
             }
         }
