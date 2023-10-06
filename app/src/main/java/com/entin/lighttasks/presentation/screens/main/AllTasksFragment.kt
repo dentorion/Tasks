@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -64,13 +62,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private var allTasks = mutableListOf<Task>()
 
-    private var sectionId: Int? = null
+    private var sectionId: Int = ZERO
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View {
         _binding = AllTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -79,7 +73,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observePrefs()
+        setupSectionsRecyclerView()
 
         setupTasksRecyclerView()
 
@@ -87,41 +81,13 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
         setupFabCircleButton()
 
-        allTasksObserver()
-
-        sectionObserver()
+        tasksObserver()
 
         setupResultListener()
 
         stateObserver()
 
         setHasOptionsMenu(true)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observePrefs() {
-        viewModel.prefsChannel.asLiveData().observe(viewLifecycleOwner) {
-            setupSectionsRecyclerView(it.sectionId)
-            Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
-        }
-
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                val sectionId = viewModel.flowSortingPreferences.first().sectionId
-//                setupSectionsRecyclerView(sectionId)
-//                Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
-//            }
-//        }
-
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewModel.flowSortingPreferences
-//                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-//                .first {
-//                    setupSectionsRecyclerView(it.sectionId)
-//                    Log.e("EBANINA", "Fragment. observePrefs(). sectionId: $sectionId")
-//                    true
-//                }
-//        }
     }
 
     private fun setupTasksRecyclerView() {
@@ -139,19 +105,30 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun setupSectionsRecyclerView(sectionId: Int) {
-        sectionAdapter = SectionAdapter(sectionId) { section ->
-            sectionSelected(section)
-        }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun setupSectionsRecyclerView() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Create SectionAdapter with preinstalled selection
+            sectionId = viewModel.flowSortingPreferences.first().sectionId
+            sectionAdapter = SectionAdapter(sectionId) { section ->
+                sectionSelected(section)
+            }
 
-        with(binding) {
-            tasksRecyclerSection.apply {
-                adapter = sectionAdapter
-                layoutManager = LinearLayoutManager(
-                    requireContext(),
-                    LinearLayoutManager.HORIZONTAL,
-                    false,
-                )
+            // Set SectionAdapter on view
+            with(binding) {
+                sectionsRecyclerView.apply {
+                    adapter = sectionAdapter
+                    layoutManager = LinearLayoutManager(
+                        requireContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false,
+                    )
+                }
+            }
+
+            // Fill sections
+            viewModel.sections.observe(viewLifecycleOwner) { listSections ->
+                setSections(listSections)
             }
         }
     }
@@ -167,21 +144,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     @ExperimentalCoroutinesApi
-    private fun allTasksObserver() {
+    private fun tasksObserver() {
         viewModel.tasks.observe(viewLifecycleOwner) { listTask ->
             showWelcome(listTask.isEmpty())
-            allTasks.apply {
-                clear()
-                addAll(listTask)
-            }
             setTasks(listTask)
-        }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun sectionObserver() {
-        viewModel.sections.observe(viewLifecycleOwner) { listSections ->
-            setSections(listSections)
         }
     }
 

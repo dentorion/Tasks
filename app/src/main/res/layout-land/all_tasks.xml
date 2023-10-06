@@ -16,7 +16,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasks_recycler_section"
+            android:id="@+id/sections_recycler_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -40,7 +40,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tasks_recycler_section"
+            app:layout_constraintTop_toBottomOf="@+id/sections_recycler_view"
             tools:itemCount="10"
             tools:listitem="@layout/task_item" />
 

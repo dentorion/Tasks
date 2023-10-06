@@ -13,6 +13,7 @@ import com.entin.lighttasks.domain.entity.SortPreferences
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -36,21 +38,30 @@ class AllTasksViewModel @Inject constructor(
     private val preferences: Preferences,
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
-    val searchValue = state.getLiveData("searchValue", "")
+
+    /** Search value */
+    val searchValue = state.getLiveData(SEARCH_VALUE, EMPTY_STRING)
+
+    /** Preferences Flow to get tasks from DB */
     val flowSortingPreferences = preferences.preferencesFlow
+
+    /** For checking - show details or move on long press task */
+    var isManualSorting = false
+        private set
+
+    init {
+        viewModelScope.launch {
+            flowSortingPreferences.collect{
+                isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
+            }
+        }
+    }
 
     /** Events for AllTaskFragment */
     private val _tasksEvent = Channel<AllTasksEvent>()
     val tasksEvent = _tasksEvent.receiveAsFlow()
 
-    /** Preferences */
-    private val _prefsChannel = Channel<MainFragmentState>()
-    val prefsChannel = _prefsChannel.receiveAsFlow()
-
-    var isManualSorting: Boolean = false
-        private set
-    private var isASCSorting: Boolean = true
-
+    /** Get tasks by preferences */
     private val searchFlow = combine(
         searchValue.asFlow(),
         flowSortingPreferences,
@@ -68,27 +79,9 @@ class AllTasksViewModel @Inject constructor(
     }
     var tasks: LiveData<List<Task>> = searchFlow.asLiveData()
 
+    /** Get sections (group of tasks) */
     private val sectionFlow = sectionsRepository.getAllSections()
     var sections: LiveData<List<Section>> = sectionFlow.asLiveData()
-
-    init {
-        viewModelScope.launch(Dispatchers.Main) {
-            flowSortingPreferences.collect {
-                isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
-                isASCSorting = it.sortASC
-
-                _prefsChannel.send(
-                    MainFragmentState(
-                        isManualSorting = isManualSorting,
-                        isASCSorting = isASCSorting,
-                        sortType = it.sortByTitleDateImportantManual,
-                        hideDatePickedTasks = it.hideEvents,
-                        sectionId = it.sectionId
-                    )
-                )
-            }
-        }
-    }
 
     // SORTING Tasks
 
@@ -106,7 +99,9 @@ class AllTasksViewModel @Inject constructor(
 
     fun updateSortASC() {
         viewModelScope.launch {
-            preferences.updateSortASC(isASCSorting.not())
+            preferences.updateSortASC(
+                flowSortingPreferences.first().sortASC.not()
+            )
         }
     }
 
@@ -210,6 +205,8 @@ class AllTasksViewModel @Inject constructor(
     }
 
     companion object {
+        private const val SEARCH_VALUE = "searchValue"
+
         data class MainFragmentState(
             val isManualSorting: Boolean,
             val isASCSorting: Boolean,

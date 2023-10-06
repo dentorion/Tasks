@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -54,7 +53,6 @@ class SectionAdapter(
             position: Int,
         ) {
             binding.apply {
-                Log.e("EBANINA", "Selected section: ${selectedItem.toString()}, initialSection: $initialSection")
                 val context = root.context
                 sectionRoot.apply {
                     if (selectedItem == section) {
@@ -68,7 +66,7 @@ class SectionAdapter(
                 val color = if (section.isImportant) {
                     R.color.dark_red
                 } else {
-                    R.color.white
+                    R.color.rose
                 }
                 sectionTitle.setTextColor(context.getColor(color))
                 sectionIcon.setImageResource(getIconTaskDrawable(section.icon))
