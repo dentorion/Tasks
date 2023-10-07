@@ -35,6 +35,7 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom2To3)
             .addMigrations(DbMigration().migrationFrom3To4)
             .addMigrations(DbMigration().migrationFrom4To5)
+            .addMigrations(DbMigration().migrationFrom5To6)
             .addCallback(TaskGroupsCallback(provider))
             .build()
 
