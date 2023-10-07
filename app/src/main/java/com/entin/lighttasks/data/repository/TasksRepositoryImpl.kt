@@ -163,6 +163,10 @@ class TasksRepositoryImpl @Inject constructor(
     override fun getActualAudioRecordsNames(): Flow<List<String>> =
         tasksDao.getActualAudioRecordsNames()
 
+    override suspend fun updateAllTasksWithDeletedSection(sectionId: Int) {
+        tasksDao.updateAllTasksWithDeletedSection(sectionId)
+    }
+
     /**
      * WIDGET
      */

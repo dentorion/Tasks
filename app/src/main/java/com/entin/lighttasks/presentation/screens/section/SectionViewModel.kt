@@ -1,9 +1,9 @@
 package com.entin.lighttasks.presentation.screens.section
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.repository.SectionsRepository
@@ -12,17 +12,21 @@ import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class SectionViewModel @Inject constructor(
     val state: SavedStateHandle,
-    private val repository: SectionsRepository,
+    private val sectionRepository: SectionsRepository,
     private val taskRepository: TasksRepository,
+    private val preferences: Preferences,
+    @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
 
     private val _sectionEvent = Channel<SectionsEventContract>()
@@ -40,10 +44,6 @@ class SectionViewModel @Inject constructor(
             sectionTitle = value?.title ?: EMPTY_STRING
             sectionIcon = value?.icon ?: ZERO
             sectionImportant = value?.isImportant ?: false
-            Log.e(
-                "EBANINA",
-                "sectionTitle: $sectionTitle, sectionIcon: $sectionIcon, sectionImportant: $sectionImportant"
-            )
         }
 
     init {
@@ -55,7 +55,7 @@ class SectionViewModel @Inject constructor(
      */
     private fun getAllSections() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllSections().collect { listOfSections ->
+            sectionRepository.getAllSections().collect { listOfSections ->
                 _sectionEvent.send(SectionsEventContract.ShowAllSections(listOfSections))
             }
         }
@@ -81,7 +81,7 @@ class SectionViewModel @Inject constructor(
                     editedAt = ZERO_LONG,
                     icon = sectionIcon,
                     isImportant = sectionImportant,
-                    position = ZERO
+                    position = ZERO, // will be replaced in Repository
                 )
             )
         } else {
@@ -97,8 +97,8 @@ class SectionViewModel @Inject constructor(
     }
 
     private fun createSection(section: Section) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.createSection(section)
+        diAppScope.launch {
+            sectionRepository.createSection(section)
         }
     }
 
@@ -107,7 +107,16 @@ class SectionViewModel @Inject constructor(
      */
     private fun updateSection(section: Section) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateSection(section)
+            sectionRepository.updateSection(section)
+        }
+    }
+
+    /**
+     * Edit list of sections
+     */
+    fun updateSections(sections: List<Section>) {
+        diAppScope.launch(Dispatchers.IO) {
+            sectionRepository.updateSections(sections)
         }
     }
 
@@ -117,7 +126,9 @@ class SectionViewModel @Inject constructor(
     fun deleteSection() {
         viewModelScope.launch(Dispatchers.IO) {
             currentSection?.let {
-                repository.deleteSection(it)
+                sectionRepository.deleteSection(it)
+                taskRepository.updateAllTasksWithDeletedSection(it.id)
+                preferences.updateSection(ZERO)
             }
         }
     }

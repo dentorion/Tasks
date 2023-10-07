@@ -241,7 +241,8 @@
             android:src="@drawable/ic_circle"
             app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_category_recyclerview"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_important_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/add_edit_task_share"
@@ -259,7 +260,7 @@
             android:id="@+id/add_edit_task_category_recyclerview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="32dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="25dp"
@@ -292,11 +293,31 @@
             app:layout_constraintTop_toTopOf="@+id/add_edit_task_label_advanced_points"
             tools:ignore="TouchTargetSizeCheck" />
 
+        <TextView
+            android:id="@+id/add_edit_task_section_selection"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/checkbox_light_solid_background"
+            android:gravity="center_vertical|center_horizontal"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_advanced"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_goneMarginBottom="0dp"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:text="NO CATEGORY" />
+
         <CheckBox
             android:id="@+id/add_edit_task_expired_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/checkbox_light_solid_background"
             android:buttonTint="#E182D8"
             android:minHeight="48dp"
@@ -304,7 +325,7 @@
             android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
             android:textColor="@color/main"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_advanced" />
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_section_selection" />
 
         <ImageView
             android:id="@+id/add_edit_task_add_date_label_arrow"

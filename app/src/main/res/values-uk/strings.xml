@@ -107,4 +107,5 @@
     <string name="add_audio">Додайте аудіо</string>
     <string name="sections">Категорії завдань</string>
     <string name="dialog_delete_section">Видалити групу?</string>
+    <string name="no_section" >без категорії</string>
 </resources>

@@ -21,7 +21,7 @@ class SortTasksByIconDialog : DialogFragment() {
     private var _binding: SortTaskDialogBinding? = null
     private val binding get() = _binding!!
     private val args: SortTasksByIconDialogArgs by navArgs()
-    private val viewModel: AllTasksViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private val viewModel: AllTasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

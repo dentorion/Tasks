@@ -60,11 +60,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private var searchView: SearchView? = null
 
-    private var allTasks = mutableListOf<Task>()
-
     private var sectionId: Int = ZERO
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AllTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -95,7 +93,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             tasksRecyclerView.apply {
                 adapter = tasksAdapter
                 hasFixedSize()
-                setItemViewCacheSize(0)
+                setItemViewCacheSize(ZERO)
                 layoutManager = LinearLayoutManager(
                     requireContext(),
                     LinearLayoutManager.VERTICAL,
@@ -118,6 +116,8 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             with(binding) {
                 sectionsRecyclerView.apply {
                     adapter = sectionAdapter
+                    hasFixedSize()
+                    setItemViewCacheSize(ZERO)
                     layoutManager = LinearLayoutManager(
                         requireContext(),
                         LinearLayoutManager.HORIZONTAL,

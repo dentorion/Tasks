@@ -1,11 +1,13 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
@@ -14,6 +16,7 @@ import com.entin.lighttasks.presentation.util.LAST_SECOND
 import com.entin.lighttasks.presentation.util.LINK_ATTACHED
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.PHOTO_ATTACHED
+import com.entin.lighttasks.presentation.util.SECTION
 import com.entin.lighttasks.presentation.util.TASK
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
@@ -46,6 +49,7 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
+    private val sectionsRepository: SectionsRepository,
 ) : ViewModel() {
 
     private val _editTaskChannel = Channel<EditTaskEventContract>()
@@ -181,6 +185,14 @@ class AddEditTaskViewModel @Inject constructor(
                 state[VOICE_ATTACHED] = value
             }
         }
+    var sectionId: Int = state.get<Int>(SECTION) ?: task?.sectionId ?: ZERO
+        set(value) {
+            field = value
+            state[SECTION] = value
+        }
+    val sectionName: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 
     fun getTaskId(): Int? = task?.id
 
@@ -235,7 +247,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedLink = linkAttached,
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
-                            sectionId = ZERO,
+                            sectionId = sectionId,
                         ),
                     )
                 }
@@ -260,7 +272,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedLink = linkAttached,
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
-                            sectionId = ZERO,
+                            sectionId = sectionId,
                         ),
                     )
                 }
@@ -294,9 +306,14 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    fun setLink(url: String?) {
-        url?.let {
-            linkAttached = it
+    fun getSectionById() {
+        if(sectionId != ZERO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val name = sectionsRepository.getSectionById(sectionId).title
+                sectionName.postValue(name)
+            }
+        } else {
+            sectionName.value = EMPTY_STRING
         }
     }
 

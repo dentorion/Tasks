@@ -32,7 +32,7 @@ import javax.inject.Named
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class AllTasksViewModel @Inject constructor(
-    state: SavedStateHandle,
+    val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
     private val sectionsRepository: SectionsRepository,
     private val preferences: Preferences,

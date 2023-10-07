@@ -23,12 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
+import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
@@ -84,6 +86,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         VoiceAddToTaskDialog()
     }
 
+    // Section choose dialog
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val sectionChooseDialog by lazy {
+        SectionChooseDialog(::onSectionSelect)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,7 +100,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
         viewModel.getIcons()
+        viewModel.getSectionById()
         setupCategoryRecyclerView()
+        setupSectionNameObserver()
         setupEventObserver()
         setupFields()
 
@@ -121,6 +131,16 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 viewModel.iconTaskChannel.collect { icons ->
                     onIconsGet(icons)
                 }
+            }
+        }
+    }
+
+    private fun setupSectionNameObserver() {
+        viewModel.sectionName.observe(viewLifecycleOwner) {
+            binding.addEditTaskSectionSelection.text = if(it == EMPTY_STRING) {
+                resources.getString(R.string.no_section)
+            } else {
+                it
             }
         }
     }
@@ -326,6 +346,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     }
                 }
             }
+            /** Choose section (category of task) */
+            addEditTaskSectionSelection.setOnClickListener {
+                if (!sectionChooseDialog.isVisible) {
+                    sectionChooseDialog.show(childFragmentManager, SectionChooseDialog::class.simpleName)
+                }
+            }
             /** OK Button */
             addEditTaskOkButton.setOnClickListener {
                 viewModel.saveTaskBtnClicked()
@@ -436,6 +462,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 }
             }
         }
+    }
+
+    private fun onSectionSelect(section: Section) {
+        viewModel.sectionId = section.id
+        viewModel.getSectionById()
     }
 
     private fun setTagUrlVisibility(value: Boolean) {

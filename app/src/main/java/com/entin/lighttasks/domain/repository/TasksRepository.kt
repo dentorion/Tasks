@@ -42,4 +42,6 @@ interface TasksRepository {
     fun getActualPhotoNames(): Flow<List<String>>
 
     fun getActualAudioRecordsNames(): Flow<List<String>>
+
+    suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
 }

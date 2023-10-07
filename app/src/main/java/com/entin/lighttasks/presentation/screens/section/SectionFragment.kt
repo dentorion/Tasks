@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionPreferencesBinding
@@ -16,6 +17,7 @@ import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionPreferencesAdapter
+import com.entin.lighttasks.presentation.screens.section.adapter.SectionTouchHelperCallback
 import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,8 +32,14 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
 
     private val viewModel: SectionViewModel by viewModels()
     private var sectionPreferencesAdapter: SectionPreferencesAdapter? = SectionPreferencesAdapter(
-        onEdit = ::openEditSectionDialog, onDelete = ::openDeleteSectionDialog
+        onEdit = ::openEditSectionDialog,
+        onDelete = ::openDeleteSectionDialog,
+        updateDb = ::updateAllSections
     )
+
+    private fun updateAllSections(listTasks: List<Section>) {
+        viewModel.updateSections(listTasks)
+    }
 
     // Crate / Edit section dialog
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -60,6 +68,8 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
 
         setupSectionsRecyclerView()
 
+        setupSectionsRecyclerViewItemTouchListener()
+
         setupFabCircleButton()
 
         stateObserver()
@@ -75,6 +85,18 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
                 LinearLayoutManager.VERTICAL,
                 false,
             )
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun setupSectionsRecyclerViewItemTouchListener() {
+        sectionPreferencesAdapter?.let { adapter ->
+            ItemTouchHelper(
+                SectionTouchHelperCallback(
+                    sectionsAdapterList = adapter,
+                    viewModel = viewModel,
+                ),
+            ).attachToRecyclerView(binding.sectionPreferencesRecyclerView)
         }
     }
 

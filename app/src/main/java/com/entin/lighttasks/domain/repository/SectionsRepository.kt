@@ -14,6 +14,9 @@ interface SectionsRepository {
      */
     fun getAllSections(): Flow<List<Section>>
 
+    /** Get max position of section table */
+    fun getMaxPosition(): Flow<Int>
+
     /**
      * Create section
      */
@@ -25,7 +28,15 @@ interface SectionsRepository {
     suspend fun updateSection(section: Section): Int
 
     /**
+     * Update list of sections
+     */
+    suspend fun updateSections(sections: List<Section>)
+
+    /**
      * Delete section
      */
     suspend fun deleteSection(section: Section): Int
+
+    /** Get section by id */
+    suspend fun getSectionById(sectionId: Int): Section
 }

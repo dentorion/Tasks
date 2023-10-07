@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SectionsDao {
 
+    /** Find a maximum value of position among the list of tasks */
+    @Query("SELECT MAX(position) FROM sections")
+    fun getLastId(): Flow<Int?>
+
     /**
      * Get all sections
      */
@@ -31,8 +35,18 @@ interface SectionsDao {
     suspend fun updateSection(section: Section): Int
 
     /**
+     * Update list of sections
+     */
+    @Update
+    suspend fun updateSections(sections: List<Section>)
+
+    /**
      * Delete section
      */
     @Delete
     suspend fun deleteSection(section: Section): Int
+
+    /** Get section by id */
+    @Query("SELECT * FROM sections WHERE id = :sectionId LIMIT 1")
+    suspend fun getSectionById(sectionId: Int): Section
 }

@@ -106,4 +106,5 @@
     <string name="add_audio">Dodaj dźwięk</string>
     <string name="sections">Kategorie zadań</string>
     <string name="dialog_delete_section">Usunąć grupę?</string>
+    <string name="no_section" >brak kategorii</string>
 </resources>

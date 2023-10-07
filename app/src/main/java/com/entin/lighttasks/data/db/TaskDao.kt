@@ -212,4 +212,7 @@ interface TaskDao {
             "FROM tasks " +
             "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)")
     fun getCountTasksToday(startExpireDate: Long, finishExpireDate: Long): Flow<Int>
+
+    @Query("UPDATE tasks SET section_id = 0 WHERE section_id = :sectionId")
+    suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
 }
