@@ -11,6 +11,7 @@ const val TASK_EDIT: Int = 2
  * Language block
  */
 
+const val LANGUAGE = "language"
 const val LANGUAGE_ENGLISH_SHOT = "en"
 const val LANGUAGE_SPANISH_SHOT = "es"
 const val LANGUAGE_POLISH_SHOT = "pl"

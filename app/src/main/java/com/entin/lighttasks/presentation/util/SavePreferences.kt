@@ -3,10 +3,8 @@ package com.entin.lighttasks.presentation.util
 import android.content.SharedPreferences
 import com.google.gson.Gson
 
-// Saving language preferences
-
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : Any> SharedPreferences.get(key: String, defaultValue: T? = null): T {
+inline operator fun <reified T : Any> SharedPreferences.get(key: String, defaultValue: T? = null): T? {
     return when (T::class) {
         Boolean::class -> getBoolean(key, defaultValue as? Boolean? ?: false) as T
         Float::class -> getFloat(key, defaultValue as? Float? ?: 0.0f) as T
