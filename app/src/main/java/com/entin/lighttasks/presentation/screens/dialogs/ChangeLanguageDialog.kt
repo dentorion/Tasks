@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.entin.lighttasks.databinding.ChangeLanguageDialogBinding
 import com.entin.lighttasks.presentation.activity.MainActivity
+import com.entin.lighttasks.presentation.util.LANGUAGE
 import com.entin.lighttasks.presentation.util.LANGUAGE_ENGLISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_POLISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_SPANISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_UKRAINE_SHOT
+import com.entin.lighttasks.presentation.util.set
 import java.util.Locale
 
 class ChangeLanguageDialog : DialogFragment() {
@@ -52,12 +54,8 @@ class ChangeLanguageDialog : DialogFragment() {
     // Language changing
     @Suppress("DEPRECATION")
     private fun setAppLocale(context: Context, language: String) {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        context.createConfigurationContext(config)
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        sharedPref[LANGUAGE] = language
 
         dismiss()
         Intent(requireContext(), MainActivity::class.java).also {

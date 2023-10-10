@@ -2,6 +2,7 @@ package com.entin.lighttasks.presentation.activity
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Context
 import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.activity.viewModels
@@ -14,11 +15,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.entin.lighttasks.presentation.widget.LightTasksWidget
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.ActivityMainBinding
+import com.entin.lighttasks.presentation.util.LANGUAGE
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.get
 import com.entin.lighttasks.presentation.util.hideKeyboard
+import com.entin.lighttasks.presentation.util.set
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -32,9 +37,11 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
 
     private var countWidget: Int = ZERO
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setAppLanguage()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         clearUnusedFiles()
@@ -101,6 +108,18 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         arguments: Bundle?,
     ) {
         currentFocus?.hideKeyboard()
+    }
+
+    private fun setAppLanguage() {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        sharedPref.get<String>(LANGUAGE)?.let {
+            val locale = Locale(it)
+            Locale.setDefault(locale)
+            val config = resources.configuration
+            config.setLocale(locale)
+            createConfigurationContext(config)
+            resources.updateConfiguration(config, resources.displayMetrics)
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
