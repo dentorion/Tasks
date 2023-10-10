@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
@@ -42,8 +43,9 @@ class AllTasksAdapter(
         viewHolder.bind(getItem(position))
     }
 
-    inner class TaskViewHolder(private val view: TaskItemBinding) :
-        RecyclerView.ViewHolder(view.root) {
+    inner class TaskViewHolder(
+        private val view: TaskItemBinding
+    ) : RecyclerView.ViewHolder(view.root) {
         init {
             view.apply {
                 root.setOnClickListener {
@@ -83,6 +85,8 @@ class AllTasksAdapter(
 
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
+
+                taskAlarmBellNotification.isVisible = task.taskAlarm != ZERO_LONG
 
                 if (task.isTaskExpired) {
                     /** RANGE */

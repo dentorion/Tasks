@@ -108,4 +108,6 @@
     <string name="sections">Категорії завдань</string>
     <string name="dialog_delete_section">Видалити групу?</string>
     <string name="no_section" >без категорії</string>
+    <string name="add_edit_task_add_alarm_label">Додати будильник</string>
+    <string name="set_date_and_time">Встановіть дату та час</string>
 </resources>

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item"
     android:layout_marginBottom="@dimen/margin_bottom_item"
-    android:background="?android:selectableItemBackground">
+    android:background="?android:selectableItemBackground"
+    tools:background="@color/main_light_extra">
 
     <TextView
         android:id="@+id/task_title"
@@ -141,13 +142,26 @@
         android:id="@+id/task_alarm"
         android:layout_width="12dp"
         android:layout_height="18dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:alpha="@dimen/small_icon_opacity_size_item"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/task_group_icon"
         app:layout_constraintStart_toStartOf="@+id/task_group_icon"
         app:layout_constraintTop_toBottomOf="@+id/task_group_icon"
         app:srcCompat="@drawable/ic_alarm_black"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/task_alarm_bell_notification"
+        android:layout_width="15dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="4dp"
+        android:alpha="@dimen/small_icon_opacity_size_item"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/task_group_icon"
+        app:layout_constraintEnd_toEndOf="@+id/task_group_icon"
+        app:layout_constraintStart_toStartOf="@+id/task_group_icon"
+        app:srcCompat="@drawable/ic_alarm_bell"
         tools:visibility="visible" />
 
     <View

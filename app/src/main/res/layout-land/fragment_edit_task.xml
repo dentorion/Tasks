@@ -314,14 +314,24 @@
             tools:text="NO CATEGORY" />
 
         <include
-            layout="@layout/include_intervals"
-            android:id="@+id/include_intervals"
+            android:id="@+id/add_edit_task_include_alarm"
+            layout="@layout/include_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_section_selection" />
+
+        <include
+            layout="@layout/include_intervals"
+            android:id="@+id/add_edit_task_include_intervals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_include_alarm" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tasks">
+        <receiver android:name=".data.util.broadcast.AlarmReceiver" />
         <receiver
             android:name=".presentation.widget.LightTasksWidget"
             android:exported="false">

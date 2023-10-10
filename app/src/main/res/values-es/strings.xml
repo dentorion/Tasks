@@ -108,5 +108,7 @@
     <string name="sections">Categorías de tareas</string>
     <string name="dialog_delete_section">¿Eliminar grupo?</string>
     <string name="no_section" >ninguna categoria</string>
+    <string name="add_edit_task_add_alarm_label">Agregar alarma</string>
+    <string name="set_date_and_time">Establecer fecha y hora</string>
 
 </resources>

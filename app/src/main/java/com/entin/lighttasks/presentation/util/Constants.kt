@@ -21,6 +21,7 @@ const val LANGUAGE_UKRAINE_SHOT = "uk"
  */
 
 const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
+const val DATE_FORMAT_STANDARD_TIME = "dd/MM/yyyy  HH:mm:ss"
 const val DATE_FORMAT_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
 
 /**
@@ -38,6 +39,7 @@ const val TASK_EXPIRE_DATE_SECOND = "taskExpireDateSecond"
 const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
+const val IS_ALARM = "iisAlarm"
 
 const val SECTION = "section"
 const val SECTION_TITLE = "sectionTitle"
