@@ -81,7 +81,6 @@ class TasksRepositoryImpl @Inject constructor(
                 tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
             }
         }.map {list ->
-            Log.e("EBANINA", "Repository: sectionId to show: $sectionId")
             list.filter { it.sectionId == sectionId }
         }
 

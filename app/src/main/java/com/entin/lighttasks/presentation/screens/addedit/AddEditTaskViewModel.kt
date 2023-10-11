@@ -252,12 +252,12 @@ class AddEditTaskViewModel @Inject constructor(
                     ZERO_LONG
                 }
                 val alarm = if (alarmIsOn) {
-                    if (taskAlarm != ZERO_LONG && (taskAlarm*1000) > Date().time) {
+                    if (taskAlarm != ZERO_LONG && (taskAlarm * ONE_SEC_MLS) > Date().time) {
                         setAlarm()
                     }
                     taskAlarm
                 } else {
-                    if (taskAlarm != ZERO_LONG && (taskAlarm*1000) > Date().time) {
+                    if (taskAlarm != ZERO_LONG && (taskAlarm * ONE_SEC_MLS) > Date().time) {
                         cancelAlarm()
                     }
                     ZERO_LONG
@@ -375,5 +375,6 @@ class AddEditTaskViewModel @Inject constructor(
 
     companion object {
         const val ONE_DAY_MLS = 86400000L
+        const val ONE_SEC_MLS = 1000
     }
 }

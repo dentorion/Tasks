@@ -22,7 +22,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Section
@@ -201,8 +200,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
                 viewModel.taskImportant = isCheck
             }
-
-
             /** Alarm */
             addEditTaskIncludeAlarm.addEditTaskAlarmCheckbox.apply {
                 this.isChecked = viewModel.taskAlarm != ZERO_LONG
@@ -218,8 +215,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 updateAlarmDateTimeText()
                 setOnClickListener { pickDateTime() }
             }
-
-
             /** Expired */
             addEditTaskIncludeIntervals.addEditTaskExpiredCheckbox.apply {
                 this.isChecked = viewModel.isTaskExpired
@@ -491,15 +486,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.text =
                 viewModel.taskAlarm.toFormattedDateTimeString()
 
-            val color = if ((viewModel.taskAlarm * 1000) <= Date().time) {
-                R.color.main
-            } else {
+            Log.e("ALARM_MY", "viewModel.taskAlarm: ${viewModel.taskAlarm}, Date().time: ${Date().time}")
+            val color = if ((viewModel.taskAlarm) <= Date().time) {
                 R.color.dark_red
+            } else {
+                R.color.main
             }
             binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.setTextColor(
-                resources.getColor(
-                    color
-                )
+                resources.getColor(color)
             )
         }
     }
