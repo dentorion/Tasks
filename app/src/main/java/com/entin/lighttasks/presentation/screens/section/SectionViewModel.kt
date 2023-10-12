@@ -64,7 +64,7 @@ class SectionViewModel @Inject constructor(
     /** Get all groups for task to show icons */
     fun getIcons() {
         viewModelScope.launch(Dispatchers.IO) {
-            _iconTaskChannel.send(taskRepository.getTaskIconGroups().shuffled())
+            _iconTaskChannel.send(taskRepository.getTaskIcons().shuffled())
         }
     }
 

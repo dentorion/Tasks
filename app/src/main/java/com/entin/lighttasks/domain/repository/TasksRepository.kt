@@ -21,6 +21,8 @@ interface TasksRepository {
         sectionId: Int,
     ): Flow<List<Task>>
 
+    fun getNextTaskId(): Flow<Int>
+
     fun getMaxPosition(): Flow<Int>
 
     fun newTask(task: Task): Flow<Boolean>
@@ -33,7 +35,7 @@ interface TasksRepository {
 
     suspend fun updateAllTasks(list: List<Task>)
 
-    suspend fun getTaskIconGroups(): List<IconTask>
+    suspend fun getTaskIcons(): List<IconTask>
 
     fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>>
 

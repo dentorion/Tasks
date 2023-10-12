@@ -1,6 +1,5 @@
 package com.entin.lighttasks.data.repository
 
-import android.util.Log
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
@@ -8,7 +7,6 @@ import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
@@ -18,7 +16,6 @@ import com.entin.lighttasks.presentation.util.getTimeMls
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -112,16 +109,22 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     /**
+     * Get maximum id of tasks table
+     */
+    override fun getNextTaskId(): Flow<Int> =
+        tasksDao.getNextTaskId().map { max -> max?.let { it + ONE } ?: ONE }
+
+    /**
      * Get maximum position of tasks table
      */
     override fun getMaxPosition(): Flow<Int> =
-        tasksDao.getLastId().map { max -> max?.let { it + ONE } ?: ZERO }
+        tasksDao.getLastPosition().map { max -> max?.let { it + ONE } ?: ZERO }
 
     /**
      * Get images for task groups
      */
-    override suspend fun getTaskIconGroups(): List<IconTask> =
-        taskGroupsDao.getTaskGroups()
+    override suspend fun getTaskIcons(): List<IconTask> =
+        taskGroupsDao.getTaskIcons()
 
     /**
      * Calendar. Get tasks by month, year
@@ -174,4 +177,4 @@ class TasksRepositoryImpl @Inject constructor(
             getTimeMls(hours = ZERO, minutes = ZERO, seconds = ZERO),
             getTimeMls(hours = LAST_HOUR, minutes = LAST_MINUTE, seconds = LAST_SECOND)
         )
-    }
+}

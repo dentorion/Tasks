@@ -119,7 +119,7 @@ class CalendarViewModel @Inject constructor(
     fun initData() {
         viewModelScope.launch(Dispatchers.IO) {
             // Get all groups icons
-            _iconGroupsChannel.send(repository.getTaskIconGroups())
+            _iconGroupsChannel.send(repository.getTaskIcons())
             // Get all tasks by constraints
             getTasksByConstraints()
         }

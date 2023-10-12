@@ -2,6 +2,7 @@ package com.entin.lighttasks.presentation.di
 
 import android.content.Context
 import androidx.room.Room
+import com.entin.lighttasks.data.db.AlarmsDao
 import com.entin.lighttasks.data.db.DataBase
 import com.entin.lighttasks.data.db.DataBase.Companion.DATABASE_NAME
 import com.entin.lighttasks.data.db.SectionsDao
@@ -38,6 +39,10 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom5To6)
             .addCallback(TaskGroupsCallback(provider))
             .build()
+
+    @Singleton
+    @Provides
+    fun provideAlarmsDao(db: DataBase): AlarmsDao = db.getAlarmsDAO()
 
     @Singleton
     @Provides

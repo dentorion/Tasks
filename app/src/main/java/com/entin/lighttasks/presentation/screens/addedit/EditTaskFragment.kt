@@ -26,7 +26,7 @@ import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
-import com.entin.lighttasks.presentation.screens.addedit.adapter.IconTaskAdapter
+import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
@@ -35,6 +35,8 @@ import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
+import com.entin.lighttasks.presentation.util.TWO
+import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.getCurrentDay
@@ -52,7 +54,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
-import javax.inject.Inject
 
 /**
  * Fragment for adding new task or editing existing task
@@ -64,33 +65,33 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val binding get() = _binding!!
 
     private val viewModel: AddEditTaskViewModel by viewModels()
-    private var groupAdapter: IconTaskAdapter? = null
+    private var iconsTaskAdapter: IconsTaskAdapter? = null
 
-    // Link add dialog
+    /** Link add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val linkAddEditDialog by lazy {
         LinkAddToTaskDialog()
     }
 
-    // Photo add dialog
+    /** Photo add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val photoAddEditDialog by lazy {
         PhotoAddToTaskDialog()
     }
 
-    // Photo show dialog
+    /** Photo show dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val photoShowDialog by lazy {
         PhotoShowDialog()
     }
 
-    // Voice add Dialog
+    /** Voice add Dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val voiceAddEditDialog by lazy {
         VoiceAddToTaskDialog()
     }
 
-    // Section choose dialog
+    /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val sectionChooseDialog by lazy {
         SectionChooseDialog(::onSectionSelect)
@@ -103,9 +104,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     ): View {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
-        viewModel.getIcons()
-        viewModel.getSectionById()
-        setupCategoryRecyclerView()
+        getIcons()
+        getSection()
+        setupIconsTaskAdapter()
         setupSectionNameObserver()
         setupEventObserver()
         setupFields()
@@ -113,16 +114,19 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         return binding.root
     }
 
-    /**
-     * Category
-     */
-    private fun setupCategoryRecyclerView() {
-        groupAdapter = IconTaskAdapter(viewModel.taskGroup) { element, position ->
+    /** Get icons to show in RecyclerView */
+    private fun getIcons() {
+        viewModel.getTaskIcons()
+    }
+
+    /** Init IconsTaskAdapter and observe elements from ViewModel */
+    private fun setupIconsTaskAdapter() {
+        iconsTaskAdapter = IconsTaskAdapter(viewModel.taskIcon) { element, position ->
             onGroupIconSelected(element, position)
         }
 
         binding.addEditTaskCategoryRecyclerview.apply {
-            adapter = groupAdapter
+            adapter = iconsTaskAdapter
             layoutManager = SlowlyLinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -139,6 +143,16 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    /** Fill IconsTaskAdapter with elements and choose which is selected */
+    private fun onIconsGet(icons: List<IconTask>) {
+        val selectedIcon = icons.first { it.groupId == viewModel.taskIcon }
+        val indexOfSelectedIcon = icons.indexOf(selectedIcon)
+        iconsTaskAdapter?.submitList(icons)
+        val marginElements = if (indexOfSelectedIcon >= TWO) TWO else ZERO
+        binding.addEditTaskCategoryRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
+    }
+
+    /** Observe and setup section name from ViewModel  */
     private fun setupSectionNameObserver() {
         viewModel.sectionName.observe(viewLifecycleOwner) {
             binding.addEditTaskSectionSelection.text = if(it == EMPTY_STRING) {
@@ -149,20 +163,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    /**
-     * On list of icons get
-     */
-    private fun onIconsGet(icons: List<IconTask>) {
-        val selectedIcon = icons.first { it.groupId == viewModel.taskGroup }
-        val indexOfSelectedIcon = icons.indexOf(selectedIcon)
-        groupAdapter?.submitList(icons)
-        val marginElements = if (indexOfSelectedIcon >= 2) 2 else 0
-        binding.addEditTaskCategoryRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
-    }
-
-    /**
-     * Setup fields value
-     */
+    /** Setup fields value */
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFields() {
         with(binding) {
@@ -173,9 +174,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         viewModel.taskTitle, resources, viewModel.getTaskId()
                     )
                 )
-            } ?: kotlin.run {
-                EMPTY_STRING
-            }
+            } ?: kotlin.run { EMPTY_STRING }
             addEditTaskTitle.addTextChangedListener {
                 viewModel.taskTitle = it.toString()
             }
@@ -244,14 +243,13 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     Toast.makeText(requireContext(), "Error sending.", Toast.LENGTH_SHORT).show()
                 }
             }
-            /** Radio Group */
-            // Event flag
+            /** Event flag */
             addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarEvent.isChecked =
                 viewModel.isEvent && !viewModel.isRange
-            // Range flag
+            /** Range flag */
             addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarRange.isChecked =
                 viewModel.isRange && !viewModel.isEvent
-            // is Event (not range) listener
+            /** is Event (not range) listener */
             addEditTaskIncludeIntervals.addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, checkId ->
                 when (checkId) {
                     binding.addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarEvent.id -> {
@@ -403,7 +401,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }, startYear, startMonth, startDay).show()
     }
 
-
     private fun setFirstDateOfExpire() {
         binding.addEditTaskIncludeIntervals.addEditTaskDatePickerFirst.text =
             if (viewModel.taskExpireFirstDate == ZERO_LONG) {
@@ -444,7 +441,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     private fun onGroupIconSelected(element: IconTask, position: Int?) {
         position?.let {
-            viewModel.taskGroup = element.groupId
+            viewModel.taskIcon = element.groupId
             binding.addEditTaskCategoryRecyclerview.smoothScrollToPosition(it)
         }
     }
@@ -498,18 +495,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    /**
-     * Event: navigate to AllTasksFragment with result
-     */
+    /** Event: navigate to AllTasksFragment with result */
     private fun eventNavBackWithResult(event: Int) {
         binding.addEditTaskTitle.clearFocus()
         setFragmentResult("operationMode", bundleOf("mode" to event))
         findNavController().popBackStack()
     }
 
-    /**
-     * Event observer
-     */
+    /** Event observer */
     private fun setupEventObserver() = viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
@@ -551,6 +544,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     private fun onSectionSelect(section: Section) {
         viewModel.sectionId = section.id
+        getSection()
+    }
+
+    private fun getSection() {
         viewModel.getSectionById()
     }
 
@@ -563,7 +560,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     override fun onDestroyView() {
-        groupAdapter = null
+        iconsTaskAdapter = null
         _binding = null
         super.onDestroyView()
     }

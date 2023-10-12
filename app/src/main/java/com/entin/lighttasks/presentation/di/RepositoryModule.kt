@@ -1,10 +1,13 @@
 package com.entin.lighttasks.presentation.di
 
+import com.entin.lighttasks.data.db.AlarmsDao
 import com.entin.lighttasks.data.db.SectionsDao
 import com.entin.lighttasks.data.db.TaskDao
 import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.repository.AlarmsRepositoryImpl
 import com.entin.lighttasks.data.repository.SectionsRepositoryImpl
 import com.entin.lighttasks.data.repository.TasksRepositoryImpl
+import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import dagger.Module
@@ -46,6 +49,14 @@ object RepositoryModule {
         sectionsDao: SectionsDao,
     ): SectionsRepository {
         return SectionsRepositoryImpl(sectionsDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmsRepository(
+        alarmsDao: AlarmsDao,
+    ): AlarmsRepository {
+        return AlarmsRepositoryImpl(alarmsDao)
     }
 
     @Singleton

@@ -36,5 +36,5 @@ data class Task(
     @ColumnInfo(name = "attached_photo") val attachedPhoto: String,
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
     @ColumnInfo(name = "section_id") val sectionId: Int,
-    @ColumnInfo(name = "task_alarm") val taskAlarm: Long,
+    @ColumnInfo(name = "alarm_id") val alarmId: Long,
 ) : Parcelable

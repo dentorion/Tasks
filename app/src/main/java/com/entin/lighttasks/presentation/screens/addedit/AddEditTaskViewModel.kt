@@ -8,6 +8,7 @@ import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.domain.entity.AlarmItem
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
@@ -24,7 +25,7 @@ import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
-import com.entin.lighttasks.presentation.util.TASK_GROUP
+import com.entin.lighttasks.presentation.util.TASK_ICON
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
 import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
@@ -39,10 +40,12 @@ import com.entin.lighttasks.presentation.util.getTimeMls
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
@@ -56,6 +59,7 @@ class AddEditTaskViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
     private val sectionsRepository: SectionsRepository,
+    private val alarmsRepository: AlarmsRepository,
 ) : ViewModel() {
 
     private val _editTaskChannel = Channel<EditTaskEventContract>()
@@ -70,14 +74,14 @@ class AddEditTaskViewModel @Inject constructor(
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
 
-    // Start date
+    // Start date for taskExpireFirstDate field
     private val defaultStartDateTime: Long = getTimeMls(
         hours = ZERO,
         minutes = ONE,
         seconds = ONE,
     )
 
-    // Finish date
+    // Finish date for taskExpireSecondDate field
     val defaultFinishDateTime: Long = getTimeMls(
         hours = LAST_HOUR,
         minutes = LAST_MINUTE,
@@ -108,10 +112,10 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_IMPORTANT] = value
         }
 
-    var taskGroup: Int = state.get<Int>(TASK_GROUP) ?: task?.group ?: ZERO
+    var taskIcon: Int = state.get<Int>(TASK_ICON) ?: task?.group ?: ZERO
         set(value) {
             field = value
-            state[TASK_GROUP] = value
+            state[TASK_ICON] = value
         }
 
     var taskExpireFirstDate: Long =
@@ -194,31 +198,38 @@ class AddEditTaskViewModel @Inject constructor(
                 state[VOICE_ATTACHED] = value
             }
         }
+
     var sectionId: Int = state.get<Int>(SECTION) ?: task?.sectionId ?: ZERO
         set(value) {
             field = value
             state[SECTION] = value
         }
+
     val sectionName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 
-    var taskAlarm = state.get<Long>(IS_ALARM) ?: task?.taskAlarm ?: ZERO_LONG
+    var taskAlarm = state.get<Long>(IS_ALARM) ?: task?.alarmId ?: ZERO_LONG
         set(value) {
             field = value
             state[IS_ALARM] = value
         }
+
     var alarmIsOn: Boolean = taskAlarm != ZERO_LONG
 
+    /** Get task id if exist */
     fun getTaskId(): Int? = task?.id
 
-    /** Get all groups for task to show icons */
-    fun getIcons() {
+    /** Get all icons */
+    fun getTaskIcons() {
         viewModelScope.launch(Dispatchers.IO) {
-            _iconTaskChannel.send(taskRepository.getTaskIconGroups().shuffled())
+            _iconTaskChannel.send(
+                taskRepository.getTaskIcons().shuffled()
+            )
         }
     }
 
+    /** Get section by id to show while creating or editing task */
     fun getSectionById() {
         if(sectionId != ZERO) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -230,6 +241,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
+    /** OK button clicked while creating or editing task */
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -274,7 +286,7 @@ class AddEditTaskViewModel @Inject constructor(
                             isImportant = taskImportant,
                             createdAt = task.createdAt,
                             editedAt = getTimeMls(),
-                            group = taskGroup,
+                            group = taskIcon,
                             position = task.position,
                             expireDateFirst = expireDateFirst,
                             expireDateSecond = expireDateSecond,
@@ -285,7 +297,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
                             sectionId = sectionId,
-                            taskAlarm = alarm,
+                            alarmId = alarm,
                         ),
                     )
                 }
@@ -298,9 +310,9 @@ class AddEditTaskViewModel @Inject constructor(
                             message = taskMessage,
                             isFinished = taskFinished,
                             isImportant = taskImportant,
-                            group = taskGroup,
+                            group = taskIcon,
                             position = ZERO, // will be replaced in Repository
-                            createdAt = getTimeMls(),
+                            createdAt = Date().time, // getTimeMls()
                             editedAt = ZERO_LONG,
                             expireDateFirst = expireDateFirst,
                             expireDateSecond = expireDateSecond,
@@ -311,7 +323,7 @@ class AddEditTaskViewModel @Inject constructor(
                             attachedPhoto = photoAttached,
                             attachedVoice = voiceAttached,
                             sectionId = sectionId,
-                            taskAlarm = alarm,
+                            alarmId = alarm,
                         ),
                     )
                 }
@@ -319,14 +331,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    private suspend fun errorBlankText() {
-        _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleAndMessage)
-    }
-
-    private suspend fun errorDatesPicked() {
-        _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
-    }
-
+    /** Update task with new data */
     private suspend fun updateTask(uTask: Task) {
         taskRepository.updateTask(uTask).apply {
             state[TASK] = null
@@ -334,6 +339,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
+    /** Create new task */
     private suspend fun saveNewTask(task: Task) {
         taskRepository.newTask(task).collect { result ->
             state[TASK] = null
@@ -345,32 +351,60 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
+    /** Set alarm for task */
     private fun setAlarm() {
-        val localDateTimeOfAlarm = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(taskAlarm),
-            TimeZone.getDefault().toZoneId()
-        )
-        alarmScheduler.schedule(
-            AlarmItem(
+        viewModelScope.launch {
+            // Set time for AlarmItem
+            val localDateTimeOfAlarm = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(taskAlarm),
+                TimeZone.getDefault().toZoneId()
+            ).atZone(ZoneId.systemDefault()).toEpochSecond() * ONE_SEC_MLS
+
+            // TaskId for AlarmItem (next id of task)
+            val taskId = task?.id ?: taskRepository.getNextTaskId().first()
+
+            // Create AlarmItem
+            val alarmItem = AlarmItem(
                 time = localDateTimeOfAlarm,
-                message = "Alarm for task: $taskTitle",
-                taskId = 1
+                message = taskTitle,
+                taskId = taskId
             )
-        )
+
+            // Add alarm to Android
+            alarmScheduler.schedule(alarmItem)
+
+            // Add alarm to database
+            alarmsRepository.addAlarm(alarmItem)
+        }
     }
 
+    /** Cancel alarm for task */
     private fun cancelAlarm() {
-        val localDateTimeOfAlarm = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(taskAlarm),
-            TimeZone.getDefault().toZoneId()
-        )
-        alarmScheduler.cancel(
-            AlarmItem(
-                time = localDateTimeOfAlarm,
-                message = "Stop alarm for task: $taskTitle",
-                taskId = 1
-            )
-        )
+        viewModelScope.launch {
+            task?.let {
+                // Cancel alarm from Android
+                alarmScheduler.cancel(
+                    AlarmItem(
+                        time = ZERO_LONG,
+                        message = taskTitle,
+                        taskId = it.id
+                    )
+                )
+
+                // Delete alarm from database
+                alarmsRepository.deleteAlarmByTaskId(it.id)
+            }
+        }
+    }
+
+    /** Error to show: blank title */
+    private suspend fun errorBlankText() {
+        _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleAndMessage)
+    }
+
+    /** Error to show: error while choosing dates for event */
+    private suspend fun errorDatesPicked() {
+        _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
     }
 
     companion object {

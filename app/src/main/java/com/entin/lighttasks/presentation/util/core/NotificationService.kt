@@ -8,6 +8,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.entin.lighttasks.R
 import com.entin.lighttasks.presentation.activity.MainActivity
+import com.entin.lighttasks.presentation.util.SPACE
 import javax.inject.Inject
 
 class NotificationService @Inject constructor(
@@ -17,7 +18,7 @@ class NotificationService @Inject constructor(
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    fun showNotification() {
+    fun showNotification(message: String) {
         val activityIntent = Intent(context, MainActivity::class.java)
         val activityPendingIntent = PendingIntent.getActivity(
             context,
@@ -28,7 +29,7 @@ class NotificationService @Inject constructor(
         val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alarm_bell)
             .setContentTitle("Task alarm!")
-            .setContentText("Check out your task. Click to open.")
+            .setContentText(message)
             .setContentIntent(activityPendingIntent)
             .build()
         notificationManager.notify(NOTIFICATION_REQUEST_CODE, notification)

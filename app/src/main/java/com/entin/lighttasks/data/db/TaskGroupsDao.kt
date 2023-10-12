@@ -19,5 +19,5 @@ interface TaskGroupsDao {
      */
 
     @Query("SELECT * FROM taskGroups")
-    suspend fun getTaskGroups(): List<IconTask>
+    suspend fun getTaskIcons(): List<IconTask>
 }

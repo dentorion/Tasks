@@ -9,10 +9,10 @@ import com.entin.lighttasks.databinding.RecyclerRadioButtonItemBinding
 import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
-class IconTaskAdapter(
+class IconsTaskAdapter(
     private val defaultSelectedIcon: Int,
     private val onClick: (element: IconTask, position: Int?) -> Unit,
-) : ListAdapter<IconTask, IconTaskAdapter.RadioButtonViewHolder>(
+) : ListAdapter<IconTask, IconsTaskAdapter.RadioButtonViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
     var selectedPosition = RecyclerView.NO_POSITION

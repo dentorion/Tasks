@@ -86,7 +86,7 @@ class AllTasksAdapter(
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
 
-                taskAlarmBellNotification.isVisible = task.taskAlarm != ZERO_LONG
+                taskAlarmBellNotification.isVisible = task.alarmId != ZERO_LONG
 
                 if (task.isTaskExpired) {
                     /** RANGE */

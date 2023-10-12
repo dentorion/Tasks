@@ -123,4 +123,5 @@
     <string name="sections">Task categories</string>
     <string name="no_section" >no category</string>
     <string name="set_date_and_time">Set date and time</string>
+    <string name="alarm_message" >Warning! Alarm for:</string>
 </resources>

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.CreateEditSectionDialogBinding
 import com.entin.lighttasks.domain.entity.IconTask
-import com.entin.lighttasks.presentation.screens.addedit.adapter.IconTaskAdapter
+import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
@@ -35,7 +34,7 @@ class CreateEditSectionDialog : DialogFragment() {
     private var _binding: CreateEditSectionDialogBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SectionViewModel by viewModels(ownerProducer = { requireParentFragment() })
-    private var iconAdapter: IconTaskAdapter? = null
+    private var iconAdapter: IconsTaskAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,7 +112,7 @@ class CreateEditSectionDialog : DialogFragment() {
      * Icon
      */
     private fun setupIconRecyclerView() {
-        iconAdapter = IconTaskAdapter(viewModel.sectionIcon) { element, position ->
+        iconAdapter = IconsTaskAdapter(viewModel.sectionIcon) { element, position ->
             onGroupIconSelected(element, position)
         }
 

@@ -154,10 +154,11 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE is_finished = 1")
     suspend fun deleteFinishedTasks()
 
-    // Find a maximum value of position among the list of tasks
+    @Query("SELECT MAX(id) FROM tasks")
+    fun getNextTaskId(): Flow<Int?>
 
     @Query("SELECT MAX(position) FROM tasks")
-    fun getLastId(): Flow<Int?>
+    fun getLastPosition(): Flow<Int?>
 
     @Query("SELECT * " +
             "FROM tasks " +
