@@ -19,9 +19,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.AllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
-import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.EDIT
 import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.NEW
@@ -151,12 +151,12 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun setTasks(listTask: List<Task>) {
-        tasksAdapter.submitList(listTask)
+    private fun setTasks(listtask: List<Task>) {
+        tasksAdapter.submitList(listtask)
     }
 
-    private fun setSections(listSections: List<Section>) {
-        sectionAdapter?.submitList(listSections)
+    private fun setSections(listSectionEntities: List<SectionEntity>) {
+        sectionAdapter?.submitList(listSectionEntities)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -256,8 +256,8 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun sectionSelected(section: Section?) {
-        viewModel.onSectionClick(section?.id ?: ZERO)
+    private fun sectionSelected(sectionEntity: SectionEntity?) {
+        viewModel.onSectionClick(sectionEntity?.id ?: ZERO)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -293,8 +293,8 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun updateAllTasks(listTasks: List<Task>) {
-        viewModel.updateAllTasks(listTasks)
+    private fun updateAllTasks(listTaskEntities: List<Task>) {
+        viewModel.updateAllTasks(listTaskEntities)
     }
 
     // Empty List Welcome

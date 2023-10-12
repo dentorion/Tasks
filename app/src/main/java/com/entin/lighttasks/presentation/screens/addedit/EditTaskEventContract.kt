@@ -9,6 +9,7 @@ package com.entin.lighttasks.presentation.screens.addedit
 sealed class EditTaskEventContract {
     object ShowErrorBlankTitleAndMessage : EditTaskEventContract()
     object ShowErrorDatesPicked : EditTaskEventContract()
+    object ShowErrorAlarmTime : EditTaskEventContract()
     object TaskNotSaved : EditTaskEventContract()
     data class RefreshTagsVisibility(
         val url: Boolean = false,

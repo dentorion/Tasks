@@ -23,8 +23,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
-import com.entin.lighttasks.domain.entity.IconTask
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
@@ -144,7 +144,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /** Fill IconsTaskAdapter with elements and choose which is selected */
-    private fun onIconsGet(icons: List<IconTask>) {
+    private fun onIconsGet(icons: List<IconTaskEntity>) {
         val selectedIcon = icons.first { it.groupId == viewModel.taskIcon }
         val indexOfSelectedIcon = icons.indexOf(selectedIcon)
         iconsTaskAdapter?.submitList(icons)
@@ -168,7 +168,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun setupFields() {
         with(binding) {
             /** Title */
-            viewModel.task?.let {
+            viewModel.taskEntity?.let {
                 addEditTaskTitle.setText(
                     checkForEmptyTitle(
                         viewModel.taskTitle, resources, viewModel.getTaskId()
@@ -439,7 +439,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
     }
 
-    private fun onGroupIconSelected(element: IconTask, position: Int?) {
+    private fun onGroupIconSelected(element: IconTaskEntity, position: Int?) {
         position?.let {
             viewModel.taskIcon = element.groupId
             binding.addEditTaskCategoryRecyclerview.smoothScrollToPosition(it)
@@ -483,7 +483,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.text =
                 viewModel.taskAlarm.toFormattedDateTimeString()
 
-            Log.e("ALARM_MY", "viewModel.taskAlarm: ${viewModel.taskAlarm}, Date().time: ${Date().time}")
             val color = if ((viewModel.taskAlarm) <= Date().time) {
                 R.color.dark_red
             } else {
@@ -537,13 +536,20 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         setTagUrlVisibility(event.url)
                         setTagPhotoVisibility(event.photo)
                     }
+
+                    is EditTaskEventContract.ShowErrorAlarmTime -> {
+                        getSnackBar(
+                            resources.getString(R.string.snack_bar_error_alarm_time),
+                            requireView(),
+                        ).show()
+                    }
                 }
             }
         }
     }
 
-    private fun onSectionSelect(section: Section) {
-        viewModel.sectionId = section.id
+    private fun onSectionSelect(sectionEntity: SectionEntity) {
+        viewModel.sectionId = sectionEntity.id
         getSection()
     }
 

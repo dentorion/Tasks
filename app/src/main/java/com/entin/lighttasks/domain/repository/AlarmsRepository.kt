@@ -1,8 +1,7 @@
 package com.entin.lighttasks.domain.repository
 
-import com.entin.lighttasks.domain.entity.AlarmItem
+import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
 
 /**
  * Interface of AlarmsRepository
@@ -13,32 +12,32 @@ interface AlarmsRepository {
     /**
      * Get alarm by id
      */
-    fun getAllAlarmById(alarmId: Int): Flow<List<AlarmItem>>
+    fun getAllAlarmById(alarmId: Int): Flow<List<AlarmItemEntity>>
 
     /**
      * Get alarm by task_id
      */
-    fun getAllAlarmByTaskId(taskId: Int): Flow<List<AlarmItem>>
+    fun getAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity>
 
     /**
      * Get all alarms
      */
-    fun getAllAlarms(): Flow<List<AlarmItem>>
+    fun getAllAlarms(): Flow<List<AlarmItemEntity>>
 
     /**
      * Get all actual alarms
      */
-    fun getActualAlarms(): Flow<List<AlarmItem>>
+    fun getActualAlarms(): Flow<List<AlarmItemEntity>>
 
     /**
      * Add / update alarm
      */
-    suspend fun addAlarm(alarmItem: AlarmItem): Long
+    suspend fun addAlarm(alarmItemEntity: AlarmItemEntity): Long
 
     /**
      * Delete alarm
      */
-    suspend fun deleteAlarm(alarmItem: AlarmItem): Int
+    suspend fun deleteAlarm(alarmItemEntity: AlarmItemEntity): Int
 
     /**
      * Delete alarm by id

@@ -2,12 +2,12 @@ package com.entin.lighttasks.presentation.di
 
 import android.content.Context
 import androidx.room.Room
-import com.entin.lighttasks.data.db.AlarmsDao
+import com.entin.lighttasks.data.db.dao.AlarmsDao
 import com.entin.lighttasks.data.db.DataBase
 import com.entin.lighttasks.data.db.DataBase.Companion.DATABASE_NAME
-import com.entin.lighttasks.data.db.SectionsDao
-import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.db.dao.SectionsDao
+import com.entin.lighttasks.data.db.dao.TaskDao
+import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +24,7 @@ object DatabaseModule {
     @Provides
     fun provideDataBase(
         @ApplicationContext context: Context,
-        provider: Provider<TaskGroupsDao>,
+        provider: Provider<TaskIconsDao>,
         providerTasks: Provider<TaskDao>,
     ): DataBase =
         Room.databaseBuilder(
@@ -37,6 +37,7 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom3To4)
             .addMigrations(DbMigration().migrationFrom4To5)
             .addMigrations(DbMigration().migrationFrom5To6)
+            .addMigrations(DbMigration().migrationFrom6To7)
             .addCallback(TaskGroupsCallback(provider))
             .build()
 
@@ -54,5 +55,5 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideTaskGroupsDao(db: DataBase): TaskGroupsDao = db.getTaskGroupsDAO()
+    fun provideTaskGroupsDao(db: DataBase): TaskIconsDao = db.getTaskGroupsDAO()
 }

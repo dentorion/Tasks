@@ -143,6 +143,6 @@
         app:destination="@id/sectionFragment" />
     <dialog
         android:id="@+id/createEditSectionDialog"
-        android:name="com.entin.lighttasks.presentation.screens.section.CreateEditSectionDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog"
         android:label="CreateEditSectionDialog" />
 </navigation>

@@ -4,9 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.entin.lighttasks.data.db.entity.AlarmItemEntity
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.data.util.alarm.AlarmScheduler
-import com.entin.lighttasks.domain.entity.AlarmItem
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
@@ -21,6 +22,7 @@ import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.PHOTO_ATTACHED
 import com.entin.lighttasks.presentation.util.SECTION
 import com.entin.lighttasks.presentation.util.TASK
+import com.entin.lighttasks.presentation.util.TASK_ALARM
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
@@ -65,11 +67,11 @@ class AddEditTaskViewModel @Inject constructor(
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
 
-    private val _iconTaskChannel = Channel<List<IconTask>>()
-    val iconTaskChannel = _iconTaskChannel.receiveAsFlow()
+    private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
+    val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
 
     // If task is editing - task from SavedStateHandle
-    val task: Task? = state.get<Task>(TASK)
+    val taskEntity: Task? = state.get<Task>(TASK)
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
@@ -88,63 +90,65 @@ class AddEditTaskViewModel @Inject constructor(
         seconds = LAST_SECOND - ONE,
     ) + ONE_DAY_MLS
 
-    var taskTitle = state.get<String>(TASK_TITLE) ?: task?.title ?: EMPTY_STRING
+    var taskTitle = state.get<String>(TASK_TITLE) ?: taskEntity?.title ?: EMPTY_STRING
         set(value) {
             field = value.trim()
             state[TASK_TITLE] = value.trim()
         }
 
-    var taskMessage = state.get<String>(TASK_MESSAGE) ?: task?.message ?: EMPTY_STRING
+    var taskMessage = state.get<String>(TASK_MESSAGE) ?: taskEntity?.message ?: EMPTY_STRING
         set(value) {
             field = value.trim()
             state[TASK_MESSAGE] = value.trim()
         }
 
-    var taskFinished = state.get<Boolean>(TASK_FINISHED) ?: task?.isFinished ?: false
+    var taskFinished = state.get<Boolean>(TASK_FINISHED) ?: taskEntity?.isFinished ?: false
         set(value) {
             field = value
             state[TASK_FINISHED] = value
         }
 
-    var taskImportant = state.get<Boolean>(TASK_IMPORTANT) ?: task?.isImportant ?: false
+    var taskImportant = state.get<Boolean>(TASK_IMPORTANT) ?: taskEntity?.isImportant ?: false
         set(value) {
             field = value
             state[TASK_IMPORTANT] = value
         }
 
-    var taskIcon: Int = state.get<Int>(TASK_ICON) ?: task?.group ?: ZERO
+    var taskIcon: Int = state.get<Int>(TASK_ICON) ?: taskEntity?.group ?: ZERO
         set(value) {
             field = value
             state[TASK_ICON] = value
         }
 
     var taskExpireFirstDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: task?.expireDateFirst ?: defaultStartDateTime
+        state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: taskEntity?.expireDateFirst
+        ?: defaultStartDateTime
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_FIRST] = value
         }
 
     var taskExpireSecondDate: Long =
-        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: task?.expireDateSecond ?: defaultFinishDateTime
+        state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: taskEntity?.expireDateSecond
+        ?: defaultFinishDateTime
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_SECOND] = value
         }
 
-    var isEvent = state.get<Boolean>(TASK_IS_EVENT) ?: task?.isEvent ?: false
+    var isEvent = state.get<Boolean>(TASK_IS_EVENT) ?: taskEntity?.isEvent ?: false
         set(value) {
             field = value
             state[TASK_IS_EVENT] = value
         }
 
-    var isRange = state.get<Boolean>(TASK_IS_RANGE) ?: task?.isRange ?: true
+    var isRange = state.get<Boolean>(TASK_IS_RANGE) ?: taskEntity?.isRange ?: true
         set(value) {
             field = value
             state[TASK_IS_RANGE] = value
         }
 
-    var isTaskExpired = state.get<Boolean>(TASK_IS_EXPIRED) ?: task?.isTaskExpired ?: false
+    var isTaskExpired = state.get<Boolean>(TASK_IS_EXPIRED) ?: taskEntity?.isTaskExpired ?: false
         set(value) {
             field = value
             state[TASK_IS_EXPIRED] = value
@@ -154,7 +158,7 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
-    var linkAttached = state.get<String>(LINK_ATTACHED) ?: task?.attachedLink ?: EMPTY_STRING
+    var linkAttached = state.get<String>(LINK_ATTACHED) ?: taskEntity?.attachedLink ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
                 _editTaskChannel.send(
@@ -169,7 +173,8 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
-    var photoAttached = state.get<String>(PHOTO_ATTACHED) ?: task?.attachedPhoto ?: EMPTY_STRING
+    var photoAttached =
+        state.get<String>(PHOTO_ATTACHED) ?: taskEntity?.attachedPhoto ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
                 _editTaskChannel.send(
@@ -184,7 +189,8 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
-    var voiceAttached = state.get<String>(VOICE_ATTACHED) ?: task?.attachedVoice ?: EMPTY_STRING
+    var voiceAttached =
+        state.get<String>(VOICE_ATTACHED) ?: taskEntity?.attachedVoice ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
                 _editTaskChannel.send(
@@ -199,7 +205,7 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
-    var sectionId: Int = state.get<Int>(SECTION) ?: task?.sectionId ?: ZERO
+    var sectionId: Int = state.get<Int>(SECTION) ?: taskEntity?.sectionId ?: ZERO
         set(value) {
             field = value
             state[SECTION] = value
@@ -209,21 +215,27 @@ class AddEditTaskViewModel @Inject constructor(
         MutableLiveData<String>()
     }
 
-    var taskAlarm = state.get<Long>(IS_ALARM) ?: task?.alarmId ?: ZERO_LONG
+    var taskAlarm = state.get<Long>(TASK_ALARM) ?: taskEntity?.alarmTime ?: ZERO_LONG
+        set(value) {
+            field = value
+            state[TASK_ALARM] = value
+        }
+
+    var alarmIsOn: Boolean = (taskAlarm != ZERO_LONG)
         set(value) {
             field = value
             state[IS_ALARM] = value
         }
 
-    var alarmIsOn: Boolean = taskAlarm != ZERO_LONG
+    private var alarmId: Long = ZERO_LONG
 
     /** Get task id if exist */
-    fun getTaskId(): Int? = task?.id
+    fun getTaskId(): Int? = taskEntity?.id
 
     /** Get all icons */
     fun getTaskIcons() {
         viewModelScope.launch(Dispatchers.IO) {
-            _iconTaskChannel.send(
+            _iconTaskEntityChannel.send(
                 taskRepository.getTaskIcons().shuffled()
             )
         }
@@ -244,7 +256,6 @@ class AddEditTaskViewModel @Inject constructor(
     /** OK button clicked while creating or editing task */
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-
             // Error: First date > Second date in range task, that has date of expire
             if (isTaskExpired && isRange && taskExpireFirstDate > taskExpireSecondDate) {
                 errorDatesPicked()
@@ -253,95 +264,109 @@ class AddEditTaskViewModel @Inject constructor(
             else if (taskTitle.isEmpty() && taskMessage.isEmpty()) {
                 errorBlankText()
             }
+            // Error: Alarm time is less or equal now
+            else if (alarmIsOn && taskAlarm != ZERO_LONG && taskAlarm <= Date().time) {
+                errorAlarmTime()
+            }
             // Success: save task
             else {
-                val expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
-                val expireDateSecond = if (isTaskExpired && isEvent) {
-                    expireDateFirst
-                } else if (isTaskExpired && isRange) {
-                    taskExpireSecondDate
-                } else {
-                    ZERO_LONG
+                // checkBox = true and alarm time set
+                if (alarmIsOn && taskAlarm != ZERO_LONG) {
+                    setAlarmAndTask()
                 }
-                val alarm = if (alarmIsOn) {
-                    if (taskAlarm != ZERO_LONG && (taskAlarm * ONE_SEC_MLS) > Date().time) {
-                        setAlarm()
-                    }
-                    taskAlarm
-                } else {
-                    if (taskAlarm != ZERO_LONG && (taskAlarm * ONE_SEC_MLS) > Date().time) {
-                        cancelAlarm()
-                    }
-                    ZERO_LONG
+                // checkBox = true and alarm time not set
+                else if (alarmIsOn && taskAlarm == ZERO_LONG) {
+                    setTask(taskEntity)
                 }
-
-                // Update
-                if (task != null) {
-                    updateTask(
-                        task.copy(
-                            id = task.id,
-                            title = taskTitle,
-                            message = taskMessage,
-                            isFinished = taskFinished,
-                            isImportant = taskImportant,
-                            createdAt = task.createdAt,
-                            editedAt = getTimeMls(),
-                            group = taskIcon,
-                            position = task.position,
-                            expireDateFirst = expireDateFirst,
-                            expireDateSecond = expireDateSecond,
-                            isTaskExpired = isTaskExpired,
-                            isEvent = isEvent,
-                            isRange = isRange,
-                            attachedLink = linkAttached,
-                            attachedPhoto = photoAttached,
-                            attachedVoice = voiceAttached,
-                            sectionId = sectionId,
-                            alarmId = alarm,
-                        ),
-                    )
+                // checkBox = false and time not set
+                else if (!alarmIsOn && taskAlarm == ZERO_LONG) {
+                    setTask(taskEntity)
                 }
-                // Create new
-                else {
-                    saveNewTask(
-                        Task(
-                            id = ZERO, // will be replaced in Room
-                            title = taskTitle,
-                            message = taskMessage,
-                            isFinished = taskFinished,
-                            isImportant = taskImportant,
-                            group = taskIcon,
-                            position = ZERO, // will be replaced in Repository
-                            createdAt = Date().time, // getTimeMls()
-                            editedAt = ZERO_LONG,
-                            expireDateFirst = expireDateFirst,
-                            expireDateSecond = expireDateSecond,
-                            isTaskExpired = isTaskExpired,
-                            isEvent = isEvent,
-                            isRange = isRange,
-                            attachedLink = linkAttached,
-                            attachedPhoto = photoAttached,
-                            attachedVoice = voiceAttached,
-                            sectionId = sectionId,
-                            alarmId = alarm,
-                        ),
-                    )
+                // checkBox = false and alarm time set
+                else if (!alarmIsOn && taskAlarm != ZERO_LONG) {
+                    cancelAlarm()
+                    setTask(taskEntity)
                 }
             }
         }
     }
 
+    private suspend fun setTask(taskEntity: Task?) {
+        val expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
+        val expireDateSecond = if (isTaskExpired && isEvent) {
+            expireDateFirst
+        } else if (isTaskExpired && isRange) {
+            taskExpireSecondDate
+        } else {
+            ZERO_LONG
+        }
+
+        // Update
+        if (taskEntity != null) {
+            updateTask(
+                TaskEntity(
+                    id = taskEntity.id,
+                    title = taskTitle,
+                    message = taskMessage,
+                    isFinished = taskFinished,
+                    isImportant = taskImportant,
+                    createdAt = taskEntity.createdAt,
+                    editedAt = Date().time, // getTimeMls()
+                    group = taskIcon,
+                    position = taskEntity.position,
+                    expireDateFirst = expireDateFirst,
+                    expireDateSecond = expireDateSecond,
+                    isTaskExpired = isTaskExpired,
+                    isEvent = isEvent,
+                    isRange = isRange,
+                    attachedLink = linkAttached,
+                    attachedPhoto = photoAttached,
+                    attachedVoice = voiceAttached,
+                    sectionId = sectionId,
+                    alarmId = alarmId
+
+                )
+            )
+        }
+        // Create new
+        else {
+            saveNewTask(
+                TaskEntity(
+                    id = ZERO, // will be replaced in Room
+                    title = taskTitle,
+                    message = taskMessage,
+                    isFinished = taskFinished,
+                    isImportant = taskImportant,
+                    group = taskIcon,
+                    position = ZERO, // will be replaced in Repository
+                    createdAt = Date().time, // getTimeMls()
+                    editedAt = ZERO_LONG,
+                    expireDateFirst = expireDateFirst,
+                    expireDateSecond = expireDateSecond,
+                    isTaskExpired = isTaskExpired,
+                    isEvent = isEvent,
+                    isRange = isRange,
+                    attachedLink = linkAttached,
+                    attachedPhoto = photoAttached,
+                    attachedVoice = voiceAttached,
+                    sectionId = sectionId,
+                    alarmId = alarmId,
+                ),
+            )
+        }
+    }
+
     /** Update task with new data */
-    private suspend fun updateTask(uTask: Task) {
-        taskRepository.updateTask(uTask).apply {
+    private suspend fun updateTask(taskEntity: TaskEntity) {
+        taskRepository.updateTask(taskEntity).apply {
             state[TASK] = null
             if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
         }
     }
 
     /** Create new task */
-    private suspend fun saveNewTask(task: Task) {
-        taskRepository.newTask(task).collect { result ->
+    private suspend fun saveNewTask(taskEntity: TaskEntity) {
+        taskRepository.newTask(taskEntity).collect { result ->
             state[TASK] = null
             if (result) {
                 _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_NEW))
@@ -352,47 +377,50 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     /** Set alarm for task */
-    private fun setAlarm() {
-        viewModelScope.launch {
-            // Set time for AlarmItem
-            val localDateTimeOfAlarm = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(taskAlarm),
-                TimeZone.getDefault().toZoneId()
-            ).atZone(ZoneId.systemDefault()).toEpochSecond() * ONE_SEC_MLS
+    private suspend fun setAlarmAndTask() {
+        // Set time for AlarmItem
+        val localDateTimeOfAlarm = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(taskAlarm),
+            TimeZone.getDefault().toZoneId()
+        ).atZone(ZoneId.systemDefault()).toEpochSecond() * ONE_SEC_MLS
 
-            // TaskId for AlarmItem (next id of task)
-            val taskId = task?.id ?: taskRepository.getNextTaskId().first()
+        // TaskId for AlarmItem (next id of task)
+        val taskId = taskEntity?.id ?: taskRepository.getNextTaskId().first()
 
-            // Create AlarmItem
-            val alarmItem = AlarmItem(
-                time = localDateTimeOfAlarm,
-                message = taskTitle,
-                taskId = taskId
-            )
+        // Create AlarmItem
+        val alarmItemEntity = AlarmItemEntity(
+            alarmTime = localDateTimeOfAlarm,
+            alarmMessage = taskTitle,
+            taskId = taskId
+        )
 
-            // Add alarm to Android
-            alarmScheduler.schedule(alarmItem)
+        // Add alarm to Android
+        alarmScheduler.schedule(alarmItemEntity)
 
-            // Add alarm to database
-            alarmsRepository.addAlarm(alarmItem)
-        }
+        // Add alarm to database and set alarmId
+        alarmId = alarmsRepository.addAlarm(alarmItemEntity)
+
+        setTask(taskEntity)
     }
 
     /** Cancel alarm for task */
     private fun cancelAlarm() {
-        viewModelScope.launch {
-            task?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            taskEntity?.let {
                 // Cancel alarm from Android
                 alarmScheduler.cancel(
-                    AlarmItem(
-                        time = ZERO_LONG,
-                        message = taskTitle,
+                    AlarmItemEntity(
+                        alarmTime = ZERO_LONG,
+                        alarmMessage = taskTitle,
                         taskId = it.id
                     )
                 )
 
                 // Delete alarm from database
                 alarmsRepository.deleteAlarmByTaskId(it.id)
+
+                // Clear alarmId
+                alarmId = ZERO_LONG
             }
         }
     }
@@ -405,6 +433,10 @@ class AddEditTaskViewModel @Inject constructor(
     /** Error to show: error while choosing dates for event */
     private suspend fun errorDatesPicked() {
         _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
+    }
+
+    private suspend fun errorAlarmTime() {
+        _editTaskChannel.send(EditTaskEventContract.ShowErrorAlarmTime)
     }
 
     companion object {

@@ -111,4 +111,5 @@
     <string name="add_edit_task_add_alarm_label">Додати будильник</string>
     <string name="set_date_and_time">Встановіть дату та час</string>
     <string name="alarm_message" >Увага! Сигналізація для:</string>
+    <string name="snack_bar_error_alarm_time" >Неправильний час сигналу!</string>
 </resources>

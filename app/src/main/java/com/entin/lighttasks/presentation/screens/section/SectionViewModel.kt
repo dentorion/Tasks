@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
-import com.entin.lighttasks.domain.entity.IconTask
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
@@ -32,13 +32,13 @@ class SectionViewModel @Inject constructor(
     private val _sectionEvent = Channel<SectionsEventContract>()
     val sectionEvent = _sectionEvent.receiveAsFlow()
 
-    private val _iconTaskChannel = Channel<List<IconTask>>()
-    val iconTaskChannel = _iconTaskChannel.receiveAsFlow()
+    private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
+    val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
 
     var sectionTitle: String = EMPTY_STRING
     var sectionIcon: Int = ZERO
     var sectionImportant: Boolean = false
-    var currentSection: Section? = null
+    var currentSectionEntity: SectionEntity? = null
         set(value) {
             field = value
             sectionTitle = value?.title ?: EMPTY_STRING
@@ -64,7 +64,7 @@ class SectionViewModel @Inject constructor(
     /** Get all groups for task to show icons */
     fun getIcons() {
         viewModelScope.launch(Dispatchers.IO) {
-            _iconTaskChannel.send(taskRepository.getTaskIcons().shuffled())
+            _iconTaskEntityChannel.send(taskRepository.getTaskIcons().shuffled())
         }
     }
 
@@ -72,9 +72,9 @@ class SectionViewModel @Inject constructor(
      * Create section
      */
     fun onSaveButtonClick() {
-        if (currentSection == null) {
+        if (currentSectionEntity == null) {
             createSection(
-                Section(
+                SectionEntity(
                     id = ZERO,
                     title = sectionTitle,
                     createdAt = System.currentTimeMillis(),
@@ -86,7 +86,7 @@ class SectionViewModel @Inject constructor(
             )
         } else {
             updateSection(
-                currentSection!!.copy(
+                currentSectionEntity!!.copy(
                     title = sectionTitle,
                     editedAt = System.currentTimeMillis(),
                     icon = sectionIcon,
@@ -96,27 +96,27 @@ class SectionViewModel @Inject constructor(
         }
     }
 
-    private fun createSection(section: Section) {
+    private fun createSection(sectionEntity: SectionEntity) {
         diAppScope.launch {
-            sectionRepository.createSection(section)
+            sectionRepository.createSection(sectionEntity)
         }
     }
 
     /**
      * Edit section
      */
-    private fun updateSection(section: Section) {
+    private fun updateSection(sectionEntity: SectionEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            sectionRepository.updateSection(section)
+            sectionRepository.updateSection(sectionEntity)
         }
     }
 
     /**
      * Edit list of sections
      */
-    fun updateSections(sections: List<Section>) {
+    fun updateSections(sectionEntities: List<SectionEntity>) {
         diAppScope.launch(Dispatchers.IO) {
-            sectionRepository.updateSections(sections)
+            sectionRepository.updateSections(sectionEntities)
         }
     }
 
@@ -125,7 +125,7 @@ class SectionViewModel @Inject constructor(
      */
     fun deleteSection() {
         viewModelScope.launch(Dispatchers.IO) {
-            currentSection?.let {
+            currentSectionEntity?.let {
                 sectionRepository.deleteSection(it)
                 taskRepository.updateAllTasksWithDeletedSection(it.id)
                 preferences.updateSection(ZERO)

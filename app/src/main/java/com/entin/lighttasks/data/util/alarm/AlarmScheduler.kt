@@ -1,10 +1,10 @@
 package com.entin.lighttasks.data.util.alarm
 
-import com.entin.lighttasks.domain.entity.AlarmItem
+import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 
 interface AlarmScheduler {
 
-    fun schedule(item: AlarmItem)
+    fun schedule(item: AlarmItemEntity)
 
-    fun cancel(item: AlarmItem)
+    fun cancel(item: AlarmItemEntity)
 }

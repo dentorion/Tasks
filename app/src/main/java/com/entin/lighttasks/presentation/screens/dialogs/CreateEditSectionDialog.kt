@@ -18,7 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.CreateEditSectionDialogBinding
-import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
@@ -75,7 +75,7 @@ class CreateEditSectionDialog : DialogFragment() {
 
         with(binding) {
             /** Title */
-            Log.e("EBANINA", "Dialog section title should be: ${viewModel.currentSection?.title}")
+            Log.e("EBANINA", "Dialog section title should be: ${viewModel.currentSectionEntity?.title}")
             dialogAddEditSectionTitleValue.text =
                 SpannableStringBuilder(viewModel.sectionTitle)
 
@@ -129,7 +129,7 @@ class CreateEditSectionDialog : DialogFragment() {
     /**
      * On icon selected
      */
-    private fun onGroupIconSelected(element: IconTask, position: Int?) {
+    private fun onGroupIconSelected(element: IconTaskEntity, position: Int?) {
         position?.let {
             viewModel.sectionIcon = element.groupId
             binding.dialogAddEditSectionCategoryRecyclerview.smoothScrollToPosition(it)
@@ -139,7 +139,7 @@ class CreateEditSectionDialog : DialogFragment() {
     /**
      * On list of icons get
      */
-    private fun onIconsGet(icons: List<IconTask>) {
+    private fun onIconsGet(icons: List<IconTaskEntity>) {
         val selectedIcon = icons.first { it.groupId == viewModel.sectionIcon }
         val indexOfSelectedIcon = icons.indexOf(selectedIcon)
         iconAdapter?.submitList(icons)

@@ -3,7 +3,7 @@ package com.entin.lighttasks.presentation.util
 import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Task
 
-fun getIconTaskDrawable(task: Task) = when (task.group) {
+fun getIconTaskDrawable(taskEntity: Task) = when (taskEntity.group) {
     0 -> R.drawable.ic_nothing
     1 -> R.drawable.ic_work
     2 -> R.drawable.ic_rest

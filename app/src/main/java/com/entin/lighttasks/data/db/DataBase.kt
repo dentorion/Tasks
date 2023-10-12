@@ -2,26 +2,30 @@ package com.entin.lighttasks.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.entin.lighttasks.domain.entity.AlarmItem
-import com.entin.lighttasks.domain.entity.IconTask
-import com.entin.lighttasks.domain.entity.Section
-import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.data.db.dao.AlarmsDao
+import com.entin.lighttasks.data.db.dao.SectionsDao
+import com.entin.lighttasks.data.db.dao.TaskDao
+import com.entin.lighttasks.data.db.dao.TaskIconsDao
+import com.entin.lighttasks.data.db.entity.AlarmItemEntity
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 
 @Database(
     entities = [
-        Task::class,
-        IconTask::class,
-        Section::class,
-        AlarmItem::class,
+        TaskEntity::class,
+        IconTaskEntity::class,
+        SectionEntity::class,
+        AlarmItemEntity::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = false,
 )
 abstract class DataBase : RoomDatabase() {
 
     abstract fun getTaskDAO(): TaskDao
 
-    abstract fun getTaskGroupsDAO(): TaskGroupsDao
+    abstract fun getTaskGroupsDAO(): TaskIconsDao
 
     abstract fun getSectionDAO(): SectionsDao
 

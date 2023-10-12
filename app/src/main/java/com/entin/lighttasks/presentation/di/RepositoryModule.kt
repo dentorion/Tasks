@@ -1,9 +1,9 @@
 package com.entin.lighttasks.presentation.di
 
-import com.entin.lighttasks.data.db.AlarmsDao
-import com.entin.lighttasks.data.db.SectionsDao
-import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.db.dao.AlarmsDao
+import com.entin.lighttasks.data.db.dao.SectionsDao
+import com.entin.lighttasks.data.db.dao.TaskDao
+import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import com.entin.lighttasks.data.repository.AlarmsRepositoryImpl
 import com.entin.lighttasks.data.repository.SectionsRepositoryImpl
 import com.entin.lighttasks.data.repository.TasksRepositoryImpl
@@ -38,9 +38,9 @@ object RepositoryModule {
     @Provides
     fun provideTasksRepository(
         taskDao: TaskDao,
-        taskGroupsDao: TaskGroupsDao,
+        taskIconsDao: TaskIconsDao,
     ): TasksRepository {
-        return TasksRepositoryImpl(taskDao, taskGroupsDao)
+        return TasksRepositoryImpl(taskDao, taskIconsDao)
     }
 
     @Singleton

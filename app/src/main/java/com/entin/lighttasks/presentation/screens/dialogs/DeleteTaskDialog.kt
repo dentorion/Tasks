@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.entin.lighttasks.databinding.DeleteTaskDialogBinding
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
 import dagger.hilt.android.AndroidEntryPoint

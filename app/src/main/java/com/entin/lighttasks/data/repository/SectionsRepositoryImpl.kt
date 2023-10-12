@@ -1,11 +1,10 @@
 package com.entin.lighttasks.data.repository
 
-import com.entin.lighttasks.data.db.SectionsDao
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.dao.SectionsDao
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ONE
-import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -28,34 +27,34 @@ class SectionsRepositoryImpl @Inject constructor(
         sectionsDao.getLastId().map { max -> max?.let { it + ONE } ?: ONE }
 
     /** Get all sections */
-    override fun getAllSections(): Flow<List<Section>> =
+    override fun getAllSections(): Flow<List<SectionEntity>> =
         sectionsDao.getAllSections()
 
     /**
      * Create section
      */
-    override suspend fun createSection(section: Section): Long =
-        sectionsDao.createSection(section.copy(position = getMaxPosition().first()))
+    override suspend fun createSection(sectionEntity: SectionEntity): Long =
+        sectionsDao.createSection(sectionEntity.copy(position = getMaxPosition().first()))
 
     /**
      * Edit section
      */
-    override suspend fun updateSection(section: Section): Int =
-        sectionsDao.updateSection(section)
+    override suspend fun updateSection(sectionEntity: SectionEntity): Int =
+        sectionsDao.updateSection(sectionEntity)
 
     /**
      * Update list of sections
      */
-    override suspend fun updateSections(sections: List<Section>) =
-        sectionsDao.updateSections(sections)
+    override suspend fun updateSections(sectionEntities: List<SectionEntity>) =
+        sectionsDao.updateSections(sectionEntities)
 
     /**
      * Delete section
      */
-    override suspend fun deleteSection(section: Section): Int =
-        sectionsDao.deleteSection(section)
+    override suspend fun deleteSection(sectionEntity: SectionEntity): Int =
+        sectionsDao.deleteSection(sectionEntity)
 
     /** Get section by id */
-    override suspend fun getSectionById(sectionId: Int): Section =
+    override suspend fun getSectionById(sectionId: Int): SectionEntity =
         sectionsDao.getSectionById(sectionId)
 }

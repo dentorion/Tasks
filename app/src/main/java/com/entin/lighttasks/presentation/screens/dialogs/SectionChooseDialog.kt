@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionChooseDialogBinding
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SectionChooseAdapter
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import com.entin.lighttasks.presentation.screens.section.SectionsEventContract
@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SectionChooseDialog(
-    private val onSelect: (Section) -> Unit
+    private val onSelect: (SectionEntity) -> Unit
 ) : DialogFragment() {
 
     private var _binding: SectionChooseDialogBinding? = null
@@ -112,8 +112,9 @@ class SectionChooseDialog(
                 when (event) {
                     is SectionsEventContract.ShowAllSections -> {
                         // Add first "No category" item to list
-                        val newListWithNoSection = event.sections.toMutableList()
-                        newListWithNoSection.add(Section(
+                        val newListWithNoSection = event.sectionEntities.toMutableList()
+                        newListWithNoSection.add(
+                            SectionEntity(
                                 id = 0,
                                 title = requireContext().resources.getString(R.string.no_section),
                                 createdAt = 0,
@@ -121,7 +122,8 @@ class SectionChooseDialog(
                                 icon = 0,
                                 isImportant = false,
                                 position = 0
-                            ))
+                            )
+                        )
                         sectionChooseAdapter?.submitList(newListWithNoSection)
                     }
                 }

@@ -1,9 +1,10 @@
 package com.entin.lighttasks.data.repository
 
-import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.db.dao.TaskDao
+import com.entin.lighttasks.data.db.dao.TaskIconsDao
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
@@ -27,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class TasksRepositoryImpl @Inject constructor(
     private val tasksDao: TaskDao,
-    private val taskGroupsDao: TaskGroupsDao,
+    private val taskIconsDao: TaskIconsDao,
 ) : TasksRepository {
 
     /**
@@ -84,18 +85,12 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Create new Task
      */
-    override fun newTask(task: Task): Flow<Boolean> = flow {
-        emit(tasksDao.newTask(task.copy(position = getMaxPosition().first())) > ZERO)
+    override fun newTask(taskEntity: TaskEntity): Flow<Boolean> = flow {
+        emit(tasksDao.newTask(taskEntity.copy(position = getMaxPosition().first())) > ZERO)
     }
 
-    /**
-     * Updating queries
-     */
-    override suspend fun updateAllTasks(list: List<Task>) =
-        tasksDao.updateAllTasks(list)
-
-    override suspend fun updateTask(task: Task): Boolean =
-        tasksDao.updateTask(task) > ZERO
+    override suspend fun updateTask(taskEntity: TaskEntity): Boolean =
+        tasksDao.updateTask(taskEntity) > ZERO
 
     /**
      * Delete queries
@@ -105,7 +100,7 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(task: Task) {
-        tasksDao.deleteTask(task)
+        tasksDao.deleteTaskById(task.id)
     }
 
     /**
@@ -123,8 +118,8 @@ class TasksRepositoryImpl @Inject constructor(
     /**
      * Get images for task groups
      */
-    override suspend fun getTaskIcons(): List<IconTask> =
-        taskGroupsDao.getTaskIcons()
+    override suspend fun getTaskIcons(): List<IconTaskEntity> =
+        taskIconsDao.getTaskIcons()
 
     /**
      * Calendar. Get tasks by month, year
@@ -167,6 +162,10 @@ class TasksRepositoryImpl @Inject constructor(
 
     override suspend fun updateAllTasksWithDeletedSection(sectionId: Int) {
         tasksDao.updateAllTasksWithDeletedSection(sectionId)
+    }
+
+    override suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean) {
+        tasksDao.onFinishedTaskClick(id, isFinished)
     }
 
     /**

@@ -1,16 +1,24 @@
-package com.entin.lighttasks.domain.entity
+package com.entin.lighttasks.data.db.entity
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
-import com.entin.lighttasks.data.db.entity.TaskEntity
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.entin.lighttasks.presentation.util.ZERO
-import com.entin.lighttasks.presentation.util.ZERO_LONG
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Database model Task
+ * - represents item that user creates and use
+ * - need to bee @keep to not be shrinks by Proguard
+ */
+
+@Keep
+@Entity(tableName = "tasks")
 @Parcelize
-data class Task(
-    @ColumnInfo(name = "id") val id: Int = ZERO,
+data class TaskEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = ZERO,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "message") val message: String,
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
@@ -28,27 +36,5 @@ data class Task(
     @ColumnInfo(name = "attached_photo") val attachedPhoto: String,
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
     @ColumnInfo(name = "section_id") val sectionId: Int,
-    @ColumnInfo(name = "alarm_time") val alarmTime: Long = ZERO_LONG,    // Join from Alarms
-): Parcelable
-
-fun Task.toTaskEntity(alarmId: Long): TaskEntity = TaskEntity(
-    id = this.id,
-    title = this.title,
-    message = this.message,
-    isFinished = this.isFinished,
-    isImportant = this.isImportant,
-    createdAt = this.createdAt,
-    editedAt = this.editedAt,
-    group = this.group,
-    position = this.position,
-    expireDateFirst = this.expireDateFirst,
-    expireDateSecond = this.expireDateSecond,
-    isTaskExpired = this.isTaskExpired,
-    isEvent = this.isEvent,
-    isRange = this.isRange,
-    attachedLink = this.attachedLink,
-    attachedPhoto = this.attachedPhoto,
-    attachedVoice = this.attachedVoice,
-    sectionId = this.sectionId,
-    alarmId = alarmId,
-)
+    @ColumnInfo(name = "alarm_id") val alarmId: Long,
+) : Parcelable

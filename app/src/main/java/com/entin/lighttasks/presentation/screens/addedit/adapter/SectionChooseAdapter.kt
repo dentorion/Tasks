@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.SectionItemChooseBinding
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class SectionChooseAdapter(
-    private val onSelect: (element: Section) -> Unit,
-) : ListAdapter<Section, SectionChooseAdapter.SectionViewHolder>(
+    private val onSelect: (element: SectionEntity) -> Unit,
+) : ListAdapter<SectionEntity, SectionChooseAdapter.SectionViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
 
@@ -31,32 +31,32 @@ class SectionChooseAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            section: Section,
+            sectionEntity: SectionEntity,
             position: Int,
         ) {
             binding.apply {
-                sectionChooseTitle.text = section.title
-                sectionChooseIcon.setImageResource(getIconTaskDrawable(section.icon))
-                sectionChooseImportant.isVisible = section.isImportant
+                sectionChooseTitle.text = sectionEntity.title
+                sectionChooseIcon.setImageResource(getIconTaskDrawable(sectionEntity.icon))
+                sectionChooseImportant.isVisible = sectionEntity.isImportant
                 root.setOnClickListener {
-                    onSelect(section)
+                    onSelect(sectionEntity)
                 }
             }
         }
     }
 
     companion object {
-        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
+        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<SectionEntity>() {
             override fun areItemsTheSame(
-                oldItem: Section,
-                newItem: Section,
+                oldItem: SectionEntity,
+                newItem: SectionEntity,
             ): Boolean {
                 return oldItem.createdAt == newItem.createdAt && oldItem.editedAt == newItem.editedAt && oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(
-                oldItem: Section,
-                newItem: Section,
+                oldItem: SectionEntity,
+                newItem: SectionEntity,
             ): Boolean {
                 return oldItem == newItem
             }
