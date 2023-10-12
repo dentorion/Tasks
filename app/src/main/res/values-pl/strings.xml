@@ -107,4 +107,8 @@
     <string name="sections">Kategorie zadań</string>
     <string name="dialog_delete_section">Usunąć grupę?</string>
     <string name="no_section" >brak kategorii</string>
+    <string name="add_edit_task_add_alarm_label">Dodaj alarm</string>
+    <string name="set_date_and_time">Ustaw datę i godzinę</string>
+    <string name="alarm_message" >Ostrzeżenie! Alarm dla:</string>
+    <string name="snack_bar_error_alarm_time" >Nieprawidłowa godzina alarmu!</string>
 </resources>

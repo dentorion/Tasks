@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.SimpleTaskItemBinding
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel

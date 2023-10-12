@@ -1,4 +1,4 @@
-package com.entin.lighttasks.domain.entity
+package com.entin.lighttasks.data.db.entity
 
 import android.os.Parcelable
 import androidx.annotation.Keep
@@ -17,7 +17,7 @@ import kotlinx.parcelize.Parcelize
 @Keep
 @Entity(tableName = "sections")
 @Parcelize
-data class Section(
+data class SectionEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = ZERO,
     @ColumnInfo(name = "name") val title: String,
     @ColumnInfo(name = "created_at") val createdAt: Long,

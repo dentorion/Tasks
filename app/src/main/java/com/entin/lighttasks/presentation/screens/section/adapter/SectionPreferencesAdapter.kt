@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.SectionItemPreferencesBinding
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
@@ -20,10 +20,10 @@ import kotlinx.coroutines.launch
 import java.util.Collections
 
 class SectionPreferencesAdapter(
-    private val onEdit: (element: Section) -> Unit,
-    private val onDelete: (element: Section) -> Unit,
-    private val updateDb: (List<Section>) -> Unit,
-) : ListAdapter<Section, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
+    private val onEdit: (element: SectionEntity) -> Unit,
+    private val onDelete: (element: SectionEntity) -> Unit,
+    private val updateDb: (List<SectionEntity>) -> Unit,
+) : ListAdapter<SectionEntity, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
     ItemTouchHelperAdapter {
 
     private var job: Job? = null
@@ -46,18 +46,18 @@ class SectionPreferencesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            section: Section,
+            sectionEntity: SectionEntity,
             position: Int,
         ) {
             binding.apply {
-                sectionTitle.text = section.title
-                sectionIcon.setImageResource(getIconTaskDrawable(section.icon))
-                sectionImportant.isVisible = section.isImportant
+                sectionTitle.text = sectionEntity.title
+                sectionIcon.setImageResource(getIconTaskDrawable(sectionEntity.icon))
+                sectionImportant.isVisible = sectionEntity.isImportant
                 sectionUpdate.setOnClickListener {
-                    onEdit(section)
+                    onEdit(sectionEntity)
                 }
                 sectionDelete.setOnClickListener {
-                    onDelete(section)
+                    onDelete(sectionEntity)
                 }
             }
         }
@@ -68,7 +68,7 @@ class SectionPreferencesAdapter(
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        val newCurrentList = mutableListOf<Section>().apply { addAll(currentList) }
+        val newCurrentList = mutableListOf<SectionEntity>().apply { addAll(currentList) }
 
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
@@ -94,17 +94,17 @@ class SectionPreferencesAdapter(
     }
 
     companion object {
-        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
+        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<SectionEntity>() {
             override fun areItemsTheSame(
-                oldItem: Section,
-                newItem: Section,
+                oldItem: SectionEntity,
+                newItem: SectionEntity,
             ): Boolean {
                 return oldItem.createdAt == newItem.createdAt && oldItem.editedAt == newItem.editedAt && oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(
-                oldItem: Section,
-                newItem: Section,
+                oldItem: SectionEntity,
+                newItem: SectionEntity,
             ): Boolean {
                 return oldItem == newItem
             }

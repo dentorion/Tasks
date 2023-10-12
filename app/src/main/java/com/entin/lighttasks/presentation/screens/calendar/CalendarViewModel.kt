@@ -3,9 +3,9 @@ package com.entin.lighttasks.presentation.screens.calendar
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.DayItem
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.CALENDAR_CONSTRAINTS
@@ -48,7 +48,7 @@ class CalendarViewModel @Inject constructor(
     private val _calendarChannel = Channel<CalendarEventContract>()
     val calendarChannel = _calendarChannel.receiveAsFlow()
 
-    private val _iconGroupsChannel = Channel<List<IconTask>>()
+    private val _iconGroupsChannel = Channel<List<IconTaskEntity>>()
     val iconGroupsChannel = _iconGroupsChannel.receiveAsFlow()
 
     private var calendar = Calendar.getInstance()
@@ -119,7 +119,7 @@ class CalendarViewModel @Inject constructor(
     fun initData() {
         viewModelScope.launch(Dispatchers.IO) {
             // Get all groups icons
-            _iconGroupsChannel.send(repository.getTaskIconGroups())
+            _iconGroupsChannel.send(repository.getTaskIcons())
             // Get all tasks by constraints
             getTasksByConstraints()
         }
@@ -176,14 +176,14 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private suspend fun generateDayItemList(tasks: List<Task>) {
+    private suspend fun generateDayItemList(taskEntities: List<Task>) {
         val size = getLastDayOfMonth(month)
         val dayItemList = mutableListOf<DayItem>()
         for (dayNumber in ONE..size) {
             dayItemList.add(
                 DayItem(
                     dayNumber = dayNumber,
-                    listOfTasks = getTasksByDayNumber(tasks, dayNumber),
+                    listOfTaskEntities = getTasksByDayNumber(taskEntities, dayNumber),
                     isToday = isToday(dayNumber, month, year),
                     dayOfWeek = getDayOfWeek(dayNumber, month, year),
                 ),
@@ -197,8 +197,8 @@ class CalendarViewModel @Inject constructor(
         )
     }
 
-    private fun getTasksByDayNumber(tasks: List<Task>, dayNumber: Int): List<Task> =
-        tasks.filter { task ->
+    private fun getTasksByDayNumber(taskEntities: List<Task>, dayNumber: Int): List<Task> =
+        taskEntities.filter { task ->
             Timestamp(task.expireDateFirst).date == dayNumber
         }
 

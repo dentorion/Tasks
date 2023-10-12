@@ -1,14 +1,13 @@
 package com.entin.lighttasks.data.repository
 
-import android.util.Log
-import com.entin.lighttasks.data.db.TaskDao
-import com.entin.lighttasks.data.db.TaskGroupsDao
+import com.entin.lighttasks.data.db.dao.TaskDao
+import com.entin.lighttasks.data.db.dao.TaskIconsDao
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
@@ -18,7 +17,6 @@ import com.entin.lighttasks.presentation.util.getTimeMls
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class TasksRepositoryImpl @Inject constructor(
     private val tasksDao: TaskDao,
-    private val taskGroupsDao: TaskGroupsDao,
+    private val taskIconsDao: TaskIconsDao,
 ) : TasksRepository {
 
     /**
@@ -81,25 +79,18 @@ class TasksRepositoryImpl @Inject constructor(
                 tasksDao.getTasksSortedByManualAsc(query, hideFinished, hideDatePick)
             }
         }.map {list ->
-            Log.e("EBANINA", "Repository: sectionId to show: $sectionId")
             list.filter { it.sectionId == sectionId }
         }
 
     /**
      * Create new Task
      */
-    override fun newTask(task: Task): Flow<Boolean> = flow {
-        emit(tasksDao.newTask(task.copy(position = getMaxPosition().first())) > ZERO)
+    override fun newTask(taskEntity: TaskEntity): Flow<Boolean> = flow {
+        emit(tasksDao.newTask(taskEntity.copy(position = getMaxPosition().first())) > ZERO)
     }
 
-    /**
-     * Updating queries
-     */
-    override suspend fun updateAllTasks(list: List<Task>) =
-        tasksDao.updateAllTasks(list)
-
-    override suspend fun updateTask(task: Task): Boolean =
-        tasksDao.updateTask(task) > ZERO
+    override suspend fun updateTask(taskEntity: TaskEntity): Boolean =
+        tasksDao.updateTask(taskEntity) > ZERO
 
     /**
      * Delete queries
@@ -109,20 +100,26 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(task: Task) {
-        tasksDao.deleteTask(task)
+        tasksDao.deleteTaskById(task.id)
     }
+
+    /**
+     * Get maximum id of tasks table
+     */
+    override fun getNextTaskId(): Flow<Int> =
+        tasksDao.getNextTaskId().map { max -> max?.let { it + ONE } ?: ONE }
 
     /**
      * Get maximum position of tasks table
      */
     override fun getMaxPosition(): Flow<Int> =
-        tasksDao.getLastId().map { max -> max?.let { it + ONE } ?: ZERO }
+        tasksDao.getLastPosition().map { max -> max?.let { it + ONE } ?: ZERO }
 
     /**
      * Get images for task groups
      */
-    override suspend fun getTaskIconGroups(): List<IconTask> =
-        taskGroupsDao.getTaskGroups()
+    override suspend fun getTaskIcons(): List<IconTaskEntity> =
+        taskIconsDao.getTaskIcons()
 
     /**
      * Calendar. Get tasks by month, year
@@ -167,6 +164,10 @@ class TasksRepositoryImpl @Inject constructor(
         tasksDao.updateAllTasksWithDeletedSection(sectionId)
     }
 
+    override suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean) {
+        tasksDao.onFinishedTaskClick(id, isFinished)
+    }
+
     /**
      * WIDGET
      */
@@ -175,4 +176,4 @@ class TasksRepositoryImpl @Inject constructor(
             getTimeMls(hours = ZERO, minutes = ZERO, seconds = ZERO),
             getTimeMls(hours = LAST_HOUR, minutes = LAST_MINUTE, seconds = LAST_SECOND)
         )
-    }
+}

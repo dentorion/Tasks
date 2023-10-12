@@ -227,4 +227,53 @@ class DbMigration {
             database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
         }
     }
+
+
+    /**
+     * Migration From6 to 7 version
+     */
+    val migrationFrom6To7 = object : Migration(6, 7) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Alarms
+
+            database.execSQL(
+                "CREATE TABLE alarms (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "time INTEGER NOT NULL DEFAULT 0, " +
+                        "message TEXT NOT NULL DEFAULT '', " +
+                        "task_id INTEGER NOT NULL DEFAULT 0)",
+            )
+
+            // Tasks
+
+            database.execSQL(
+                "CREATE TABLE tasksNew (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "title TEXT NOT NULL DEFAULT '', " +
+                        "message TEXT NOT NULL DEFAULT '', " +
+                        "is_finished INTEGER NOT NULL DEFAULT 0, " +
+                        "is_important INTEGER NOT NULL DEFAULT 0, " +
+                        "created_at INTEGER NOT NULL DEFAULT 0, " +
+                        "edited_at INTEGER NOT NULL DEFAULT 0, " +
+                        "task_group INTEGER NOT NULL DEFAULT 0, " +
+                        "position INTEGER NOT NULL DEFAULT 0, " +
+                        "expire_date_first INTEGER NOT NULL DEFAULT 0, " +
+                        "expire_date_second INTEGER NOT NULL DEFAULT 0, " +
+                        "is_task_expired INTEGER NOT NULL DEFAULT 0, " +
+                        "is_event INTEGER NOT NULL DEFAULT 0, " +
+                        "is_range INTEGER NOT NULL DEFAULT 0, " +
+                        "attached_link TEXT NOT NULL DEFAULT '', " +
+                        "attached_photo TEXT NOT NULL DEFAULT '', " +
+                        "attached_voice TEXT NOT NULL DEFAULT '', " +
+                        "section_id INTEGER NOT NULL DEFAULT 0, " +
+                        "alarm_id INTEGER NOT NULL DEFAULT 0)",
+            )
+            database.execSQL(
+                "INSERT INTO tasksNew (id, title, message, is_finished, is_important, created_at, edited_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range, attached_link, attached_photo, attached_voice, section_id, alarm_id) " +
+                        "SELECT id, title, message, is_finished, is_important, created_at, edited_at, task_group, position, expire_date_first, expire_date_second, is_task_expired, is_event, is_range, attached_link, attached_photo, attached_voice, section_id, 0 FROM tasks",
+            )
+            database.execSQL("DROP TABLE tasks")
+            database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
+        }
+    }
 }

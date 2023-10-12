@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.databinding.RecyclerIconSortItemBinding
-import com.entin.lighttasks.domain.entity.IconTask
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class SortByIconAdapter(
     private val getSelectedIcon: () -> Int,
-    private val onClick: (element: IconTask?, position: Int?) -> Unit,
-) : ListAdapter<IconTask, SortByIconAdapter.RadioButtonViewHolder>(
+    private val onClick: (element: IconTaskEntity?, position: Int?) -> Unit,
+) : ListAdapter<IconTaskEntity, SortByIconAdapter.RadioButtonViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
 
@@ -38,7 +38,7 @@ class SortByIconAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            radioItemElement: IconTask,
+            radioItemElement: IconTaskEntity,
             position: Int,
             adapterPosition: Int,
         ) {
@@ -67,17 +67,17 @@ class SortByIconAdapter(
 
     companion object {
         private val RadioButtonAdapterDiffCallback =
-            object : DiffUtil.ItemCallback<IconTask>() {
+            object : DiffUtil.ItemCallback<IconTaskEntity>() {
                 override fun areItemsTheSame(
-                    oldItem: IconTask,
-                    newItem: IconTask,
+                    oldItem: IconTaskEntity,
+                    newItem: IconTaskEntity,
                 ): Boolean {
                     return oldItem.backgroundRes == newItem.backgroundRes
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: IconTask,
-                    newItem: IconTask,
+                    oldItem: IconTaskEntity,
+                    newItem: IconTaskEntity,
                 ): Boolean {
                     return oldItem == newItem
                 }

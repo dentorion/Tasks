@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
@@ -42,8 +43,9 @@ class AllTasksAdapter(
         viewHolder.bind(getItem(position))
     }
 
-    inner class TaskViewHolder(private val view: TaskItemBinding) :
-        RecyclerView.ViewHolder(view.root) {
+    inner class TaskViewHolder(
+        private val view: TaskItemBinding
+    ) : RecyclerView.ViewHolder(view.root) {
         init {
             view.apply {
                 root.setOnClickListener {
@@ -69,7 +71,8 @@ class AllTasksAdapter(
                     openTaskDetailsDialog(task)
                     true
                 }
-                taskTitle.text = checkForEmptyTitle(task.title, this.root.resources, task.id)
+                taskTitle.text =
+                    checkForEmptyTitle(task.title, this.root.resources, task.id)
                 taskMessage.apply {
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
                     text = task.message
@@ -83,6 +86,8 @@ class AllTasksAdapter(
 
                 // Height of task
                 val fullHeightPx = convertDpToPixel(96.toFloat(), root.context).toInt()
+
+                taskAlarmBellNotification.isVisible = (task.alarmTime != ZERO_LONG && task.alarmTime != null)
 
                 if (task.isTaskExpired) {
                     /** RANGE */
@@ -102,9 +107,11 @@ class AllTasksAdapter(
                             taskExpiredBackground.visibility = View.VISIBLE
                             taskExpiredIndicator.apply {
                                 visibility = View.VISIBLE
-                                val fullLengthPeriod = task.expireDateSecond - task.expireDateFirst
+                                val fullLengthPeriod =
+                                    task.expireDateSecond - task.expireDateFirst
                                 val lengthPassed = Date().time - task.expireDateFirst
-                                val progressPercentage = (lengthPassed / fullLengthPeriod.toFloat()) * 100
+                                val progressPercentage =
+                                    (lengthPassed / fullLengthPeriod.toFloat()) * 100
                                 val height = (progressPercentage * fullHeightPx / 100).toInt()
                                 layoutParams.height = height
                             }

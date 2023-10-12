@@ -17,7 +17,7 @@ class DeleteFinishedTasksDialog : DialogFragment() {
 
     private var _binding: ClearFinishedDialogBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AllTasksViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private val viewModel: AllTasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

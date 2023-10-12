@@ -13,9 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.databinding.FragmentCalendarBinding
 import com.entin.lighttasks.domain.entity.DayItem
-import com.entin.lighttasks.domain.entity.IconTask
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.calendar.adapter.DayTasksAdapter
@@ -119,7 +120,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
 
-    private fun onGroupIconSelected(element: IconTask?, position: Int?) {
+    private fun onGroupIconSelected(element: IconTaskEntity?, position: Int?) {
         position?.let {
             if (element == null) {
                 viewModel.sortIcon = null
@@ -134,7 +135,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private fun onDayCalendarSelected(element: DayItem?, position: Int?) {
         position?.let { positionInRv ->
             element?.let { element ->
-                setTasks(element.listOfTasks)
+                setTasks(element.listOfTaskEntities)
                 binding.calendarDaysRecyclerview.smoothScrollToPosition(positionInRv)
             }
         }
@@ -173,7 +174,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private fun setupTodayButton() {
         binding.calendarDaysTodayButton.setOnClickListener {
             daysListAdapter?.currentList?.firstOrNull { it.isToday }?.let { today ->
-                setTasks(today.listOfTasks)
+                setTasks(today.listOfTaskEntities)
                 daysListAdapter?.selectedItem = today
                 val indexOfSelectedIcon = daysListAdapter?.currentList?.indexOfFirst { it == today } ?: ZERO
                 daysListAdapter?.notifyDataSetChanged()
@@ -227,7 +228,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             }
             val indexOfSelectedDay = listOfDays.indexOf(selectedDay)
             binding.calendarDaysRecyclerview.scrollToPosition(indexOfSelectedDay)
-            setTasks(selectedDay.listOfTasks)
+            setTasks(selectedDay.listOfTaskEntities)
         }
     }
 
@@ -235,8 +236,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         binding.calendarMonthLabel.text = resources.getString(getMonthName(monthSequenceNumber))
     }
 
-    private fun setTasks(listOfTasks: List<Task>) {
-        taskListAdapter?.submitList(listOfTasks)
+    private fun setTasks(listOfTaskEntities: List<Task>) {
+        taskListAdapter?.submitList(listOfTaskEntities)
     }
 
     private fun openTaskEditScreen(task: Task) {
@@ -244,7 +245,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun openTaskDetailsDialog(task: Task) {
-        findNavController().navigate(AllTasksFragmentDirections.actionGlobalTaskDetailsDialog(task))
+        findNavController().navigate(
+            AllTasksFragmentDirections.actionGlobalTaskDetailsDialog(
+                task
+            )
+        )
     }
 
     override fun onDestroyView() {

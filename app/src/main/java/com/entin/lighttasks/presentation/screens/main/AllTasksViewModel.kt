@@ -8,9 +8,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.domain.entity.SortPreferences
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.domain.entity.toTaskEntity
+import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
@@ -21,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -35,6 +39,7 @@ class AllTasksViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
     private val sectionsRepository: SectionsRepository,
+    private val alarmsRepository: AlarmsRepository,
     private val preferences: Preferences,
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
@@ -62,7 +67,7 @@ class AllTasksViewModel @Inject constructor(
     val tasksEvent = _tasksEvent.receiveAsFlow()
 
     /** Get tasks by preferences */
-    private val searchFlow = combine(
+    private val searchFlow: Flow<List<Task>> = combine(
         searchValue.asFlow(),
         flowSortingPreferences,
     ) { search, prefs ->
@@ -81,7 +86,7 @@ class AllTasksViewModel @Inject constructor(
 
     /** Get sections (group of tasks) */
     private val sectionFlow = sectionsRepository.getAllSections()
-    var sections: LiveData<List<Section>> = sectionFlow.asLiveData()
+    var sections: LiveData<List<SectionEntity>> = sectionFlow.asLiveData()
 
     // SORTING Tasks
 
@@ -120,8 +125,8 @@ class AllTasksViewModel @Inject constructor(
     }
 
     fun onFinishedTaskClick(task: Task, isChecked: Boolean) {
-        viewModelScope.launch {
-            taskRepository.updateTask(task.copy(isFinished = isChecked))
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.onFinishedTaskClick(task.id, isFinished = isChecked)
         }
     }
 
@@ -134,7 +139,9 @@ class AllTasksViewModel @Inject constructor(
 
     fun onUndoDeleteClick(task: Task) {
         diAppScope.launch {
-            taskRepository.newTask(task).collect { result ->
+            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first().alarmId.toLong()
+            val taskEntity = task.toTaskEntity(alarmId)
+            taskRepository.newTask(taskEntity).collect { result ->
                 if (result) _tasksEvent.send(AllTasksEvent.RestoreTaskWithoutPhoto)
             }
         }
@@ -177,7 +184,11 @@ class AllTasksViewModel @Inject constructor(
 
     // Update list after manual changing position of Task
     fun updateAllTasks(list: List<Task>) = diAppScope.launch {
-        taskRepository.updateAllTasks(list)
+        list.forEach { task ->
+            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first().alarmId.toLong()
+            val taskEntity = task.toTaskEntity(alarmId)
+            taskRepository.updateTask(taskEntity)
+        }
     }
 
     fun onTaskSortByIcon(task: Task) {

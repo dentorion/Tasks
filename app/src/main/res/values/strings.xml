@@ -69,6 +69,7 @@
     <string name="click_me">click me</string>
     <string name="options_show_events">Hide events</string>
     <string name="add_edit_task_add_date_label">Add time limit</string>
+    <string name="add_edit_task_add_alarm_label">Add alarm</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
     <string name="expiration_date_format">Expiration date: %1$s - %2$s</string>
@@ -121,4 +122,7 @@
     <string name="zero_time" translatable="false">00:00</string>
     <string name="sections">Task categories</string>
     <string name="no_section" >no category</string>
+    <string name="set_date_and_time">Set date and time</string>
+    <string name="alarm_message" >Warning! Alarm for:</string>
+    <string name="snack_bar_error_alarm_time">Incorrect alarm time!</string>
 </resources>

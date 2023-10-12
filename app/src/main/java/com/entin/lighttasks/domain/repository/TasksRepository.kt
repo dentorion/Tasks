@@ -1,9 +1,10 @@
 package com.entin.lighttasks.domain.repository
 
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.domain.entity.IconTask
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,19 +22,19 @@ interface TasksRepository {
         sectionId: Int,
     ): Flow<List<Task>>
 
+    fun getNextTaskId(): Flow<Int>
+
     fun getMaxPosition(): Flow<Int>
 
-    fun newTask(task: Task): Flow<Boolean>
+    fun newTask(taskEntity: TaskEntity): Flow<Boolean>
 
-    suspend fun updateTask(task: Task): Boolean
+    suspend fun updateTask(taskEntity: TaskEntity): Boolean
 
     suspend fun deleteTask(task: Task)
 
     suspend fun deleteFinishedTasks()
 
-    suspend fun updateAllTasks(list: List<Task>)
-
-    suspend fun getTaskIconGroups(): List<IconTask>
+    suspend fun getTaskIcons(): List<IconTaskEntity>
 
     fun getTasksByConstraints(constraints: CalendarDatesConstraints): Flow<List<Task>>
 
@@ -44,4 +45,6 @@ interface TasksRepository {
     fun getActualAudioRecordsNames(): Flow<List<String>>
 
     suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
+
+    suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean)
 }

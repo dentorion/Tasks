@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionPreferencesBinding
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionPreferencesAdapter
@@ -37,7 +37,7 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         updateDb = ::updateAllSections
     )
 
-    private fun updateAllSections(listTasks: List<Section>) {
+    private fun updateAllSections(listTasks: List<SectionEntity>) {
         viewModel.updateSections(listTasks)
     }
 
@@ -105,7 +105,7 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
             .onEach { event: SectionsEventContract ->
                 when (event) {
                     is SectionsEventContract.ShowAllSections -> {
-                        sectionPreferencesAdapter?.submitList(event.sections)
+                        sectionPreferencesAdapter?.submitList(event.sectionEntities)
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -122,9 +122,9 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun openEditSectionDialog(section: Section) {
+    private fun openEditSectionDialog(sectionEntity: SectionEntity) {
         if (!createEditSectionDialog.isVisible) {
-            setActualSection(section)
+            setActualSection(sectionEntity)
             createEditSectionDialog.show(
                 childFragmentManager, CreateEditSectionDialog::class.simpleName
             )
@@ -132,9 +132,9 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun openDeleteSectionDialog(section: Section) {
+    private fun openDeleteSectionDialog(sectionEntity: SectionEntity) {
         if (!deleteSectionDialog.isVisible) {
-            setActualSection(section)
+            setActualSection(sectionEntity)
             deleteSectionDialog.show(
                 childFragmentManager, CreateEditSectionDialog::class.simpleName
             )
@@ -147,8 +147,8 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    private fun setActualSection(section: Section?) {
-        viewModel.currentSection = section
+    private fun setActualSection(sectionEntity: SectionEntity?) {
+        viewModel.currentSectionEntity = sectionEntity
     }
 
     override fun onDestroyView() {

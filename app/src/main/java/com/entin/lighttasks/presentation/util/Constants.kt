@@ -22,6 +22,7 @@ const val LANGUAGE_UKRAINE_SHOT = "uk"
  */
 
 const val DATE_FORMAT_STANDARD = "dd/MM/yyyy"
+const val DATE_FORMAT_STANDARD_TIME = "dd/MM/yyyy  HH:mm:ss"
 const val DATE_FORMAT_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
 
 /**
@@ -33,17 +34,16 @@ const val TASK_TITLE = "taskTitle"
 const val TASK_MESSAGE = "taskMessage"
 const val TASK_FINISHED = "taskFinished"
 const val TASK_IMPORTANT = "taskImportant"
-const val TASK_GROUP = "taskGroup"
+const val TASK_ICON = "taskIcon"
 const val TASK_EXPIRE_DATE_FIRST = "taskExpireDateFirst"
 const val TASK_EXPIRE_DATE_SECOND = "taskExpireDateSecond"
 const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
+const val TASK_ALARM = "taskAlarm"
+const val IS_ALARM = "isAlarm"
 
 const val SECTION = "section"
-const val SECTION_TITLE = "sectionTitle"
-const val SECTION_GROUP = "sectionGroup"
-const val SECTION_IMPORTANT = "sectionImportant"
 
 const val CALENDAR_CONSTRAINTS = "calendarConstraints"
 const val CALENDAR_ICON_SORT = "iconSort"
@@ -71,7 +71,9 @@ const val FORMAT_MP3 = ".mp3"
 const val ZERO = 0
 const val ZERO_LONG = 0L
 const val ONE = 1
+const val TWO = 2
 const val THOUSAND = 1000L
+const val SPACE = " "
 const val EMPTY_STRING = ""
 const val NEW_LINE = "\n"
 const val LAST_HOUR = 23
@@ -79,3 +81,7 @@ const val LAST_MINUTE = 59
 const val LAST_SECOND = 59
 const val ONE_DAY_MLS = 86400000
 const val ONE_WEEK_MLS = 604800000
+
+/** Broadcast receiver */
+
+const val INTENT_MESSAGE = "intentMessage"

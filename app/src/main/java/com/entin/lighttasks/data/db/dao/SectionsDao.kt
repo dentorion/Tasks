@@ -1,4 +1,4 @@
-package com.entin.lighttasks.data.db
+package com.entin.lighttasks.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,33 +20,33 @@ interface SectionsDao {
      * Get all sections
      */
     @Query("SELECT * FROM sections ORDER BY position ASC")
-    fun getAllSections(): Flow<List<Section>>
+    fun getAllSections(): Flow<List<SectionEntity>>
 
     /**
      * Create section
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createSection(section: Section): Long
+    suspend fun createSection(sectionEntity: SectionEntity): Long
 
     /**
      * Edit section
      */
     @Update
-    suspend fun updateSection(section: Section): Int
+    suspend fun updateSection(sectionEntity: SectionEntity): Int
 
     /**
      * Update list of sections
      */
     @Update
-    suspend fun updateSections(sections: List<Section>)
+    suspend fun updateSections(sectionEntities: List<SectionEntity>)
 
     /**
      * Delete section
      */
     @Delete
-    suspend fun deleteSection(section: Section): Int
+    suspend fun deleteSection(sectionEntity: SectionEntity): Int
 
     /** Get section by id */
     @Query("SELECT * FROM sections WHERE id = :sectionId LIMIT 1")
-    suspend fun getSectionById(sectionId: Int): Section
+    suspend fun getSectionById(sectionId: Int): SectionEntity
 }

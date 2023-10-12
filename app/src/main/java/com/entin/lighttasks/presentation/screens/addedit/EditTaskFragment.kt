@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -22,10 +23,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
-import com.entin.lighttasks.domain.entity.IconTask
-import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
-import com.entin.lighttasks.presentation.screens.addedit.adapter.IconTaskAdapter
+import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
@@ -34,6 +35,8 @@ import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
+import com.entin.lighttasks.presentation.util.TWO
+import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.getCurrentDay
@@ -45,10 +48,12 @@ import com.entin.lighttasks.presentation.util.getStartDate
 import com.entin.lighttasks.presentation.util.getTimeMls
 import com.entin.lighttasks.presentation.util.replaceZeroDateWithNow
 import com.entin.lighttasks.presentation.util.toFormattedDateString
+import com.entin.lighttasks.presentation.util.toFormattedDateTimeString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
 
 /**
  * Fragment for adding new task or editing existing task
@@ -60,33 +65,33 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val binding get() = _binding!!
 
     private val viewModel: AddEditTaskViewModel by viewModels()
-    private var groupAdapter: IconTaskAdapter? = null
+    private var iconsTaskAdapter: IconsTaskAdapter? = null
 
-    // Link add dialog
+    /** Link add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val linkAddEditDialog by lazy {
         LinkAddToTaskDialog()
     }
 
-    // Photo add dialog
+    /** Photo add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val photoAddEditDialog by lazy {
         PhotoAddToTaskDialog()
     }
 
-    // Photo show dialog
+    /** Photo show dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val photoShowDialog by lazy {
         PhotoShowDialog()
     }
 
-    // Voice add Dialog
+    /** Voice add Dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val voiceAddEditDialog by lazy {
         VoiceAddToTaskDialog()
     }
 
-    // Section choose dialog
+    /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val sectionChooseDialog by lazy {
         SectionChooseDialog(::onSectionSelect)
@@ -99,9 +104,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     ): View {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
-        viewModel.getIcons()
-        viewModel.getSectionById()
-        setupCategoryRecyclerView()
+        getIcons()
+        getSection()
+        setupIconsTaskAdapter()
         setupSectionNameObserver()
         setupEventObserver()
         setupFields()
@@ -109,16 +114,19 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         return binding.root
     }
 
-    /**
-     * Category
-     */
-    private fun setupCategoryRecyclerView() {
-        groupAdapter = IconTaskAdapter(viewModel.taskGroup) { element, position ->
+    /** Get icons to show in RecyclerView */
+    private fun getIcons() {
+        viewModel.getTaskIcons()
+    }
+
+    /** Init IconsTaskAdapter and observe elements from ViewModel */
+    private fun setupIconsTaskAdapter() {
+        iconsTaskAdapter = IconsTaskAdapter(viewModel.taskIcon) { element, position ->
             onGroupIconSelected(element, position)
         }
 
         binding.addEditTaskCategoryRecyclerview.apply {
-            adapter = groupAdapter
+            adapter = iconsTaskAdapter
             layoutManager = SlowlyLinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -135,6 +143,16 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    /** Fill IconsTaskAdapter with elements and choose which is selected */
+    private fun onIconsGet(icons: List<IconTaskEntity>) {
+        val selectedIcon = icons.first { it.groupId == viewModel.taskIcon }
+        val indexOfSelectedIcon = icons.indexOf(selectedIcon)
+        iconsTaskAdapter?.submitList(icons)
+        val marginElements = if (indexOfSelectedIcon >= TWO) TWO else ZERO
+        binding.addEditTaskCategoryRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
+    }
+
+    /** Observe and setup section name from ViewModel  */
     private fun setupSectionNameObserver() {
         viewModel.sectionName.observe(viewLifecycleOwner) {
             binding.addEditTaskSectionSelection.text = if(it == EMPTY_STRING) {
@@ -145,33 +163,18 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    /**
-     * On list of icons get
-     */
-    private fun onIconsGet(icons: List<IconTask>) {
-        val selectedIcon = icons.first { it.groupId == viewModel.taskGroup }
-        val indexOfSelectedIcon = icons.indexOf(selectedIcon)
-        groupAdapter?.submitList(icons)
-        val marginElements = if (indexOfSelectedIcon >= 2) 2 else 0
-        binding.addEditTaskCategoryRecyclerview.scrollToPosition(indexOfSelectedIcon - marginElements)
-    }
-
-    /**
-     * Setup fields value
-     */
+    /** Setup fields value */
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFields() {
         with(binding) {
             /** Title */
-            viewModel.task?.let {
+            viewModel.taskEntity?.let {
                 addEditTaskTitle.setText(
                     checkForEmptyTitle(
                         viewModel.taskTitle, resources, viewModel.getTaskId()
                     )
                 )
-            } ?: kotlin.run {
-                EMPTY_STRING
-            }
+            } ?: kotlin.run { EMPTY_STRING }
             addEditTaskTitle.addTextChangedListener {
                 viewModel.taskTitle = it.toString()
             }
@@ -196,13 +199,28 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskImportantCheckbox.setOnCheckedChangeListener { _, isCheck ->
                 viewModel.taskImportant = isCheck
             }
+            /** Alarm */
+            addEditTaskIncludeAlarm.addEditTaskAlarmCheckbox.apply {
+                this.isChecked = viewModel.taskAlarm != ZERO_LONG
+                this.jumpDrawablesToCurrentState()
+                isAlarmPickerShown()
+            }
+            addEditTaskIncludeAlarm.addEditTaskAlarmCheckbox.setOnCheckedChangeListener { _, isCheck ->
+                viewModel.alarmIsOn = isCheck
+                updateAlarmDateTimeText()
+                isAlarmPickerShown(isCheck = isCheck)
+            }
+            addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.apply {
+                updateAlarmDateTimeText()
+                setOnClickListener { pickDateTime() }
+            }
             /** Expired */
-            addEditTaskExpiredCheckbox.apply {
+            addEditTaskIncludeIntervals.addEditTaskExpiredCheckbox.apply {
                 this.isChecked = viewModel.isTaskExpired
                 this.jumpDrawablesToCurrentState()
                 isDatePickersShown()
             }
-            addEditTaskExpiredCheckbox.setOnCheckedChangeListener { _, isCheck ->
+            addEditTaskIncludeIntervals.addEditTaskExpiredCheckbox.setOnCheckedChangeListener { _, isCheck ->
                 viewModel.isTaskExpired = isCheck
                 isDatePickersShown()
             }
@@ -225,20 +243,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     Toast.makeText(requireContext(), "Error sending.", Toast.LENGTH_SHORT).show()
                 }
             }
-            /** Radio Group */
-            // Event flag
-            addEditTaskDatePickerCalendarEvent.isChecked = viewModel.isEvent && !viewModel.isRange
-            // Range flag
-            addEditTaskDatePickerCalendarRange.isChecked = viewModel.isRange && !viewModel.isEvent
-            // is Event (not range) listener
-            addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, checkId ->
+            /** Event flag */
+            addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarEvent.isChecked =
+                viewModel.isEvent && !viewModel.isRange
+            /** Range flag */
+            addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarRange.isChecked =
+                viewModel.isRange && !viewModel.isEvent
+            /** is Event (not range) listener */
+            addEditTaskIncludeIntervals.addEditTaskDatePickerRadioGroup.setOnCheckedChangeListener { _, checkId ->
                 when (checkId) {
-                    binding.addEditTaskDatePickerCalendarEvent.id -> {
+                    binding.addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarEvent.id -> {
                         viewModel.isEvent = true
                         viewModel.isRange = false
                     }
 
-                    binding.addEditTaskDatePickerCalendarRange.id -> {
+                    binding.addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarRange.id -> {
                         viewModel.isEvent = false
                         viewModel.isRange = true
                     }
@@ -247,11 +266,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         Log.e("GlobalErrors", "Error setting type: event / range.")
                     }
                 }
-                addEditTaskDatePickerSecond.isVisible =
+                addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.isVisible =
                     viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
             }
             /** First Date picker */
-            addEditTaskDatePickerFirst.setOnClickListener {
+            addEditTaskIncludeIntervals.addEditTaskDatePickerFirst.setOnClickListener {
                 val date = Calendar.getInstance().apply {
                     timeInMillis = replaceZeroDateWithNow(viewModel.taskExpireFirstDate)
                 }
@@ -275,9 +294,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             setFirstDateOfExpire()
             /** Second Date picker */
-            addEditTaskDatePickerSecond.isVisible =
+            addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.isVisible =
                 viewModel.isTaskExpired && !viewModel.isEvent && viewModel.isRange
-            addEditTaskDatePickerSecond.setOnClickListener {
+            addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.setOnClickListener {
                 val date = Calendar.getInstance().apply {
                     timeInMillis = replaceZeroDateWithNow(viewModel.taskExpireSecondDate)
                 }
@@ -349,7 +368,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             /** Choose section (category of task) */
             addEditTaskSectionSelection.setOnClickListener {
                 if (!sectionChooseDialog.isVisible) {
-                    sectionChooseDialog.show(childFragmentManager, SectionChooseDialog::class.simpleName)
+                    sectionChooseDialog.show(
+                        childFragmentManager,
+                        SectionChooseDialog::class.simpleName
+                    )
                 }
             }
             /** OK Button */
@@ -359,24 +381,49 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    private fun pickDateTime() {
+        val currentDateTime = Calendar.getInstance()
+        val startYear = currentDateTime.get(Calendar.YEAR)
+        val startMonth = currentDateTime.get(Calendar.MONTH)
+        val startDay = currentDateTime.get(Calendar.DAY_OF_MONTH)
+        val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
+        val startMinute = currentDateTime.get(Calendar.MINUTE)
+
+        DatePickerDialog(requireContext(), { _, year, month, day ->
+            TimePickerDialog(requireContext(), { _, hour, minute ->
+                val pickedDateTime = Calendar.getInstance().apply {
+                    set(year, month, day, hour, minute)
+                }
+                viewModel.taskAlarm = pickedDateTime.time.time
+                viewModel.alarmIsOn = true
+                updateAlarmDateTimeText()
+            }, startHour, startMinute, false).show()
+        }, startYear, startMonth, startDay).show()
+    }
+
     private fun setFirstDateOfExpire() {
-        binding.addEditTaskDatePickerFirst.text = if (viewModel.taskExpireFirstDate == ZERO_LONG) {
-            getStartDate(year = getCurrentYear(), month = getCurrentMonth(), day = getCurrentDay()).toFormattedDateString()
-        } else {
-            viewModel.taskExpireFirstDate.toFormattedDateString()
-        }
+        binding.addEditTaskIncludeIntervals.addEditTaskDatePickerFirst.text =
+            if (viewModel.taskExpireFirstDate == ZERO_LONG) {
+                getStartDate(
+                    year = getCurrentYear(),
+                    month = getCurrentMonth(),
+                    day = getCurrentDay()
+                ).toFormattedDateString()
+            } else {
+                viewModel.taskExpireFirstDate.toFormattedDateString()
+            }
     }
 
     private fun setSecondDateOfExpire() {
-        binding.addEditTaskDatePickerSecond.text =
+        binding.addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.text =
             if (viewModel.taskExpireSecondDate == ZERO_LONG) {
                 (getFinishDate(
                     year = getCurrentYear(),
                     month = getCurrentMonth(),
-                    day = getCurrentDay()) + ONE_DAY_MLS
-                ).toFormattedDateString()
-            }
-            else if (viewModel.taskExpireFirstDate == viewModel.taskExpireSecondDate) {
+                    day = getCurrentDay()
+                ) + ONE_DAY_MLS
+                        ).toFormattedDateString()
+            } else if (viewModel.taskExpireFirstDate == viewModel.taskExpireSecondDate) {
                 /**
                  * User choose event type without changing dates, save.
                  * After change type to range and if start was today, finish will be tomorrow by auto,
@@ -392,9 +439,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
     }
 
-    private fun onGroupIconSelected(element: IconTask, position: Int?) {
+    private fun onGroupIconSelected(element: IconTaskEntity, position: Int?) {
         position?.let {
-            viewModel.taskGroup = element.groupId
+            viewModel.taskIcon = element.groupId
             binding.addEditTaskCategoryRecyclerview.smoothScrollToPosition(it)
         }
     }
@@ -402,29 +449,59 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun isDatePickersShown() {
         binding.apply {
             // Label
-            addEditTaskAddDateLabel.isVisible = !viewModel.isTaskExpired
-            addEditTaskAddDateLabelArrow.isVisible = !viewModel.isTaskExpired
+            addEditTaskIncludeIntervals.addEditTaskAddDateLabel.isVisible = !viewModel.isTaskExpired
+            addEditTaskIncludeIntervals.addEditTaskAddDateLabelArrow.isVisible =
+                !viewModel.isTaskExpired
             // Radio flags of event / radio
-            addEditTaskDatePickerCalendarEvent.isVisible = viewModel.isTaskExpired
-            addEditTaskDatePickerCalendarRange.isVisible = viewModel.isTaskExpired
+            addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarEvent.isVisible =
+                viewModel.isTaskExpired
+            addEditTaskIncludeIntervals.addEditTaskDatePickerCalendarRange.isVisible =
+                viewModel.isTaskExpired
             // Date pickers with date as title
-            addEditTaskDatePickerFirst.isVisible = viewModel.isTaskExpired && (viewModel.isRange || viewModel.isEvent)
-            addEditTaskDatePickerSecond.isVisible = viewModel.isTaskExpired && viewModel.isRange
+            addEditTaskIncludeIntervals.addEditTaskDatePickerFirst.isVisible =
+                viewModel.isTaskExpired && (viewModel.isRange || viewModel.isEvent)
+            addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.isVisible =
+                viewModel.isTaskExpired && viewModel.isRange
         }
     }
 
-    /**
-     * Event: navigate to AllTasksFragment with result
-     */
+    private fun isAlarmPickerShown(isCheck: Boolean? = null) {
+        binding.apply {
+            // Label
+            addEditTaskIncludeAlarm.addEditTaskAlarmAddAlarmLabel.isVisible =
+                isCheck?.not() ?: (viewModel.taskAlarm == ZERO_LONG)
+            addEditTaskIncludeAlarm.addEditTaskAlarmLabelArrow.isVisible =
+                isCheck?.not() ?: (viewModel.taskAlarm == ZERO_LONG)
+            // Date picker with date as title for alarm
+            addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.isVisible =
+                isCheck ?: (viewModel.taskAlarm != ZERO_LONG)
+        }
+    }
+
+    private fun updateAlarmDateTimeText() {
+        if (viewModel.taskAlarm != ZERO_LONG) {
+            binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.text =
+                viewModel.taskAlarm.toFormattedDateTimeString()
+
+            val color = if ((viewModel.taskAlarm) <= Date().time) {
+                R.color.dark_red
+            } else {
+                R.color.main
+            }
+            binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.setTextColor(
+                resources.getColor(color)
+            )
+        }
+    }
+
+    /** Event: navigate to AllTasksFragment with result */
     private fun eventNavBackWithResult(event: Int) {
         binding.addEditTaskTitle.clearFocus()
         setFragmentResult("operationMode", bundleOf("mode" to event))
         findNavController().popBackStack()
     }
 
-    /**
-     * Event observer
-     */
+    /** Event observer */
     private fun setupEventObserver() = viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
@@ -459,13 +536,24 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         setTagUrlVisibility(event.url)
                         setTagPhotoVisibility(event.photo)
                     }
+
+                    is EditTaskEventContract.ShowErrorAlarmTime -> {
+                        getSnackBar(
+                            resources.getString(R.string.snack_bar_error_alarm_time),
+                            requireView(),
+                        ).show()
+                    }
                 }
             }
         }
     }
 
-    private fun onSectionSelect(section: Section) {
-        viewModel.sectionId = section.id
+    private fun onSectionSelect(sectionEntity: SectionEntity) {
+        viewModel.sectionId = sectionEntity.id
+        getSection()
+    }
+
+    private fun getSection() {
         viewModel.getSectionById()
     }
 
@@ -478,7 +566,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     override fun onDestroyView() {
-        groupAdapter = null
+        iconsTaskAdapter = null
         _binding = null
         super.onDestroyView()
     }

@@ -21,6 +21,12 @@ fun Long.toFormattedDateString(): String {
     return dateFormat.format(date)
 }
 
+fun Long.toFormattedDateTimeString(): String {
+    val date = Date(this)
+    val dateFormat = SimpleDateFormat(DATE_FORMAT_STANDARD_TIME, Locale.getDefault())
+    return dateFormat.format(date)
+}
+
 fun getMonthName(monthSequenceNumber: Int): Int =
     when (monthSequenceNumber) {
         Months.January.number -> R.string.january

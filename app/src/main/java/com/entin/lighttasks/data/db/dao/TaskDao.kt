@@ -1,11 +1,11 @@
-package com.entin.lighttasks.data.db
+package com.entin.lighttasks.data.db.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
 import kotlinx.coroutines.flow.Flow
 
@@ -27,6 +27,7 @@ interface TaskDao {
     @Query(
         "SELECT * " +
                 "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -39,6 +40,7 @@ interface TaskDao {
     @Query(
         "SELECT * " +
                 "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -53,6 +55,7 @@ interface TaskDao {
     @Query(
         "SELECT * " +
                 "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -65,6 +68,7 @@ interface TaskDao {
     @Query(
         "SELECT * " +
                 "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -76,56 +80,71 @@ interface TaskDao {
 
     // SORT_BY_IMPORTANT
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-            "AND title LIKE '%' || :search || '%' " +
-            "ORDER BY is_finished ASC, is_important ASC")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+                "AND title LIKE '%' || :search || '%' " +
+                "ORDER BY is_finished ASC, is_important ASC"
+    )
     fun getTasksSortedByImportantAsc(
         search: String, hideFinished: Boolean, hideDatePick: Boolean
     ): Flow<List<Task>>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-            "AND title LIKE '%' || :search || '%' " +
-            "ORDER BY is_finished ASC, is_important DESC")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+                "AND title LIKE '%' || :search || '%' " +
+                "ORDER BY is_finished ASC, is_important DESC"
+    )
     fun getTasksSortedByImportantDesc(
         search: String, hideFinished: Boolean, hideDatePick: Boolean
     ): Flow<List<Task>>
 
     // SORT_BY_MANUAL
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-            "AND title LIKE '%' || :search || '%' " +
-            "ORDER BY position ASC")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+                "AND title LIKE '%' || :search || '%' " +
+                "ORDER BY position ASC"
+    )
     fun getTasksSortedByManualAsc(
         search: String, hideFinished: Boolean, hideDatePick: Boolean
     ): Flow<List<Task>>
 
     // SORT_BY_ICON
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-            "AND task_group = :groupId " +
-            "ORDER BY title ASC")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+                "AND task_group = :groupId " +
+                "ORDER BY title ASC"
+    )
     fun getTasksSortedByIconAsc(
         hideFinished: Boolean, groupId: Int, hideDatePick: Boolean
     ): Flow<List<Task>>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-            "AND task_group = :groupId " +
-            "ORDER BY title DESC")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+                "AND task_group = :groupId " +
+                "ORDER BY title DESC"
+    )
     fun getTasksSortedByIconDesc(
         hideFinished: Boolean, groupId: Int, hideDatePick: Boolean
     ): Flow<List<Task>>
@@ -133,62 +152,75 @@ interface TaskDao {
     // Insert new Task with replace
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun newTask(task: Task): Long
+    fun newTask(taskEntity: TaskEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun newTasks(tasks: List<Task>): List<Long>
+    fun newTasks(taskEntities: List<TaskEntity>): List<Long>
 
     // Update task or list of tasks
 
     @Update
-    suspend fun updateTask(task: Task): Int
+    suspend fun updateTask(taskEntity: TaskEntity): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAllTasks(list: List<Task>)
+    suspend fun updateAllTasks(taskEntities: List<TaskEntity>)
 
     // Deleting queries
 
-    @Delete
-    suspend fun deleteTask(task: Task): Int
+    @Query("DELETE FROM tasks WHERE id = :taskId")
+    suspend fun deleteTaskById(taskId: Int): Int
 
     @Query("DELETE FROM tasks WHERE is_finished = 1")
     suspend fun deleteFinishedTasks()
 
-    // Find a maximum value of position among the list of tasks
+    @Query("SELECT MAX(id) FROM tasks")
+    fun getNextTaskId(): Flow<Int?>
 
     @Query("SELECT MAX(position) FROM tasks")
-    fun getLastId(): Flow<Int?>
+    fun getLastPosition(): Flow<Int?>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE expire_date_first >= :startExpireDate " +
-            "AND expire_date_first <= :finishExpireDate")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE expire_date_first >= :startExpireDate " +
+                "AND expire_date_first <= :finishExpireDate"
+    )
     fun getTasksWithStartExpireDate(
         startExpireDate: Long, finishExpireDate: Long
     ): Flow<List<Task>>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE expire_date_first >= :startExpireDate " +
-            "AND expire_date_first <= :finishExpireDate " +
-            "AND task_group = :iconGroup")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE expire_date_first >= :startExpireDate " +
+                "AND expire_date_first <= :finishExpireDate " +
+                "AND task_group = :iconGroup"
+    )
     fun getTasksWithStartExpireDateWithIcon(
         startExpireDate: Long, finishExpireDate: Long, iconGroup: Int
     ): Flow<List<Task>>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
-            "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate)")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
+                "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate)"
+    )
     fun getTasksWithStartFinishExpireDates(
         startExpireDate: Long, finishExpireDate: Long
     ): Flow<List<Task>>
 
-    @Query("SELECT * " +
-            "FROM tasks " +
-            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
-            "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate) " +
-            "AND (task_group = :iconGroup)")
+    @Query(
+        "SELECT * " +
+                "FROM tasks " +
+                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
+                "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate) " +
+                "AND (task_group = :iconGroup)"
+    )
     fun getTasksWithStartFinishExpireDatesWithIcon(
         startExpireDate: Long, finishExpireDate: Long, iconGroup: Int
     ): Flow<List<Task>>
@@ -205,14 +237,19 @@ interface TaskDao {
     @Query("SELECT attached_voice FROM tasks WHERE attached_voice IS NOT NULL")
     fun getActualAudioRecordsNames(): Flow<List<String>>
 
+    @Query("UPDATE tasks SET section_id = 0 WHERE section_id = :sectionId")
+    suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
+
+    @Query("UPDATE tasks SET is_finished = :finished WHERE id = :id")
+    fun onFinishedTaskClick(id: Int, finished: Boolean)
+
     /**
      * WIDGET
      */
-    @Query("SELECT COUNT(*) " +
-            "FROM tasks " +
-            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)")
+    @Query(
+        "SELECT COUNT(*) " +
+                "FROM tasks " +
+                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)"
+    )
     fun getCountTasksToday(startExpireDate: Long, finishExpireDate: Long): Flow<Int>
-
-    @Query("UPDATE tasks SET section_id = 0 WHERE section_id = :sectionId")
-    suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
 }

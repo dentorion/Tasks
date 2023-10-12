@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.entin.lighttasks.databinding.DeleteSectionDialogBinding
-import com.entin.lighttasks.databinding.DeleteTaskDialogBinding
-import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

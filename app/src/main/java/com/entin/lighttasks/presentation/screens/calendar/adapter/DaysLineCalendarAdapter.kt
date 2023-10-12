@@ -183,8 +183,8 @@ class DaysLineCalendarAdapter(
                 }
 
                 // Count of tasks
-                if (dayItem.listOfTasks.isNotEmpty()) {
-                    dayItemCountTasks.text = dayItem.listOfTasks.count().toString()
+                if (dayItem.listOfTaskEntities.isNotEmpty()) {
+                    dayItemCountTasks.text = dayItem.listOfTaskEntities.count().toString()
                     dayItemCountTasks.visibility = View.VISIBLE
                 } else {
                     dayItemCountTasks.visibility = View.INVISIBLE
@@ -213,7 +213,7 @@ class DaysLineCalendarAdapter(
                 override fun areItemsTheSame(oldItem: DayItem, newItem: DayItem): Boolean {
                     return oldItem.dayNumber == newItem.dayNumber &&
                             oldItem.isToday == newItem.isToday &&
-                            oldItem.listOfTasks.count() == newItem.listOfTasks.count()
+                            oldItem.listOfTaskEntities.count() == newItem.listOfTaskEntities.count()
                 }
 
                 override fun areContentsTheSame(oldItem: DayItem, newItem: DayItem): Boolean {

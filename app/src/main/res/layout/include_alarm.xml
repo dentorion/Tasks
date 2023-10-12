@@ -1,0 +1,67 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="24dp">
+
+    <CheckBox
+        android:id="@+id/add_edit_task_alarm_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/checkbox_light_solid_background"
+        android:buttonTint="#E182D8"
+        android:minHeight="48dp"
+        android:paddingStart="@dimen/checkbox_done_padding_start_add_edit"
+        android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
+        android:textColor="@color/main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/add_edit_task_alarm_label_arrow"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/ic_arrow_left_fill"
+        app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintStart_toEndOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintTop_toTopOf="@+id/add_edit_task_alarm_checkbox" />
+
+    <TextView
+        android:id="@+id/add_edit_task_alarm_add_alarm_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/add_edit_task_add_alarm_label"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/main"
+        android:textSize="@dimen/add_edit_task_add_date_label"
+        app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintStart_toEndOf="@+id/add_edit_task_alarm_label_arrow"
+        app:layout_constraintTop_toTopOf="@+id/add_edit_task_alarm_checkbox"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/add_edit_task_alarm_picker_date"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/checkbox_light_solid_background"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/set_date_and_time"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/main"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintTop_toTopOf="@+id/add_edit_task_alarm_checkbox"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_goneMarginBottom="0dp"
+        tools:ignore="TouchTargetSizeCheck" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

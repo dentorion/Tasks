@@ -313,121 +313,25 @@
             tools:ignore="TouchTargetSizeCheck"
             tools:text="NO CATEGORY" />
 
-        <CheckBox
-            android:id="@+id/add_edit_task_expired_checkbox"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/add_edit_task_include_alarm"
+            layout="@layout/include_alarm"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/checkbox_light_solid_background"
-            android:buttonTint="#E182D8"
-            android:minHeight="48dp"
-            android:paddingStart="@dimen/checkbox_done_padding_start_add_edit"
-            android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
-            android:textColor="@color/main"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_section_selection" />
 
-        <ImageView
-            android:id="@+id/add_edit_task_add_date_label_arrow"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/ic_arrow_left_fill"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox" />
-
-        <TextView
-            android:id="@+id/add_edit_task_add_date_label"
-            android:layout_width="wrap_content"
+        <include
+            layout="@layout/include_intervals"
+            android:id="@+id/add_edit_task_include_intervals"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/add_edit_task_add_date_label"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/main"
-            android:textSize="@dimen/add_edit_task_add_date_label"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_add_date_label_arrow"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <RadioGroup
-            android:id="@+id/add_edit_task_date_picker_radio_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox">
-
-            <RadioButton
-                android:id="@+id/add_edit_task_date_picker_calendar_range"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/food_radio_calendar_range"
-                android:buttonTint="#E182D8"
-                android:checked="true"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_expired_checkbox"
-                app:layout_constraintStart_toEndOf="@+id/add_edit_task_expired_checkbox"
-                app:layout_constraintTop_toTopOf="@+id/add_edit_task_expired_checkbox" />
-
-            <RadioButton
-                android:id="@+id/add_edit_task_date_picker_calendar_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/food_radio_calendar_event"
-                android:buttonTint="#E182D8"
-                android:checked="false"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_date_picker_calendar_range"
-                app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_calendar_range"
-                app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_calendar_range" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/add_edit_task_date_picker_first"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/checkbox_light_solid_background"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/click_me"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/main"
-            android:textSize="12sp"
-            app:layout_goneMarginBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/add_edit_task_date_picker_second"
-            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_radio_group"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_date_picker_radio_group"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/add_edit_task_date_picker_second"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/checkbox_light_solid_background"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/click_me"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/main"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_date_picker_radio_group"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_date_picker_first"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_include_alarm" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
