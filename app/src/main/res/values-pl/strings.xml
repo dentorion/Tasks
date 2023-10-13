@@ -111,4 +111,6 @@
     <string name="set_date_and_time">Ustaw datę i godzinę</string>
     <string name="alarm_message" >Ostrzeżenie! Alarm dla:</string>
     <string name="snack_bar_error_alarm_time" >Nieprawidłowa godzina alarmu!</string>
+    <string name="task_alarm">Alarm dotyczący zadania!</string>
+    <string name="used_to_show_alarm_of_task">Used to show alarm of task</string>
 </resources>

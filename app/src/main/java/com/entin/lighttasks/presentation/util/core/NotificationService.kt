@@ -28,9 +28,11 @@ class NotificationService @Inject constructor(
         )
         val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alarm_bell)
-            .setContentTitle("Task alarm!")
+            .setContentTitle(context.getString(R.string.task_alarm))
             .setContentText(message)
             .setContentIntent(activityPendingIntent)
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
             .build()
         notificationManager.notify(NOTIFICATION_REQUEST_CODE, notification)
     }
@@ -38,7 +40,6 @@ class NotificationService @Inject constructor(
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "light_tasks_alarm_channel"
         const val NOTIFICATION_CHANNEL_NAME = "Light tasks channel"
-        const val NOTIFICATION_CHANNEL_DESCRIPTION = "Used to show alarm of task"
         const val NOTIFICATION_REQUEST_CODE = 72000
     }
 }

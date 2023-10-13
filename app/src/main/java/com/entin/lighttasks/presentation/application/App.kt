@@ -1,10 +1,11 @@
 package com.entin.lighttasks.presentation.application
 
 import android.app.Application
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import com.entin.lighttasks.presentation.util.core.NotificationService.Companion.NOTIFICATION_CHANNEL_DESCRIPTION
+import com.entin.lighttasks.R
 import com.entin.lighttasks.presentation.util.core.NotificationService.Companion.NOTIFICATION_CHANNEL_ID
 import com.entin.lighttasks.presentation.util.core.NotificationService.Companion.NOTIFICATION_CHANNEL_NAME
 import dagger.hilt.android.HiltAndroidApp
@@ -23,7 +24,10 @@ class App : Application() {
             NOTIFICATION_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = NOTIFICATION_CHANNEL_DESCRIPTION
+            description = this@App.getString(R.string.used_to_show_alarm_of_task)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(true)
+            enableVibration(true)
         }
 
         val notificationManager =
