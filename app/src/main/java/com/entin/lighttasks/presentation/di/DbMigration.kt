@@ -238,9 +238,9 @@ class DbMigration {
 
             database.execSQL(
                 "CREATE TABLE alarms (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "time INTEGER NOT NULL DEFAULT 0, " +
-                        "message TEXT NOT NULL DEFAULT '', " +
+                        "alarm_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "alarm_time INTEGER NOT NULL DEFAULT 0, " +
+                        "alarm_message TEXT NOT NULL DEFAULT '', " +
                         "task_id INTEGER NOT NULL DEFAULT 0)",
             )
 

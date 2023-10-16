@@ -3,13 +3,20 @@ package com.entin.lighttasks.presentation.screens.addedit
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -35,6 +42,7 @@ import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
+import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.TWO
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
@@ -67,6 +75,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private val viewModel: AddEditTaskViewModel by viewModels()
     private var iconsTaskAdapter: IconsTaskAdapter? = null
 
+    /** Permissions for notification */
+    private var activityResultLauncher: ActivityResultLauncher<Array<String>>? = null
+
     /** Link add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val linkAddEditDialog by lazy {
@@ -97,6 +108,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         SectionChooseDialog(::onSectionSelect)
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,6 +116,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     ): View {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
+        setActivityResultLauncher()
         getIcons()
         getSection()
         setupIconsTaskAdapter()
@@ -112,6 +125,23 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         setupFields()
 
         return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun setActivityResultLauncher() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            var permissionGranted = true
+            permissions.entries.forEach {
+                if (it.key in REQUIRED_PERMISSIONS && !it.value) permissionGranted = false
+            }
+            if (!permissionGranted) {
+                Log.e("Error", "permissions are not granted!")
+            } else {
+                pickDateTime()
+            }
+        }
     }
 
     /** Get icons to show in RecyclerView */
@@ -164,6 +194,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /** Setup fields value */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupFields() {
         with(binding) {
@@ -212,7 +243,17 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.apply {
                 updateAlarmDateTimeText()
-                setOnClickListener { pickDateTime() }
+                setOnClickListener {
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                        pickDateTime()
+                    } else {
+                        if (hasPermissions(requireContext())) {
+                            pickDateTime()
+                        } else {
+                            activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
+                        }
+                    }
+                }
             }
             /** Expired */
             addEditTaskIncludeIntervals.addEditTaskExpiredCheckbox.apply {
@@ -387,7 +428,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         val startMonth = currentDateTime.get(Calendar.MONTH)
         val startDay = currentDateTime.get(Calendar.DAY_OF_MONTH)
         val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
-        val startMinute = currentDateTime.get(Calendar.MINUTE)
+        val startMinute = currentDateTime.get(Calendar.MINUTE) + ONE
 
         DatePickerDialog(requireContext(), { _, year, month, day ->
             TimePickerDialog(requireContext(), { _, hour, minute ->
@@ -397,8 +438,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 viewModel.taskAlarm = pickedDateTime.time.time
                 viewModel.alarmIsOn = true
                 updateAlarmDateTimeText()
-            }, startHour, startMinute, false).show()
-        }, startYear, startMonth, startDay).show()
+            }, startHour, startMinute, true).show()
+        }, startYear, startMonth, startDay).also {
+            it.datePicker.minDate = Date().time
+        }.show()
     }
 
     private fun setFirstDateOfExpire() {
@@ -569,5 +612,19 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         iconsTaskAdapter = null
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        fun hasPermissions(context: Context) = REQUIRED_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private val REQUIRED_PERMISSIONS = mutableListOf(
+            android.Manifest.permission.POST_NOTIFICATIONS,
+            android.Manifest.permission.USE_EXACT_ALARM,
+            android.Manifest.permission.SCHEDULE_EXACT_ALARM,
+        ).toTypedArray()
     }
 }
