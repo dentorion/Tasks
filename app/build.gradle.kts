@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 17
-        versionName = "Categories"
+        versionCode = 18
+        versionName = "Alarm for task"
     }
 
     buildTypes {
