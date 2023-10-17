@@ -2,13 +2,14 @@ package com.entin.lighttasks.data.db.converter
 
 import android.net.Uri
 import androidx.room.TypeConverter
+import com.entin.lighttasks.presentation.util.COMMA
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 
 class ListUriToStringConverter {
     @TypeConverter
     fun fromUriList(uriList: List<Uri>?): String {
         return uriList?.let {
-            uriList.map { it.toString() }.joinToString(",")
+            uriList.joinToString(COMMA) { it.toString() }
         } ?: EMPTY_STRING
     }
 
@@ -17,7 +18,7 @@ class ListUriToStringConverter {
         return if (uriString == EMPTY_STRING) {
             listOf<Uri>()
         } else {
-            uriString.split(",").map { Uri.parse(it) }
+            uriString.split(COMMA).map { Uri.parse(it) }
         }
     }
 }

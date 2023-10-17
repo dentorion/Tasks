@@ -76,6 +76,7 @@ const val TWO = 2
 const val THOUSAND = 1000L
 const val SPACE = " "
 const val EMPTY_STRING = ""
+const val COMMA = ","
 const val NEW_LINE = "\n"
 const val LAST_HOUR = 23
 const val LAST_MINUTE = 59

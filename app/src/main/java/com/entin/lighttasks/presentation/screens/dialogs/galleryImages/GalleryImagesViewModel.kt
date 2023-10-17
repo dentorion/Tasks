@@ -35,9 +35,15 @@ class GalleryImagesViewModel @Inject constructor(
         }
     }
 
-//    fun deleteUri(id: Int, imageClickedUri: Uri) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            taskRepository.deletePickedImageUriByTaskId(id, imageClickedUri)
-//        }
-//    }
+    fun deleteUri(id: Int, imageClickedUri: Uri) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listUri = taskRepository
+                .getAttachedGalleryImagesByTaskId(id)
+                .first()
+                .toMutableList()
+            listUri.removeIf { it == imageClickedUri }
+
+            taskRepository.updateAttachedGalleryImagesByTaskId(id, listUri.toList())
+        }
+    }
 }

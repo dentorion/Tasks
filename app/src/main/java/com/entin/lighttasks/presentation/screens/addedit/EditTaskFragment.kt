@@ -3,6 +3,7 @@ package com.entin.lighttasks.presentation.screens.addedit
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -163,7 +164,13 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             ActivityResultContracts.PickMultipleVisualMedia()
         ) { listUri ->
             if (listUri.isNotEmpty()) {
-                viewModel.attachedGalleryImages = listUri
+                requireContext().contentResolver.let { contentResolver: ContentResolver ->
+                    val readUriPermission: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    listUri.forEach { uri ->
+                        contentResolver.takePersistableUriPermission(uri, readUriPermission)
+                    }
+                    viewModel.attachedGalleryImages = listUri
+                }
             }
         }
     }

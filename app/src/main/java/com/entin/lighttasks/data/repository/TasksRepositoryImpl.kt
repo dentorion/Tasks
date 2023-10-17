@@ -9,6 +9,7 @@ import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
+import com.entin.lighttasks.presentation.util.COMMA
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
@@ -170,9 +171,13 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     override fun getAttachedGalleryImagesByTaskId(id: Int): Flow<List<Uri>> =
-        tasksDao.getAttachedGalleryImagesByTaskId(id).map {
-            it.split(",").map { Uri.parse(it) }
+        tasksDao.getAttachedGalleryImagesByTaskId(id).map { listUriString ->
+            listUriString.split(COMMA).map { Uri.parse(it) }
         }
+
+    override suspend fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>) {
+        tasksDao.updateAttachedGalleryImagesByTaskId(id, listUri)
+    }
 
     /**
      * WIDGET

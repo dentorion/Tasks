@@ -247,6 +247,9 @@ interface TaskDao {
     @Query("SELECT attached_gallery_images FROM tasks WHERE id = :id")
     fun getAttachedGalleryImagesByTaskId(id: Int): Flow<String>
 
+    @Query("UPDATE tasks SET attached_gallery_images = :listUri WHERE id = :id")
+    fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>)
+
     /**
      * WIDGET
      */
