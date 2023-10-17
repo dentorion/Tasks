@@ -9,7 +9,7 @@
     <string name="new_edit_fragment_important_checkbox">Важливо</string>
     <string name="new_edit_fragment_field_title">Заголовок</string>
     <string name="new_edit_fragment_field_message">Опис</string>
-    <string name="new_edit_fragment_btn_ok">OK</string>
+    <string name="new_edit_fragment_btn_ok">Зберегти</string>
 
     <string name="attached_link">url посилання</string>
     <string name="snack_bar_empty_task_title_forbidden">Заголовок і повідомлення не можуть бути порожніми</string>
@@ -114,4 +114,6 @@
     <string name="snack_bar_error_alarm_time" >Неправильний час сигналу!</string>
     <string name="task_alarm">Сигналізація до завдання!</string>
     <string name="used_to_show_alarm_of_task">Used to show alarm of task</string>
+    <string name="images_from_gallery">Зображення з галереї</string>
+    <string name="nothing_attached_yet">Поки що нічого не додано</string>
 </resources>

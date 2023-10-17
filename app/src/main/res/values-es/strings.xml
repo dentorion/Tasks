@@ -9,7 +9,7 @@
     <string name="new_edit_fragment_important_checkbox">Importante</string>
     <string name="new_edit_fragment_field_title">Título</string>
     <string name="new_edit_fragment_field_message">Descripción</string>
-    <string name="new_edit_fragment_btn_ok">OK</string>
+    <string name="new_edit_fragment_btn_ok">Salvo</string>
 
     <string name="attached_link">enlace url</string>
     <string name="snack_bar_empty_task_title_forbidden">El título y el mensaje no pueden estar vacíos</string>
@@ -114,5 +114,7 @@
     <string name="snack_bar_error_alarm_time" >¡Hora de alarma incorrecta!</string>
     <string name="task_alarm">¡Alarma de tarea!</string>
     <string name="used_to_show_alarm_of_task">Used to show alarm of task</string>
+    <string name="images_from_gallery">Imágenes de la galería</string>
+    <string name="nothing_attached_yet">Nada adjunto todavía</string>
 
 </resources>

@@ -42,6 +42,7 @@ const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
 const val TASK_ALARM = "taskAlarm"
 const val IS_ALARM = "isAlarm"
+const val GALLERY_PICKED_IMAGES = "galleryImages"
 
 const val SECTION = "section"
 

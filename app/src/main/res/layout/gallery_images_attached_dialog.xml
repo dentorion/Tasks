@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/common_dialog_elevation_constraint"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_main_new"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="24dp">
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_circle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="@dimen/trash_basket_opacity_delete"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_voice_attached_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle" />
+
+        <ImageView
+            android:id="@+id/dialog_voice_attached_icon_to_show"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:adjustViewBounds="true"
+            android:alpha="@dimen/small_icon_opacity_size_item"
+            android:src="@drawable/ic_gallery_image_pick_default"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintStart_toStartOf="@+id/dialog_voice_attached_circle"
+            app:layout_constraintTop_toTopOf="@+id/dialog_voice_attached_circle"
+            app:tint="@color/main" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/important_background"
+            android:padding="8dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="@string/close"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gallery_images_recyclerview" />
+
+        <TextView
+            android:id="@+id/dialog_voice_attached_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/title_dialogs"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="2dp"
+            android:text="@string/images_from_gallery"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="4pt"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/gallery_images_recyclerview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_circle"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gallery_images_recyclerview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingEnd="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_voice_attached_cancel_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_voice_attached_label"
+            tools:itemCount="2"
+            tools:listitem="@layout/recycler_attached_image_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

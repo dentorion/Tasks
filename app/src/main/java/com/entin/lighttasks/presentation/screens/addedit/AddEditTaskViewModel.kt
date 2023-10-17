@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.GALLERY_PICKED_IMAGES
 import com.entin.lighttasks.presentation.util.IS_ALARM
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
@@ -229,6 +231,12 @@ class AddEditTaskViewModel @Inject constructor(
 
     private var alarmId: Long = ZERO_LONG
 
+    var attachedGalleryImages: List<Uri> = state.get<List<Uri>>(GALLERY_PICKED_IMAGES) ?: taskEntity?.attachedGalleryImages ?: listOf<Uri>()
+        set(value) {
+            field = value
+            state[GALLERY_PICKED_IMAGES] = value
+        }
+
     /** Get task id if exist */
     fun getTaskId(): Int? = taskEntity?.id
 
@@ -323,8 +331,8 @@ class AddEditTaskViewModel @Inject constructor(
                     attachedPhoto = photoAttached,
                     attachedVoice = voiceAttached,
                     sectionId = sectionId,
-                    alarmId = alarmId
-
+                    alarmId = alarmId,
+                    attachedGalleryImages = attachedGalleryImages
                 )
             )
         }
@@ -351,6 +359,7 @@ class AddEditTaskViewModel @Inject constructor(
                     attachedVoice = voiceAttached,
                     sectionId = sectionId,
                     alarmId = alarmId,
+                    attachedGalleryImages = attachedGalleryImages
                 ),
             )
         }

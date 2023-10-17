@@ -1,5 +1,6 @@
 package com.entin.lighttasks.data.db.entity
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
@@ -37,4 +38,5 @@ data class TaskEntity(
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
     @ColumnInfo(name = "section_id") val sectionId: Int,
     @ColumnInfo(name = "alarm_id") val alarmId: Long,
+    @ColumnInfo(name = "attached_gallery_images") val attachedGalleryImages: List<Uri>,
 ) : Parcelable

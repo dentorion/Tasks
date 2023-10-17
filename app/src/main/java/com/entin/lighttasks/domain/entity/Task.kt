@@ -1,9 +1,9 @@
 package com.entin.lighttasks.domain.entity
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.entin.lighttasks.data.db.entity.TaskEntity
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import kotlinx.parcelize.Parcelize
@@ -29,6 +29,7 @@ data class Task(
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
     @ColumnInfo(name = "section_id") val sectionId: Int,
     @ColumnInfo(name = "alarm_time") val alarmTime: Long = ZERO_LONG,    // Join from Alarms
+    @ColumnInfo(name = "attached_gallery_images") val attachedGalleryImages: List<Uri>
 ): Parcelable
 
 fun Task.toTaskEntity(alarmId: Long): TaskEntity = TaskEntity(
@@ -51,4 +52,5 @@ fun Task.toTaskEntity(alarmId: Long): TaskEntity = TaskEntity(
     attachedVoice = this.attachedVoice,
     sectionId = this.sectionId,
     alarmId = alarmId,
+    attachedGalleryImages = this.attachedGalleryImages,
 )

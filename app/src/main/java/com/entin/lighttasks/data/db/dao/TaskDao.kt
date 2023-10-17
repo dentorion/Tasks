@@ -1,5 +1,6 @@
 package com.entin.lighttasks.data.db.dao
 
+import android.net.Uri
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -242,6 +243,9 @@ interface TaskDao {
 
     @Query("UPDATE tasks SET is_finished = :finished WHERE id = :id")
     fun onFinishedTaskClick(id: Int, finished: Boolean)
+
+    @Query("SELECT attached_gallery_images FROM tasks WHERE id = :id")
+    fun getAttachedGalleryImagesByTaskId(id: Int): Flow<String>
 
     /**
      * WIDGET

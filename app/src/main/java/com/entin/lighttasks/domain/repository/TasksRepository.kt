@@ -1,5 +1,6 @@
 package com.entin.lighttasks.domain.repository
 
+import android.net.Uri
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
@@ -47,4 +48,8 @@ interface TasksRepository {
     suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
 
     suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean)
+
+    fun getAttachedGalleryImagesByTaskId(id: Int): Flow<List<Uri>>
+
+//    suspend fun deletePickedImageUriByTaskId(id: Int, imageClickedUri: Uri)
 }

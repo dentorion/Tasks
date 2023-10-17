@@ -20,9 +20,9 @@
             android:layout_marginStart="12dp"
             android:background="@drawable/voice_add_button_selector"
             android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_link"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_link"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_link"
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
@@ -31,21 +31,31 @@
             android:layout_height="35dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/link_add_button_selector"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_photo"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_gallery_photo"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_gallery_photo"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_gallery_photo"
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/add_edit_task_photo"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/photo_add_button_selector"
             android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_finished_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox" />
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_important_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_important_checkbox" />
+
+        <ImageView
+            android:id="@+id/add_edit_task_gallery_photo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/gallery_image_add_button_selector"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_photo"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_photo"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_photo" />
 
         <CheckBox
             android:id="@+id/add_edit_task_important_checkbox"
@@ -77,14 +87,17 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_edit_task_ok_button"
-            android:layout_width="60dp"
-            android:layout_height="55dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
             android:backgroundTint="@color/main"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/new_edit_fragment_btn_ok"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
+            android:textSize="6pt"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_voice"
             app:layout_constraintEnd_toEndOf="@+id/add_edit_task_title_layout"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_voice" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_edit_task_title_layout"
@@ -92,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/title_margin_start_add_edit"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="@dimen/title_margin_end_add_edit"
             android:hint="@string/new_edit_fragment_field_title"
             android:textColorHint="@color/main"
@@ -110,7 +123,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_ok_button">
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_photo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_edit_task_title"
@@ -126,7 +139,7 @@
             android:id="@+id/add_edit_task_url_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tag_rose"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
@@ -136,9 +149,8 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_label_attached_files_points"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_attached_files_points"
             tools:ignore="TouchTargetSizeCheck"
             tools:visibility="visible" />
 
@@ -146,7 +158,8 @@
             android:id="@+id/add_edit_task_photo_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tag_rose"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
@@ -155,11 +168,9 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:layout_goneMarginStart="2dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_message_layout"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_url_tag"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_attached"
             tools:ignore="TouchTargetSizeCheck"
             tools:visibility="visible" />
 
@@ -167,7 +178,8 @@
             android:id="@+id/add_edit_task_voice_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tag_rose"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
@@ -176,11 +188,29 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:layout_goneMarginStart="2dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_message_layout"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_photo_tag"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_attached"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/add_edit_task_gallery_images_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/tag_rose"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp"
+            android:text="IMAGES"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_voice_tag"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_attached"
             tools:ignore="TouchTargetSizeCheck"
             tools:visibility="visible" />
 
@@ -226,12 +256,10 @@
             android:id="@+id/imageView"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginStart="16dp"
             android:src="@drawable/ic_slide"
-            app:layout_goneMarginStart="2dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_voice_tag"
-            app:layout_constraintStart_toEndOf="@+id/add_edit_task_voice_tag"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_voice_tag" />
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_category_recyclerview"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
+            app:layout_goneMarginStart="2dp" />
 
         <ImageView
             android:id="@+id/add_edit_task_circle_share"
@@ -271,13 +299,51 @@
             tools:listitem="@layout/recycler_radio_button_item" />
 
         <ImageView
-            android:id="@+id/add_edit_task_label_advanced_points"
+            android:id="@+id/add_edit_task_label_attached_files_points"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="32dp"
             android:src="@drawable/ic_three_dots_vertical"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_circle_share" />
+
+        <TextView
+            android:id="@+id/add_edit_task_label_attached"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attached"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="@dimen/add_edit_task_date_picker_label"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_label_attached_files_points"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_label_attached_files_points"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_label_attached_files_points"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/add_edit_task_attached_nothing_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/nothing_attached_yet"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/main"
+            android:textSize="@dimen/add_edit_task_add_date_label"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_label_attached_files_points"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_label_attached"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageView
+            android:id="@+id/add_edit_task_label_advanced_points"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_three_dots_vertical"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_attached_nothing_label" />
 
         <TextView
             android:id="@+id/add_edit_task_label_advanced"
@@ -296,7 +362,7 @@
         <TextView
             android:id="@+id/add_edit_task_section_selection"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/checkbox_light_solid_background"
             android:gravity="center_vertical|center_horizontal"
@@ -324,8 +390,8 @@
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_section_selection" />
 
         <include
-            layout="@layout/include_intervals"
             android:id="@+id/add_edit_task_include_intervals"
+            layout="@layout/include_intervals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

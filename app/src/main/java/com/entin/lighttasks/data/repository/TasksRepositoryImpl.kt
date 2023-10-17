@@ -1,5 +1,6 @@
 package com.entin.lighttasks.data.repository
 
+import android.net.Uri
 import com.entin.lighttasks.data.db.dao.TaskDao
 import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
@@ -167,6 +168,11 @@ class TasksRepositoryImpl @Inject constructor(
     override suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean) {
         tasksDao.onFinishedTaskClick(id, isFinished)
     }
+
+    override fun getAttachedGalleryImagesByTaskId(id: Int): Flow<List<Uri>> =
+        tasksDao.getAttachedGalleryImagesByTaskId(id).map {
+            it.split(",").map { Uri.parse(it) }
+        }
 
     /**
      * WIDGET

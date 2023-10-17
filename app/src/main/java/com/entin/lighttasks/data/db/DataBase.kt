@@ -2,6 +2,8 @@ package com.entin.lighttasks.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.entin.lighttasks.data.db.converter.ListUriToStringConverter
 import com.entin.lighttasks.data.db.dao.AlarmsDao
 import com.entin.lighttasks.data.db.dao.SectionsDao
 import com.entin.lighttasks.data.db.dao.TaskDao
@@ -20,6 +22,11 @@ import com.entin.lighttasks.data.db.entity.TaskEntity
     ],
     version = 7,
     exportSchema = false,
+)
+@TypeConverters(
+    value = [
+        ListUriToStringConverter::class,
+    ]
 )
 abstract class DataBase : RoomDatabase() {
 

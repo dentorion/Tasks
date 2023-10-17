@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -35,6 +36,7 @@ import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
+import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
@@ -78,6 +80,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /** Permissions for notification */
     private var activityResultLauncher: ActivityResultLauncher<Array<String>>? = null
 
+    /** Gallery image pick */
+    private var galleryImagePickLauncher: ActivityResultLauncher<PickVisualMediaRequest>? = null
+
     /** Link add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val linkAddEditDialog by lazy {
@@ -102,6 +107,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         VoiceAddToTaskDialog()
     }
 
+    /** Voice add Dialog */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val galleryImagesDialog by lazy {
+        GalleryImagesDialog(viewModel.getTaskId())
+    }
+
     /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val sectionChooseDialog by lazy {
@@ -117,6 +128,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         _binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
         setActivityResultLauncher()
+        setGalleryImagePickLauncher()
         getIcons()
         getSection()
         setupIconsTaskAdapter()
@@ -127,6 +139,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         return binding.root
     }
 
+    /** Permissions */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun setActivityResultLauncher() {
         activityResultLauncher = registerForActivityResult(
@@ -140,6 +153,17 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 Log.e("Error", "permissions are not granted!")
             } else {
                 pickDateTime()
+            }
+        }
+    }
+
+    /** Gallery image pick */
+    private fun setGalleryImagePickLauncher() {
+        galleryImagePickLauncher = registerForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia()
+        ) { listUri ->
+            if (listUri.isNotEmpty()) {
+                viewModel.attachedGalleryImages = listUri
             }
         }
     }
@@ -361,6 +385,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 }
             }
             setSecondDateOfExpire()
+            /** Galley images attach */
+            addEditTaskGalleryPhoto.setOnClickListener {
+                galleryImagePickLauncher?.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
             /** Photo Attached */
             addEditTaskPhoto.setOnClickListener {
                 if (!photoAddEditDialog.isVisible) {
@@ -403,6 +431,16 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 setOnClickListener {
                     if (!voiceAddEditDialog.isVisible) {
                         voiceAddEditDialog.show(childFragmentManager, VoiceAddToTaskDialog::class.simpleName)
+                    }
+                }
+            }
+            /** Tag gallery images */
+            addEditTaskAttachedNothingLabel.visibility = if(viewModel.attachedGalleryImages.isEmpty()) View.VISIBLE else View.INVISIBLE
+            addEditTaskGalleryImagesTag.apply{
+                isVisible = viewModel.attachedGalleryImages.isNotEmpty()
+                setOnClickListener {
+                    if (!galleryImagesDialog.isVisible) {
+                        galleryImagesDialog.show(childFragmentManager, GalleryImagesDialog::class.simpleName)
                     }
                 }
             }
