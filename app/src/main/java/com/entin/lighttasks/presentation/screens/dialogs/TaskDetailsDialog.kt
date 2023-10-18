@@ -33,7 +33,7 @@ class TaskDetailsDialog : DialogFragment() {
                 attributes?.windowAnimations = R.style.NoPaddingDialogTheme
                 setGravity(Gravity.CENTER)
             }
-            setDialogWidth(if (isOrientationLandscape(context)) LinkAddToTaskDialog.LANDSCAPE_MODE else LinkAddToTaskDialog.FULL_SCREEN)
+            setDialogWidth(if (isOrientationLandscape(context)) 0.92 else 0.72)
         }
     }
 

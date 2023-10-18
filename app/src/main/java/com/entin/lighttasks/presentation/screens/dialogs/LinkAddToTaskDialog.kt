@@ -29,11 +29,6 @@ class LinkAddToTaskDialog : DialogFragment() {
     private val binding get() = _binding!!
     private val viewModel: AddEditTaskViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
-    private fun setDialogWidth(width: Double) {
-        val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
-        dialog?.window?.setLayout(newWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
-
     private fun hideSystemUI() {
         dialog?.let { dialog ->
             dialog.window?.let { window ->
@@ -49,17 +44,6 @@ class LinkAddToTaskDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.let { dialog ->
-            dialog.window?.apply {
-                attributes?.windowAnimations = R.style.NoPaddingDialogTheme
-                setGravity(Gravity.CENTER)
-            }
-            setDialogWidth(if (isOrientationLandscape(context)) LANDSCAPE_MODE else FULL_SCREEN)
-        }
     }
 
     override fun onCreateView(
@@ -111,10 +95,5 @@ class LinkAddToTaskDialog : DialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-    }
-
-    companion object {
-        const val FULL_SCREEN = 0.92
-        const val LANDSCAPE_MODE = 0.65
     }
 }

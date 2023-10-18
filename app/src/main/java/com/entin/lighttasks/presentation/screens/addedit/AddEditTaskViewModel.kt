@@ -163,15 +163,16 @@ class AddEditTaskViewModel @Inject constructor(
     var linkAttached = state.get<String>(LINK_ATTACHED) ?: taskEntity?.attachedLink ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
+                field = value.trim()
+                state[LINK_ATTACHED] = value.trim()
                 _editTaskChannel.send(
                     EditTaskEventContract.RefreshTagsVisibility(
                         url = value.isNotEmpty(),
                         photo = photoAttached.isNotEmpty(),
                         voice = voiceAttached.isNotEmpty(),
+                        galleryImages = attachedGalleryImages.isNotEmpty(),
                     )
                 )
-                field = value.trim()
-                state[LINK_ATTACHED] = value.trim()
             }
         }
 
@@ -179,15 +180,16 @@ class AddEditTaskViewModel @Inject constructor(
         state.get<String>(PHOTO_ATTACHED) ?: taskEntity?.attachedPhoto ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
+                field = value
+                state[PHOTO_ATTACHED] = value
                 _editTaskChannel.send(
                     EditTaskEventContract.RefreshTagsVisibility(
                         url = linkAttached.isNotEmpty(),
                         photo = value.isNotEmpty(),
                         voice = voiceAttached.isNotEmpty(),
+                        galleryImages = attachedGalleryImages.isNotEmpty(),
                     )
                 )
-                field = value
-                state[PHOTO_ATTACHED] = value
             }
         }
 
@@ -195,15 +197,33 @@ class AddEditTaskViewModel @Inject constructor(
         state.get<String>(VOICE_ATTACHED) ?: taskEntity?.attachedVoice ?: EMPTY_STRING
         set(value) {
             viewModelScope.launch {
+                field = value
+                state[VOICE_ATTACHED] = value
                 _editTaskChannel.send(
                     EditTaskEventContract.RefreshTagsVisibility(
                         url = linkAttached.isNotEmpty(),
                         photo = photoAttached.isNotEmpty(),
                         voice = value.isNotEmpty(),
+                        galleryImages = attachedGalleryImages.isNotEmpty(),
                     )
                 )
+            }
+        }
+
+    var attachedGalleryImages: List<Uri> =
+        state.get<List<Uri>>(GALLERY_PICKED_IMAGES) ?: taskEntity?.attachedGalleryImages ?: listOf()
+        set(value) {
+            viewModelScope.launch {
                 field = value
-                state[VOICE_ATTACHED] = value
+                state[GALLERY_PICKED_IMAGES] = value
+                _editTaskChannel.send(
+                    EditTaskEventContract.RefreshTagsVisibility(
+                        url = linkAttached.isNotEmpty(),
+                        photo = photoAttached.isNotEmpty(),
+                        voice = voiceAttached.isNotEmpty(),
+                        galleryImages = value.isNotEmpty(),
+                    )
+                )
             }
         }
 
@@ -230,12 +250,6 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     private var alarmId: Long = ZERO_LONG
-
-    var attachedGalleryImages: List<Uri> = state.get<List<Uri>>(GALLERY_PICKED_IMAGES) ?: taskEntity?.attachedGalleryImages ?: listOf<Uri>()
-        set(value) {
-            field = value
-            state[GALLERY_PICKED_IMAGES] = value
-        }
 
     /** Get task id if exist */
     fun getTaskId(): Int? = taskEntity?.id
@@ -446,6 +460,12 @@ class AddEditTaskViewModel @Inject constructor(
 
     private suspend fun errorAlarmTime() {
         _editTaskChannel.send(EditTaskEventContract.ShowErrorAlarmTime)
+    }
+
+    fun addListUriOfGalleryImages(listUri: List<Uri>) {
+        attachedGalleryImages = attachedGalleryImages.toMutableList().apply {
+            this.addAll(listUri)
+        }.toList()
     }
 
     companion object {

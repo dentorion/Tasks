@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.dialogs.galleryImages
 
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +10,8 @@ import coil.load
 import com.entin.lighttasks.databinding.RecyclerAttachedImageItemBinding
 
 class GalleryImagesAdapter(
-    private val onClick: (galleryImageUri: Uri) -> Unit,
+    private val onDeleteClick: (galleryImageUri: Uri) -> Unit,
+    private val onOpenImage: (galleryImageUri: Uri) -> Unit,
 ) : ListAdapter<Uri, GalleryImagesAdapter.AttachedImageViewHolder>(
     GalleryImagesDiffCallback,
 ) {
@@ -39,8 +39,11 @@ class GalleryImagesAdapter(
         ) {
             binding.apply {
                 attachedImage.load(attachedImageUri)
+                attachedImage.setOnClickListener {
+                    onOpenImage(attachedImageUri)
+                }
                 attachedImageCircle.setOnClickListener {
-                    onClick(attachedImageUri)
+                    onDeleteClick(attachedImageUri)
                 }
             }
         }

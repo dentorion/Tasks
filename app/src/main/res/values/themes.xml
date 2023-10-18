@@ -108,4 +108,10 @@
         <item name="android:windowExitAnimation">@anim/down_slide</item>
     </style>
 
+    <style name="ShowImageDialogTheme" parent="Theme.Tasks">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>

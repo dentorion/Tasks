@@ -7,7 +7,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -172,7 +171,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     listUri.forEach { uri ->
                         contentResolver.takePersistableUriPermission(uri, readUriPermission)
                     }
-                    viewModel.attachedGalleryImages = listUri
+
+                    // Add list of selected uri to existing list in ViewModel, not replace
+                    viewModel.addListUriOfGalleryImages(listUri)
                 }
             }
         }
@@ -338,7 +339,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     }
 
                     else -> {
-                        Log.e("GlobalErrors", "Error setting type: event / range.")
+                        Log.e("Error", "Error setting type: event / range.")
                     }
                 }
                 addEditTaskIncludeIntervals.addEditTaskDatePickerSecond.isVisible =
@@ -428,29 +429,37 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Tag photo */
             addEditTaskPhotoTag.apply{
-                isVisible = viewModel.photoAttached.isNotEmpty()
+                setTagPhotoVisibility(viewModel.photoAttached.isNotEmpty())
                 setOnClickListener {
                     if (!photoShowDialog.isVisible) {
-                        photoShowDialog.show(childFragmentManager, PhotoShowDialog::class.simpleName)
+                        photoShowDialog.show(
+                            childFragmentManager,
+                            PhotoShowDialog::class.simpleName
+                        )
                     }
                 }
             }
             /** Tag voice */
             addEditTaskVoiceTag.apply{
-                isVisible = viewModel.voiceAttached.isNotEmpty()
+                setTagVoiceVisibility(viewModel.voiceAttached.isNotEmpty())
                 setOnClickListener {
                     if (!voiceAddEditDialog.isVisible) {
-                        voiceAddEditDialog.show(childFragmentManager, VoiceAddToTaskDialog::class.simpleName)
+                        voiceAddEditDialog.show(
+                            childFragmentManager,
+                            VoiceAddToTaskDialog::class.simpleName
+                        )
                     }
                 }
             }
             /** Tag gallery images */
-            addEditTaskAttachedNothingLabel.visibility = if(viewModel.attachedGalleryImages.isEmpty()) View.VISIBLE else View.INVISIBLE
             addEditTaskGalleryImagesTag.apply{
-                isVisible = viewModel.attachedGalleryImages.isNotEmpty()
+                setTagGalleryImagesVisibility(viewModel.attachedGalleryImages.isNotEmpty())
                 setOnClickListener {
                     if (!galleryImagesDialog.isVisible) {
-                        galleryImagesDialog.show(childFragmentManager, GalleryImagesDialog::class.simpleName)
+                        galleryImagesDialog.show(
+                            childFragmentManager,
+                            GalleryImagesDialog::class.simpleName
+                        )
                     }
                 }
             }
@@ -463,6 +472,8 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     )
                 }
             }
+            /** Check is something attached to task and set label about this */
+            setLabelOfAttached()
             /** OK Button */
             addEditTaskOkButton.setOnClickListener {
                 viewModel.saveTaskBtnClicked()
@@ -597,25 +608,28 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.editTaskChannel.collect { event: EditTaskEventContract ->
                 when (event) {
-                    /** Navigation back */
+                    /** Navigation: Go back */
                     is EditTaskEventContract.NavBackWithResult -> {
                         eventNavBackWithResult(event.typeNewOrEditorExist)
                     }
-                    /** Error blank title text show */
+
+                    /** Error: Blank title text show */
                     is EditTaskEventContract.ShowErrorBlankTitleAndMessage -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_empty_task_title_forbidden),
                             requireView(),
                         ).show()
                     }
-                    /** Error dates picked show */
+
+                    /** Error: Dates picked show */
                     is EditTaskEventContract.ShowErrorDatesPicked -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_dates_picked),
                             requireView(),
                         ).show()
                     }
-                    /** Task is not saved */
+
+                    /** Error: Task is not saved */
                     is EditTaskEventContract.TaskNotSaved -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_task_not_saved),
@@ -623,16 +637,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         ).show()
                     }
 
-                    is EditTaskEventContract.RefreshTagsVisibility -> {
-                        setTagUrlVisibility(event.url)
-                        setTagPhotoVisibility(event.photo)
-                    }
-
+                    /** Error: Alarm time is in passed */
                     is EditTaskEventContract.ShowErrorAlarmTime -> {
                         getSnackBar(
                             resources.getString(R.string.snack_bar_error_alarm_time),
                             requireView(),
                         ).show()
+                    }
+
+                    /** Refresh tags to describe attached */
+                    is EditTaskEventContract.RefreshTagsVisibility -> {
+                        setLabelOfAttached()
+                        setTagUrlVisibility(event.url)
+                        setTagPhotoVisibility(event.photo)
+                        setTagVoiceVisibility(event.voice)
+                        setTagGalleryImagesVisibility(event.galleryImages)
                     }
                 }
             }
@@ -648,12 +667,37 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         viewModel.getSectionById()
     }
 
+    /** TAGS */
+
     private fun setTagUrlVisibility(value: Boolean) {
         binding.addEditTaskUrlTag.isVisible = value
     }
 
     private fun setTagPhotoVisibility(value: Boolean) {
         binding.addEditTaskPhotoTag.isVisible = value
+    }
+
+    private fun setTagVoiceVisibility(value: Boolean) {
+        binding.addEditTaskVoiceTag.isVisible = value
+    }
+
+    private fun setTagGalleryImagesVisibility(value: Boolean) {
+        binding.addEditTaskGalleryImagesTag.isVisible = value
+    }
+
+    /** LABEL INSTEAD OF TAGS */
+
+    private fun setLabelOfAttached() {
+        binding.addEditTaskAttachedNothingLabel.visibility =
+            if (viewModel.attachedGalleryImages.isEmpty() &&
+                viewModel.voiceAttached.isEmpty() &&
+                viewModel.photoAttached.isEmpty() &&
+                viewModel.linkAttached.isEmpty()
+            ) {
+                View.VISIBLE
+            } else {
+                View.INVISIBLE
+            }
     }
 
     override fun onDestroyView() {

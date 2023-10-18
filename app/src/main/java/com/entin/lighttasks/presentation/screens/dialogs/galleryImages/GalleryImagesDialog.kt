@@ -15,6 +15,7 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.GalleryImagesAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
+import com.entin.lighttasks.presentation.screens.dialogs.ShowImageDialog
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,8 +26,10 @@ class GalleryImagesDialog : DialogFragment() {
 
     private var _binding: GalleryImagesAttachedDialogBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: GalleryImagesViewModel by viewModels()
-    private val addEditTaskViewModel: AddEditTaskViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private val addEditTaskViewModel: AddEditTaskViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
     private var galleryImagesAdapter: GalleryImagesAdapter? = null
 
     private fun setDialogWidth(width: Double) {
@@ -49,9 +52,7 @@ class GalleryImagesDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        getAttachedImages()
-        createAdapter()
-        stateObserver()
+        showAttachedImages()
     }
 
     override fun onStart() {
@@ -73,6 +74,8 @@ class GalleryImagesDialog : DialogFragment() {
         isCancelable = false
         _binding = GalleryImagesAttachedDialogBinding.inflate(inflater, container, false)
 
+        createAdapter()
+
         with(binding) {
             dialogVoiceAttachedCancelButton.setOnClickListener {
                 dismiss()
@@ -83,9 +86,10 @@ class GalleryImagesDialog : DialogFragment() {
     }
 
     private fun createAdapter() {
-        galleryImagesAdapter = GalleryImagesAdapter { imageClickedUri ->
-            deleteClicked(imageClickedUri)
-        }
+        galleryImagesAdapter = GalleryImagesAdapter(
+            onDeleteClick = ::deleteClicked,
+            onOpenImage = ::onOpenImage
+        )
 
         binding.galleryImagesRecyclerview.apply {
             adapter = galleryImagesAdapter
@@ -97,22 +101,23 @@ class GalleryImagesDialog : DialogFragment() {
         }
     }
 
-    private fun getAttachedImages() {
-        addEditTaskViewModel.getTaskId()?.let {
-            viewModel.getTaskAttachedImages(it)
-        }
-    }
-
-    private fun stateObserver() {
-        viewModel.galleryImages.observe(viewLifecycleOwner) { listUri ->
-            galleryImagesAdapter?.submitList(listUri)
-            addEditTaskViewModel.attachedGalleryImages = listUri
-        }
+    private fun showAttachedImages() {
+        galleryImagesAdapter?.submitList(addEditTaskViewModel.attachedGalleryImages)
     }
 
     private fun deleteClicked(imageClickedUri: Uri) {
-        addEditTaskViewModel.getTaskId()?.let {
-            viewModel.deleteUriFromList(it, imageClickedUri)
+        val currentList = addEditTaskViewModel.attachedGalleryImages.toMutableList()
+        currentList.removeIf { it == imageClickedUri }
+        addEditTaskViewModel.attachedGalleryImages = currentList.toSet().toList()
+        showAttachedImages()
+    }
+
+    private fun onOpenImage(imageClickedUri: Uri) {
+        val showImageDialog = ShowImageDialog().newInstance(imageClickedUri.toString())
+        showImageDialog?.let { dialog ->
+            if (!dialog.isVisible) {
+                dialog.show(childFragmentManager, ShowImageDialog::class.simpleName)
+            }
         }
     }
 

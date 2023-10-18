@@ -53,6 +53,8 @@ const val LINK_ATTACHED = "linkAttached"
 const val PHOTO_ATTACHED = "photoAttached"
 const val VOICE_ATTACHED = "voiceAttached"
 
+const val SHOW_IMAGE_DIALOG_ARGUMENT = "showDialogArgument"
+
 /**
  * Photo
  */

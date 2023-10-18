@@ -14,7 +14,8 @@ sealed class EditTaskEventContract {
     data class RefreshTagsVisibility(
         val url: Boolean = false,
         val photo: Boolean = false,
-        val voice: Boolean = false
+        val voice: Boolean = false,
+        val galleryImages: Boolean = false,
     ) : EditTaskEventContract()
     data class NavBackWithResult(val typeNewOrEditorExist: Int) : EditTaskEventContract()
 }
