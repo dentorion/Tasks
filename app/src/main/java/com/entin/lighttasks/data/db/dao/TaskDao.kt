@@ -1,6 +1,5 @@
 package com.entin.lighttasks.data.db.dao
 
-import android.net.Uri
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -248,7 +247,7 @@ interface TaskDao {
     fun getAttachedGalleryImagesByTaskId(id: Int): Flow<String>
 
     @Query("UPDATE tasks SET attached_gallery_images = :listUri WHERE id = :id")
-    fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>)
+    fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: String)
 
     /**
      * WIDGET

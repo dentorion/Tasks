@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.dialogs.galleryImages
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -26,7 +27,7 @@ class GalleryImagesAdapter(
 
     override fun onBindViewHolder(holder: AttachedImageViewHolder, position: Int) {
         val attachedImageUri = getItem(position)
-        holder.bind(attachedImageUri, position)
+        holder.bind(attachedImageUri)
     }
 
     inner class AttachedImageViewHolder(
@@ -35,10 +36,12 @@ class GalleryImagesAdapter(
 
         fun bind(
             attachedImageUri: Uri,
-            position: Int,
         ) {
             binding.apply {
                 attachedImage.load(attachedImageUri)
+                attachedImageCircle.setOnClickListener {
+                    onClick(attachedImageUri)
+                }
             }
         }
     }

@@ -22,26 +22,27 @@ class GalleryImagesViewModel @Inject constructor(
     private val taskRepository: TasksRepository,
 ) : ViewModel() {
 
-    val galleryImagesChannel: MutableLiveData<List<Uri>> by lazy {
+    val galleryImages: MutableLiveData<List<Uri>> by lazy {
         MutableLiveData<List<Uri>>()
     }
 
     /** Get all icons */
     fun getTaskAttachedImages(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            galleryImagesChannel.postValue(
+            galleryImages.postValue(
                 taskRepository.getAttachedGalleryImagesByTaskId(id).first()
             )
         }
     }
 
-    fun deleteUri(id: Int, imageClickedUri: Uri) {
+    fun deleteUriFromList(id: Int, imageClickedUri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             val listUri = taskRepository
                 .getAttachedGalleryImagesByTaskId(id)
                 .first()
                 .toMutableList()
             listUri.removeIf { it == imageClickedUri }
+            galleryImages.postValue(listUri.toList())
 
             taskRepository.updateAttachedGalleryImagesByTaskId(id, listUri.toList())
         }

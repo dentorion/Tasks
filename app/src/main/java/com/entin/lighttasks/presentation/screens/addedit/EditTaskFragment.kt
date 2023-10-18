@@ -7,6 +7,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -31,18 +32,18 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
-import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
 import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
@@ -111,13 +112,15 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /** Voice add Dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val galleryImagesDialog by lazy {
-        GalleryImagesDialog(viewModel.getTaskId())
+        GalleryImagesDialog()
     }
 
     /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val sectionChooseDialog by lazy {
-        SectionChooseDialog(::onSectionSelect)
+        SectionChooseDialog().also {
+            it.setOnSelect(::onSectionSelect)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

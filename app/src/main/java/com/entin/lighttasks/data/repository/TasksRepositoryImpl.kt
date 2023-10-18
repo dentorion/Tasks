@@ -1,6 +1,7 @@
 package com.entin.lighttasks.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.entin.lighttasks.data.db.dao.TaskDao
 import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
@@ -10,6 +11,7 @@ import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.COMMA
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.LAST_HOUR
 import com.entin.lighttasks.presentation.util.LAST_MINUTE
 import com.entin.lighttasks.presentation.util.LAST_SECOND
@@ -159,29 +161,36 @@ class TasksRepositoryImpl @Inject constructor(
     override fun getActualPhotoNames(): Flow<List<String>> =
         tasksDao.getActualPhotoNames()
 
+    /** Get names of audio records */
     override fun getActualAudioRecordsNames(): Flow<List<String>> =
         tasksDao.getActualAudioRecordsNames()
 
+    /** Set section id to 0 if section was deleted */
     override suspend fun updateAllTasksWithDeletedSection(sectionId: Int) {
         tasksDao.updateAllTasksWithDeletedSection(sectionId)
     }
 
+    /** Set task flag finish */
     override suspend fun onFinishedTaskClick(id: Int, isFinished: Boolean) {
         tasksDao.onFinishedTaskClick(id, isFinished)
     }
 
+    /** Get list of uri to gallery images by task_id */
     override fun getAttachedGalleryImagesByTaskId(id: Int): Flow<List<Uri>> =
         tasksDao.getAttachedGalleryImagesByTaskId(id).map { listUriString ->
-            listUriString.split(COMMA).map { Uri.parse(it) }
+            if(listUriString != EMPTY_STRING) {
+                listUriString.split(COMMA).map { Uri.parse(it) }
+            } else {
+                emptyList()
+            }
         }
 
+    /** Update list of uri to gallery by task_id */
     override suspend fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>) {
-        tasksDao.updateAttachedGalleryImagesByTaskId(id, listUri)
+        tasksDao.updateAttachedGalleryImagesByTaskId(id, listUri.joinToString(COMMA) { it.toString() })
     }
 
-    /**
-     * WIDGET
-     */
+    /** WIDGET */
     override fun getCountTasksForWidget(): Flow<Int> =
         tasksDao.getCountTasksToday(
             getTimeMls(hours = ZERO, minutes = ZERO, seconds = ZERO),
