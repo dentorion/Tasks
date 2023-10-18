@@ -20,7 +20,7 @@ import com.entin.lighttasks.data.db.entity.TaskEntity
         SectionEntity::class,
         AlarmItemEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = false,
 )
 @TypeConverters(
