@@ -9,13 +9,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.SectionChooseDialogBinding
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.databinding.SectionChooseDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SectionChooseAdapter
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import com.entin.lighttasks.presentation.screens.section.SectionsEventContract
@@ -23,22 +20,24 @@ import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class SectionChooseDialog(
-    private val onSelect: (SectionEntity) -> Unit
-) : DialogFragment() {
+class SectionChooseDialog : DialogFragment() {
+
+    private var onSelect: ((SectionEntity) -> Unit)? = null
 
     private var _binding: SectionChooseDialogBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: SectionViewModel by viewModels()
     private var sectionChooseAdapter: SectionChooseAdapter? = SectionChooseAdapter { section ->
-        onSelect(section)
+        onSelect?.let { it(section) }
         dismiss()
+    }
+
+    fun setOnSelect(action: (SectionEntity) -> Unit) {
+        onSelect = action
     }
 
     private fun setDialogWidth(width: Double) {
@@ -61,6 +60,9 @@ class SectionChooseDialog(
     override fun onResume() {
         super.onResume()
         hideSystemUI()
+
+        setupSectionsRecyclerView()
+        stateObserver()
     }
 
     override fun onStart() {
@@ -82,7 +84,9 @@ class SectionChooseDialog(
         isCancelable = false
         _binding = SectionChooseDialogBinding.inflate(inflater, container, false)
 
-        setupSectionsRecyclerView()
+        binding.sectionChooseClose.setOnClickListener {
+            dismiss()
+        }
 
         return binding.root
     }
@@ -98,36 +102,29 @@ class SectionChooseDialog(
                 false,
             )
         }
-
-        binding.sectionChooseClose.setOnClickListener {
-            dismiss()
-        }
-
-        stateObserver()
     }
 
     private fun stateObserver() {
-        viewModel.sectionEvent.flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-            .onEach { event: SectionsEventContract ->
-                when (event) {
-                    is SectionsEventContract.ShowAllSections -> {
-                        // Add first "No category" item to list
-                        val newListWithNoSection = event.sectionEntities.toMutableList()
-                        newListWithNoSection.add(
-                            SectionEntity(
-                                id = 0,
-                                title = requireContext().resources.getString(R.string.no_section),
-                                createdAt = 0,
-                                editedAt = 0,
-                                icon = 0,
-                                isImportant = false,
-                                position = 0
-                            )
+        viewModel.sectionEvent.observe(viewLifecycleOwner) { event: SectionsEventContract ->
+            when (event) {
+                is SectionsEventContract.ShowAllSections -> {
+                    // Add first "No category" item to list
+                    val newListWithNoSection = event.sectionEntities.toMutableList()
+                    newListWithNoSection.add(
+                        SectionEntity(
+                            id = 0,
+                            title = requireContext().resources.getString(R.string.no_section),
+                            createdAt = 0,
+                            editedAt = 0,
+                            icon = 0,
+                            isImportant = false,
+                            position = 0
                         )
-                        sectionChooseAdapter?.submitList(newListWithNoSection)
-                    }
+                    )
+                    sectionChooseAdapter?.submitList(newListWithNoSection)
                 }
-            }.launchIn(lifecycleScope)
+            }
+        }
     }
 
     override fun onDestroyView() {

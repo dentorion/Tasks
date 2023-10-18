@@ -1,5 +1,7 @@
 package com.entin.lighttasks.presentation.screens.section
 
+import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,8 +31,9 @@ class SectionViewModel @Inject constructor(
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
 ) : ViewModel() {
 
-    private val _sectionEvent = Channel<SectionsEventContract>()
-    val sectionEvent = _sectionEvent.receiveAsFlow()
+    val sectionEvent: MutableLiveData<SectionsEventContract> by lazy {
+        MutableLiveData<SectionsEventContract>()
+    }
 
     private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
     val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
@@ -56,7 +59,7 @@ class SectionViewModel @Inject constructor(
     private fun getAllSections() {
         viewModelScope.launch(Dispatchers.IO) {
             sectionRepository.getAllSections().collect { listOfSections ->
-                _sectionEvent.send(SectionsEventContract.ShowAllSections(listOfSections))
+                sectionEvent.postValue(SectionsEventContract.ShowAllSections(listOfSections))
             }
         }
     }

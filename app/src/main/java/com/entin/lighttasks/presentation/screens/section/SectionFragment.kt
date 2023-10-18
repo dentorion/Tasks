@@ -6,14 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.SectionPreferencesBinding
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.databinding.SectionPreferencesBinding
 import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionPreferencesAdapter
@@ -21,8 +18,6 @@ import com.entin.lighttasks.presentation.screens.section.adapter.SectionTouchHel
 import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class SectionFragment : Fragment(R.layout.section_preferences) {
@@ -101,14 +96,13 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     private fun stateObserver() {
-        viewModel.sectionEvent.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { event: SectionsEventContract ->
-                when (event) {
-                    is SectionsEventContract.ShowAllSections -> {
-                        sectionPreferencesAdapter?.submitList(event.sectionEntities)
-                    }
+        viewModel.sectionEvent.observe(viewLifecycleOwner) { event: SectionsEventContract ->
+            when (event) {
+                is SectionsEventContract.ShowAllSections -> {
+                    sectionPreferencesAdapter?.submitList(event.sectionEntities)
                 }
-            }.launchIn(lifecycleScope)
+            }
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
