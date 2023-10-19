@@ -14,48 +14,61 @@
         android:paddingBottom="24dp">
 
         <ImageView
+            android:id="@+id/add_edit_task_section_attach"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/checkbox_light_solid_background"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_title_layout"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:text="NO CATEGORY" />
+
+        <ImageView
             android:id="@+id/add_edit_task_voice"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="12dp"
             android:background="@drawable/voice_add_button_selector"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_link"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_important_checkbox"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_link"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_link"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <ImageButton
             android:id="@+id/add_edit_task_link"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="12dp"
             android:background="@drawable/link_add_button_selector"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_gallery_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_voice"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_gallery_photo"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_gallery_photo"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <ImageView
             android:id="@+id/add_edit_task_photo"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/photo_add_button_selector"
-            android:padding="4dp"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_important_checkbox"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_important_checkbox" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_gallery_photo"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <ImageView
             android:id="@+id/add_edit_task_gallery_photo"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="12dp"
             android:background="@drawable/gallery_image_add_button_selector"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_link"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_photo"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_photo" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <CheckBox
             android:id="@+id/add_edit_task_important_checkbox"
@@ -65,16 +78,17 @@
             android:buttonTint="@color/main_light"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_finished_checkbox"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_title_layout"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_finished_checkbox" />
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_finished_checkbox"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_edit_task_voice"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <CheckBox
             android:id="@+id/add_edit_task_finished_checkbox"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:button="@drawable/custom_task_done_checkbox"
             android:buttonTint="@color/main_light"
             android:clickable="true"
@@ -82,55 +96,56 @@
             android:paddingStart="@dimen/checkbox_done_padding_start_add_edit"
             android:paddingEnd="@dimen/checkbox_done_padding_end_add_edit"
             android:text="@string/new_edit_fragment_done_checkbox_title"
+            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/add_edit_task_important_checkbox"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_section_attach" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_edit_task_ok_button"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="6dp"
             android:backgroundTint="@color/main"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/new_edit_fragment_btn_ok"
             android:textColor="@color/white"
             android:textSize="6pt"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_voice"
-            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_title_layout"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_voice" />
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_message_layout"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_title_layout" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_edit_task_title_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/title_margin_start_add_edit"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/title_margin_end_add_edit"
+            android:layout_marginEnd="8dp"
             android:hint="@string/new_edit_fragment_field_title"
             android:textColorHint="@color/main"
             app:boxBackgroundColor="@color/main_light_extra"
             app:boxStrokeColor="@color/main"
             app:boxStrokeErrorColor="@color/red"
-            app:counterEnabled="true"
-            app:counterMaxLength="35"
+
             app:counterTextColor="@color/main"
             app:endIconMode="clear_text"
             app:endIconTint="@color/main"
             app:errorTextColor="@color/red"
             app:helperTextTextColor="@color/main"
             app:hintTextColor="@color/main"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_edit_task_ok_button"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_photo">
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_edit_task_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:inputType="text"
-                android:maxLength="35"
+                android:maxLength="25"
                 android:maxLines="1"
                 android:textColor="@color/main" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -227,8 +242,6 @@
             android:textColorHint="@color/main"
             app:boxStrokeColor="@color/main"
             app:boxStrokeErrorColor="@color/red"
-            app:counterEnabled="true"
-            app:counterMaxLength="1500"
             app:counterTextColor="@color/main"
             app:endIconMode="clear_text"
             app:endIconTint="@color/main"
@@ -237,7 +250,7 @@
             app:hintTextColor="@color/main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_title_layout">
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_section_attach">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_edit_task_message"
@@ -256,22 +269,20 @@
             android:id="@+id/imageView"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginTop="2dp"
             android:src="@drawable/ic_slide"
-            app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_category_recyclerview"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_message_layout"
-            app:layout_goneMarginStart="2dp" />
+            app:layout_constraintEnd_toEndOf="@+id/add_edit_task_section_attach"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_category_recyclerview" />
 
         <ImageView
             android:id="@+id/add_edit_task_circle_share"
             android:layout_width="55dp"
             android:layout_height="0dp"
-            android:layout_marginStart="-4dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_circle"
             app:layout_constraintBottom_toBottomOf="@+id/add_edit_task_category_recyclerview"
-            app:layout_constraintStart_toStartOf="@+id/add_edit_task_important_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/add_edit_task_category_recyclerview" />
 
         <ImageView
             android:id="@+id/add_edit_task_share"
@@ -289,7 +300,7 @@
             android:id="@+id/add_edit_task_category_recyclerview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="25dp"
@@ -306,13 +317,13 @@
             android:layout_marginTop="32dp"
             android:src="@drawable/ic_three_dots_vertical"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
-            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_circle_share" />
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_category_recyclerview" />
 
         <TextView
             android:id="@+id/add_edit_task_label_attached"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Attached"
+            android:text="@string/attached"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@color/main"
@@ -341,7 +352,7 @@
             android:id="@+id/add_edit_task_label_advanced_points"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:src="@drawable/ic_three_dots_vertical"
             app:layout_constraintStart_toStartOf="@+id/add_edit_task_message_layout"
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_attached_nothing_label" />

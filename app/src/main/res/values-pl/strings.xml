@@ -115,4 +115,5 @@
     <string name="used_to_show_alarm_of_task">Used to show alarm of task</string>
     <string name="images_from_gallery">Zdjęcia z galerii</string>
     <string name="nothing_attached_yet">Nic jeszcze nie dołączone</string>
+    <string name="attached">Załącznik</string>
 </resources>

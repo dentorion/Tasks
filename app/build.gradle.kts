@@ -16,8 +16,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 18
-        versionName = "Alarm for task"
+        versionCode = 19
+        versionName = "Pick images from gallery"
     }
 
     buildTypes {
