@@ -117,5 +117,9 @@
     <string name="images_from_gallery">Imágenes de la galería</string>
     <string name="nothing_attached_yet">Nada adjunto todavía</string>
     <string name="attached">Adjuntos</string>
+    <string name="set_security_code">establecer seguridad</string>
+    <string name="minimum_4_characters">Mínimo 4 caracteres</string>
+    <string name="passwords_are_not_matching">Las contraseñas no coinciden</string>
+    <string name="repeat_password">Repita la contraseña</string>
 
 </resources>

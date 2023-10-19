@@ -43,6 +43,9 @@ import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
 import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
@@ -287,6 +290,32 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         } else {
                             activityResultLauncher?.launch(REQUIRED_PERMISSIONS)
                         }
+                    }
+                }
+            }
+            /** Security */
+            addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.apply {
+                this.isChecked = viewModel.hasPassword == true
+                isSecurityPickerShown(
+                    hasPassword = viewModel.hasPassword,
+                    isCheck = addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.isChecked
+                )
+                this.jumpDrawablesToCurrentState()
+            }
+            addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.setOnCheckedChangeListener { _, isCheck ->
+                isSecurityPickerShown(
+                    hasPassword = viewModel.hasPassword,
+                    isCheck = isCheck
+                )
+            }
+            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.apply {
+                setOnClickListener {
+                    val dialog = SecurityDialog().newInstance(
+                        type = SecurityType.Create(SecurityPlace.TASK),
+                        onSuccess = ::onSuccessPasswordAdd,
+                    )
+                    if (!dialog.isVisible) {
+                        dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
                     }
                 }
             }
@@ -580,6 +609,21 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    private fun isSecurityPickerShown(hasPassword: Boolean, isCheck: Boolean) {
+        binding.apply {
+            // Label
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabel.isVisible = isCheck.not()
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isCheck.not()
+            // Code picker
+            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isCheck
+            if(hasPassword) {
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = "Change security code"
+            } else {
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
+            }
+        }
+    }
+
     private fun updateAlarmDateTimeText() {
         if (viewModel.taskAlarm != ZERO_LONG) {
             binding.addEditTaskIncludeAlarm.addEditTaskAlarmPickerDate.text =
@@ -698,6 +742,13 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             } else {
                 View.INVISIBLE
             }
+    }
+
+    /** Set security password for saving */
+    private fun onSuccessPasswordAdd(code: String) {
+        viewModel.hasPassword = true
+        viewModel.password = code
+        isSecurityPickerShown(hasPassword = true, isCheck = true)
     }
 
     override fun onDestroyView() {

@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
+import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.GALLERY_PICKED_IMAGES
@@ -29,6 +31,7 @@ import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
+import com.entin.lighttasks.presentation.util.TASK_HAS_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_ICON
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
@@ -62,6 +65,7 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
+    private val securityRepository: SecurityRepository,
     private val sectionsRepository: SectionsRepository,
     private val alarmsRepository: AlarmsRepository,
 ) : ViewModel() {
@@ -237,6 +241,8 @@ class AddEditTaskViewModel @Inject constructor(
         MutableLiveData<String>()
     }
 
+    /** Alarm */
+
     var taskAlarm = state.get<Long>(TASK_ALARM) ?: taskEntity?.alarmTime ?: ZERO_LONG
         set(value) {
             field = value
@@ -250,6 +256,15 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     private var alarmId: Long = ZERO_LONG
+
+    /** Security */
+    var hasPassword = state.get<Boolean>(TASK_HAS_PASSWORD) ?: taskEntity?.hasPassword ?: false
+        set(value) {
+            field = value
+            state[TASK_HAS_PASSWORD] = value
+        }
+
+    var password: String? = null
 
     /** Get task id if exist */
     fun getTaskId(): Int? = taskEntity?.id
@@ -375,6 +390,20 @@ class AddEditTaskViewModel @Inject constructor(
                     alarmId = alarmId,
                     attachedGalleryImages = attachedGalleryImages
                 ),
+            )
+        }
+
+        setPasswordForTask()
+    }
+
+    private suspend fun setPasswordForTask() {
+        password?.let {
+            securityRepository.addSecurityItem(
+                SecurityEntity(
+                    password = it,
+                    taskId = taskEntity?.id ?: taskRepository.getNextTaskId().first(),
+                    sectionId = 0
+                )
             )
         }
     }

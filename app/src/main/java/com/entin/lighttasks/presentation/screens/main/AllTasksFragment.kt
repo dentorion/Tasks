@@ -252,11 +252,17 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onTaskClick(task: Task) {
+        // TODO: Check if task has password.
+        //  If yes -> Ask for password and check it, after invoke viewModel normally
+        //  If no -> invoke viewModel normally
         viewModel.onTaskClick(task)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun sectionSelected(sectionEntity: SectionEntity?) {
+        // TODO: Check if section has password.
+        //  If yes -> Ask for password and check it, after invoke viewModel normally
+        //  If no -> invoke viewModel normally
         viewModel.onSectionClick(sectionEntity?.id ?: ZERO)
     }
 

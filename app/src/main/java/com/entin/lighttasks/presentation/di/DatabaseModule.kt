@@ -6,6 +6,7 @@ import com.entin.lighttasks.data.db.dao.AlarmsDao
 import com.entin.lighttasks.data.db.DataBase
 import com.entin.lighttasks.data.db.DataBase.Companion.DATABASE_NAME
 import com.entin.lighttasks.data.db.dao.SectionsDao
+import com.entin.lighttasks.data.db.dao.SecurityDao
 import com.entin.lighttasks.data.db.dao.TaskDao
 import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import dagger.Module
@@ -45,6 +46,10 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideAlarmsDao(db: DataBase): AlarmsDao = db.getAlarmsDAO()
+
+    @Singleton
+    @Provides
+    fun provideSecurityDao(db: DataBase): SecurityDao = db.getSecurityDAO()
 
     @Singleton
     @Provides

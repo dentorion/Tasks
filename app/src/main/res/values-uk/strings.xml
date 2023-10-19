@@ -117,4 +117,8 @@
     <string name="images_from_gallery">Зображення з галереї</string>
     <string name="nothing_attached_yet">Поки що нічого не додано</string>
     <string name="attached">Додано</string>
+    <string name="set_security_code">встановити код безпеки</string>
+    <string name="minimum_4_characters">Мінімум 4 символи</string>
+    <string name="passwords_are_not_matching">Паролі не збігаються</string>
+    <string name="repeat_password">Повторіть пароль</string>
 </resources>

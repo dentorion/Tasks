@@ -411,5 +411,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_edit_task_include_alarm" />
 
+        <include
+            android:id="@+id/add_edit_task_include_security"
+            layout="@layout/include_security"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_task_include_intervals" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
