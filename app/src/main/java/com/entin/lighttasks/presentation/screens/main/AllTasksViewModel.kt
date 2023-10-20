@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.screens.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,20 +11,22 @@ import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.domain.entity.SortPreferences
-import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.toTaskEntity
 import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
+import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -39,6 +42,7 @@ class AllTasksViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
     private val sectionsRepository: SectionsRepository,
+    private val securityRepository: SecurityRepository,
     private val alarmsRepository: AlarmsRepository,
     private val preferences: Preferences,
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
@@ -120,6 +124,16 @@ class AllTasksViewModel @Inject constructor(
 
     fun onTaskClick(task: Task) {
         viewModelScope.launch {
+            securityRepository.getSecurityItemByTaskId(task.id).first()?.id?.let {
+                _tasksEvent.send(AllTasksEvent.CheckPassword(securityItemId = it, task = task))
+            } ?: kotlin.run {
+                _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
+            }
+        }
+    }
+
+    fun openTask(task: Task) {
+        viewModelScope.launch {
             _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
         }
     }
@@ -139,11 +153,17 @@ class AllTasksViewModel @Inject constructor(
 
     fun onUndoDeleteClick(task: Task) {
         diAppScope.launch {
-            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first().alarmId.toLong()
+            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first()?.alarmId?.toLong() ?: ZERO_LONG
             val taskEntity = task.toTaskEntity(alarmId)
             taskRepository.newTask(taskEntity).collect { result ->
                 if (result) _tasksEvent.send(AllTasksEvent.RestoreTaskWithoutPhoto)
             }
+        }
+    }
+
+    fun deletePasswordOfTask(taskId: Int) {
+        diAppScope.launch {
+            securityRepository.deleteSecurityItemByTaskId(taskId)
         }
     }
 
@@ -185,7 +205,7 @@ class AllTasksViewModel @Inject constructor(
     // Update list after manual changing position of Task
     fun updateAllTasks(list: List<Task>) = diAppScope.launch {
         list.forEach { task ->
-            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first().alarmId.toLong()
+            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first()?.alarmId?.toLong() ?: ZERO_LONG
             val taskEntity = task.toTaskEntity(alarmId)
             taskRepository.updateTask(taskEntity)
         }

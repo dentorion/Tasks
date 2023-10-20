@@ -121,5 +121,7 @@
     <string name="minimum_4_characters">Mínimo 4 caracteres</string>
     <string name="passwords_are_not_matching">Las contraseñas no coinciden</string>
     <string name="repeat_password">Repita la contraseña</string>
+    <string name="change_security_code">Cambiar código de seguridad</string>
+    <string name="wrong_password">Contraseña incorrecta</string>
 
 </resources>

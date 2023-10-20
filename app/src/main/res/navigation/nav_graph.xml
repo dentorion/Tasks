@@ -17,21 +17,16 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="event"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
         android:name="com.entin.lighttasks.presentation.screens.addedit.EditTaskFragment"
         android:label="{label}"
         tools:layout="@layout/fragment_edit_task">
-        <action
-            android:id="@+id/action_editTaskFragment_to_allTasksFragment"
-            app:destination="@id/allTasksFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"
-            app:popUpTo="@id/allTasksFragment"
-            app:popUpToInclusive="false" />
         <argument
             android:name="task"
             app:argType="com.entin.lighttasks.domain.entity.Task"
@@ -39,19 +34,12 @@
         <argument
             android:name="label"
             app:argType="string" />
+        <action
+            android:id="@+id/action_editTaskFragment_to_allTasksFragment2"
+            app:destination="@id/allTasksFragment"
+            app:popUpTo="@id/allTasksFragment"
+            app:popUpToInclusive="true" />
     </fragment>
-    <dialog
-        android:id="@+id/deleteTask"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog"
-        android:label="DeleteTask"
-        tools:layout="@layout/delete_task_dialog">
-        <argument
-            android:name="task"
-            app:argType="com.entin.lighttasks.domain.entity.Task" />
-    </dialog>
-    <action
-        android:id="@+id/action_global_deleteTask"
-        app:destination="@id/deleteTask" />
     <dialog
         android:id="@+id/deleteFinishedDialog"
         android:name="com.entin.lighttasks.presentation.screens.dialogs.DeleteFinishedTasksDialog"

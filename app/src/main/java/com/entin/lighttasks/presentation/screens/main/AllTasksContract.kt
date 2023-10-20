@@ -32,6 +32,9 @@ sealed class AllTasksEvent {
     // Navigate to section preferences
     object NavToSectionPreferences : AllTasksEvent()
 
+    // Check password code for security item with id
+    data class CheckPassword(val securityItemId: Int, val task: Task): AllTasksEvent()
+
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
 

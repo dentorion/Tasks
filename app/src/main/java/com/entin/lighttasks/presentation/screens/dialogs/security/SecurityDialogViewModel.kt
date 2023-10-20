@@ -1,14 +1,13 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.entin.lighttasks.domain.repository.SecurityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SecurityDialogViewModel @Inject constructor(
+    private val securityRepository: SecurityRepository,
     val state: SavedStateHandle,
 ) : ViewModel() {
 
@@ -25,14 +25,27 @@ class SecurityDialogViewModel @Inject constructor(
         MutableLiveData<SecurityStateContract>()
     }
 
-    private var insertedPassword: String? = null
+    var insertedPassword: String? = null
 
-    fun onSubmitClicked(type: SecurityType, password: String) {
+    fun onSubmitClicked(
+        type: SecurityType,
+        passwordFromUser: String,
+        securityItemId: Int? = null
+    ) {
         when (type) {
             is SecurityType.Check -> {
                 when (type.securityPlace) {
                     SecurityPlace.TASK -> {
-
+                        viewModelScope.launch(Dispatchers.IO) {
+                            securityItemId?.let { securityId ->
+                                val realPassword = securityRepository.getSecurityItemById(securityId).first().password
+                                if (realPassword == passwordFromUser) {
+                                    action.postValue(SecurityStateContract.SuccessOnCheckPassword)
+                                } else {
+                                    action.postValue(SecurityStateContract.ErrorOnCheckPassword)
+                                }
+                            }
+                        }
                     }
 
                     SecurityPlace.SECTION -> {
@@ -46,10 +59,10 @@ class SecurityDialogViewModel @Inject constructor(
                     SecurityPlace.TASK -> {
                         viewModelScope.launch {
                             if(insertedPassword == null) {
-                                insertedPassword = password
+                                insertedPassword = passwordFromUser
                                 action.value = SecurityStateContract.RepeatPassword
                             } else {
-                                if(insertedPassword.equals(password)) {
+                                if(insertedPassword.equals(passwordFromUser)) {
                                     insertedPassword = null
                                     action.value = SecurityStateContract.SuccessOnRepeatPassword
                                 } else {

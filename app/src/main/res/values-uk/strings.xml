@@ -121,4 +121,6 @@
     <string name="minimum_4_characters">Мінімум 4 символи</string>
     <string name="passwords_are_not_matching">Паролі не збігаються</string>
     <string name="repeat_password">Повторіть пароль</string>
+    <string name="change_security_code">Змінити код безпеки</string>
+    <string name="wrong_password">Помилковий пароль</string>
 </resources>

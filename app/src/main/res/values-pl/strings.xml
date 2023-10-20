@@ -120,4 +120,6 @@
     <string name="minimum_4_characters">Minimum 4 znaki</string>
     <string name="passwords_are_not_matching">Hasła nie pasują</string>
     <string name="repeat_password">Powtórz hasło</string>
+    <string name="change_security_code">Zmień kod ochronny</string>
+    <string name="wrong_password">Nieprawidłowe hasło</string>
 </resources>

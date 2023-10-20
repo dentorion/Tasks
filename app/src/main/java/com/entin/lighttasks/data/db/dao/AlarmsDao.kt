@@ -23,7 +23,7 @@ interface AlarmsDao {
      * Get alarm by task_id
      */
     @Query("SELECT * FROM alarms WHERE task_id = :taskId LIMIT 1")
-    fun getAllAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity>
+    fun getAllAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity?>
 
     /**
      * Get all alarms

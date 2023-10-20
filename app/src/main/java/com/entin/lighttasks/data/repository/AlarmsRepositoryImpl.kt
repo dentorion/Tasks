@@ -20,7 +20,7 @@ class AlarmsRepositoryImpl @Inject constructor(
     override fun getAllAlarmById(alarmId: Int): Flow<List<AlarmItemEntity>> =
         alarmsDao.getAllAlarmById(alarmId)
 
-    override fun getAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity> =
+    override fun getAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity?> =
         alarmsDao.getAllAlarmByTaskId(taskId)
 
     override fun getAllAlarms(): Flow<List<AlarmItemEntity>> =

@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +9,12 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SecurityDialogBinding
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -32,11 +27,17 @@ class SecurityDialog : DialogFragment() {
 
     private var type: SecurityType? = null
     private var onSuccess: ((String) -> Unit)? = null
+    private var securityItemId: Int? = null
 
-    fun newInstance(type: SecurityType, onSuccess: (String) -> Unit): SecurityDialog =
+    fun newInstance(
+        type: SecurityType,
+        onSuccess: (String) -> Unit,
+        securityItemId: Int? = null,
+    ): SecurityDialog =
         SecurityDialog().apply {
             this.type = type
             this.onSuccess = onSuccess
+            this.securityItemId = securityItemId
         }
 
     private fun setDialogWidth(width: Double) {
@@ -102,7 +103,7 @@ class SecurityDialog : DialogFragment() {
                 type?.let {
                     if(insertedPassword.isNotEmpty() && insertedPassword.isNotBlank()) {
                         if(insertedPassword.length >= 4) {
-                            viewModel.onSubmitClicked(it, insertedPassword)
+                            viewModel.onSubmitClicked(it, insertedPassword, securityItemId)
                         } else {
                             binding.securityDialogLabel.text =
                                 getString(R.string.minimum_4_characters)
@@ -120,6 +121,7 @@ class SecurityDialog : DialogFragment() {
     private fun stateObserver() {
         viewModel.action.observe(viewLifecycleOwner) { state: SecurityStateContract ->
             when(state) {
+                // Create password
                 SecurityStateContract.ErrorOnRepeatPassword -> {
                     binding.securityDialogLabel.text =
                         getString(R.string.passwords_are_not_matching)
@@ -134,6 +136,17 @@ class SecurityDialog : DialogFragment() {
                         it(binding.securityDialogPassword.text.toString())
                     }
                     dismiss()
+                }
+                // Check password
+                SecurityStateContract.ErrorOnCheckPassword -> {
+                    binding.securityDialogLabel.text =
+                        getString(R.string.wrong_password)
+                    binding.securityDialogPassword.text = EMPTY_STRING
+                }
+                SecurityStateContract.SuccessOnCheckPassword -> {
+                    onSuccess?.let {
+                        it(EMPTY_STRING)
+                    }
                 }
             }
         }
@@ -153,6 +166,7 @@ class SecurityDialog : DialogFragment() {
     }
 
     override fun onDestroyView() {
+        viewModel.insertedPassword = null
         _binding = null
         super.onDestroyView()
     }

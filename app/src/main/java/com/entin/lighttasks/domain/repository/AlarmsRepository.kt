@@ -17,7 +17,7 @@ interface AlarmsRepository {
     /**
      * Get alarm by task_id
      */
-    fun getAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity>
+    fun getAlarmByTaskId(taskId: Int): Flow<AlarmItemEntity?>
 
     /**
      * Get all alarms

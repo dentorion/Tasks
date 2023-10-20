@@ -20,7 +20,7 @@ class SecurityRepositoryImpl @Inject constructor(
     override fun getSecurityItemById(id: Int): Flow<SecurityEntity> =
         securityDao.getSecurityItemById(id)
 
-    override fun getSecurityItemByTaskId(taskId: Int): Flow<SecurityEntity> =
+    override fun getSecurityItemByTaskId(taskId: Int): Flow<SecurityEntity?> =
         securityDao.getSecurityItemByTaskId(taskId)
 
     override fun getSecurityItemBySectionId(sectionId: Int): Flow<SecurityEntity> =
@@ -31,6 +31,9 @@ class SecurityRepositoryImpl @Inject constructor(
 
     override suspend fun updatePasswordBySecurityItemId(id: Int, password: String) =
         securityDao.updatePasswordBySecurityItemId(id, password)
+
+    override suspend fun updateSecurityItemByTaskId(taskId: Int, password: String) =
+        securityDao.updateSecurityItemByTaskId(taskId, password)
 
     override suspend fun deleteSecurityItemById(id: Int) =
         securityDao.deleteSecurityItemById(id)

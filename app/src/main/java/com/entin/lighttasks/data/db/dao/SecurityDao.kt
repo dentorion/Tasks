@@ -20,7 +20,7 @@ interface SecurityDao {
      * Get security item by task_id
      */
     @Query("SELECT * FROM security WHERE task_id = :taskId LIMIT 1")
-    fun getSecurityItemByTaskId(taskId: Int): Flow<SecurityEntity>
+    fun getSecurityItemByTaskId(taskId: Int): Flow<SecurityEntity?>
 
     /**
      * Get security item by section_id
@@ -39,6 +39,12 @@ interface SecurityDao {
      */
     @Query("UPDATE security SET password = :password WHERE id = :id")
     suspend fun updatePasswordBySecurityItemId(id: Int, password: String)
+
+    /**
+     * Update password by task id
+     */
+    @Query("UPDATE security SET password = :password WHERE task_id = :taskId")
+    suspend fun updateSecurityItemByTaskId(taskId: Int, password: String)
 
     /**
      * Delete password by security item id

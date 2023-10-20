@@ -29,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
@@ -46,6 +47,7 @@ import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryIm
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
+import com.entin.lighttasks.presentation.screens.main.AllTasksFragment
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
@@ -56,6 +58,7 @@ import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.getCurrentDay
 import com.entin.lighttasks.presentation.util.getCurrentMonth
 import com.entin.lighttasks.presentation.util.getCurrentYear
+import com.entin.lighttasks.presentation.util.getDefaultStartDateTime
 import com.entin.lighttasks.presentation.util.getFinishDate
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.getStartDate
@@ -293,19 +296,24 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                     }
                 }
             }
-            /** Security */
+            /** Security password code */
             addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.apply {
-                this.isChecked = viewModel.hasPassword == true
+                this.isChecked = viewModel.isPasswordSecurityTurnOn
                 isSecurityPickerShown(
-                    hasPassword = viewModel.hasPassword,
-                    isCheck = addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.isChecked
+                    hasPassword = viewModel.hasPasswordOnStart,
+                    isCheckboxSwitchOn = this.isChecked
                 )
                 this.jumpDrawablesToCurrentState()
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.setOnCheckedChangeListener { _, isCheck ->
+                // If checkbox switched to off -> set new password (if it was) to null
+                if(!isCheck) {
+                    viewModel.passwordNew = null
+                }
+                viewModel.isPasswordSecurityTurnOn = isCheck
                 isSecurityPickerShown(
-                    hasPassword = viewModel.hasPassword,
-                    isCheck = isCheck
+                    hasPassword = viewModel.hasPasswordOnStart || (viewModel.passwordNew != null),
+                    isCheckboxSwitchOn = isCheck
                 )
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.apply {
@@ -562,7 +570,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                  * That's why after reselecting from event to range we can pass finish as tomorrow.
                  * But the best way to set finish date: start date + end of next day.
                  */
-                viewModel.taskExpireSecondDate = viewModel.defaultFinishDateTime
+                viewModel.taskExpireSecondDate = getDefaultStartDateTime()
                 viewModel.taskExpireSecondDate.toFormattedDateString()
             }
             else {
@@ -609,17 +617,19 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    private fun isSecurityPickerShown(hasPassword: Boolean, isCheck: Boolean) {
+    private fun isSecurityPickerShown(hasPassword: Boolean, isCheckboxSwitchOn: Boolean) {
         binding.apply {
             // Label
-            addEditTaskIncludeSecurity.addEditTaskSecurityLabel.isVisible = isCheck.not()
-            addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isCheck.not()
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabel.isVisible = isCheckboxSwitchOn.not()
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isCheckboxSwitchOn.not()
             // Code picker
-            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isCheck
+            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isCheckboxSwitchOn
             if(hasPassword) {
-                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = "Change security code"
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text =
+                    getString(R.string.change_security_code)
             } else {
-                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text =
+                    resources.getString(R.string.set_security_code)
             }
         }
     }
@@ -643,8 +653,15 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /** Event: navigate to AllTasksFragment with result */
     private fun eventNavBackWithResult(event: Int) {
         binding.addEditTaskTitle.clearFocus()
-        setFragmentResult("operationMode", bundleOf("mode" to event))
-        findNavController().popBackStack()
+        findNavController().navigate(R.id.action_editTaskFragment_to_allTasksFragment2,
+            bundleOf("event" to event),
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            }
+        )
     }
 
     /** Event observer */
@@ -729,7 +746,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         binding.addEditTaskGalleryImagesTag.isVisible = value
     }
 
-    /** LABEL INSTEAD OF TAGS */
+    /** Show label of attach instead of tags */
 
     private fun setLabelOfAttached() {
         binding.addEditTaskAttachedNothingLabel.visibility =
@@ -745,10 +762,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /** Set security password for saving */
-    private fun onSuccessPasswordAdd(code: String) {
-        viewModel.hasPassword = true
-        viewModel.password = code
-        isSecurityPickerShown(hasPassword = true, isCheck = true)
+    private fun onSuccessPasswordAdd(newPassword: String) {
+        viewModel.passwordNew = newPassword
+        isSecurityPickerShown(hasPassword = true, isCheckboxSwitchOn = true)
     }
 
     override fun onDestroyView() {
