@@ -14,6 +14,9 @@ sealed class AllTasksEvent {
     // Navigate to new / edit task fragment
     data class NavToEditTask(val task: Task) : AllTasksEvent()
 
+    // Navigate to new / edit task fragment from security code checking
+    data class NavToEditTaskFromSecurity(val task: Task) : AllTasksEvent()
+
     // Navigate to Dialog delete finished tasks
     object NavToDellFinishedTasks : AllTasksEvent()
 
@@ -32,11 +35,11 @@ sealed class AllTasksEvent {
     // Navigate to section preferences
     object NavToSectionPreferences : AllTasksEvent()
 
+    // Check password code for security item with id
+    data class CheckPassword(val securityItemId: Int, val task: Task): AllTasksEvent()
+
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
-
-    // Show snackBar after add / edit task
-    data class ShowAddEditTaskMessage(val type: AddEditTaskMessage) : AllTasksEvent()
 
     // Show snackBar if task was deleted and returned with UNDO button show snackBar smile
     object RestoreTaskWithoutPhoto : AllTasksEvent()

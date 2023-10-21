@@ -4,6 +4,7 @@ package com.entin.lighttasks.presentation.util
 
 import com.entin.lighttasks.R
 import com.entin.lighttasks.domain.entity.Months
+import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -113,3 +114,17 @@ fun getCurrentMonth() =
 
 fun getCurrentDay() =
     Date().date
+
+fun getDefaultStartDateTime(): Long =
+    getTimeMls(
+        hours = ZERO,
+        minutes = ONE,
+        seconds = ONE,
+    )
+
+fun getDefaultFinishDateTime(): Long =
+    getTimeMls(
+        hours = LAST_HOUR,
+        minutes = LAST_MINUTE,
+        seconds = LAST_SECOND - ONE,
+    ) + AddEditTaskViewModel.ONE_DAY_MLS

@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,11 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,30 +23,35 @@ import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.AllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.EDIT
-import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.NEW
+import com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
 import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
+import com.entin.lighttasks.presentation.util.TASK_EDIT
+import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private var _binding: AllTasksBinding? = null
     private val binding get() = _binding!!
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private val viewModel: AllTasksViewModel by viewModels()
+    private var securityDialog: SecurityDialog? = null
 
     private val tasksAdapter: AllTasksAdapter = AllTasksAdapter(
         listener = this,
@@ -57,9 +62,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     )
 
     private var sectionAdapter: SectionAdapter? = null
-
     private var searchView: SearchView? = null
-
     private var sectionId: Int = ZERO
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -67,7 +70,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -102,8 +104,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             }
         }
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private fun setupSectionsRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
             // Create SectionAdapter with preinstalled selection
@@ -132,8 +133,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             }
         }
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private fun setupTasksRecyclerViewItemTouchListener() {
         ItemTouchHelper(
             ItemTouchHelperCallback(
@@ -143,7 +143,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         ).attachToRecyclerView(binding.tasksRecyclerView)
     }
 
-    @ExperimentalCoroutinesApi
     private fun tasksObserver() {
         viewModel.tasks.observe(viewLifecycleOwner) { listTask ->
             showWelcome(listTask.isEmpty())
@@ -151,124 +150,200 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun setTasks(listtask: List<Task>) {
-        tasksAdapter.submitList(listtask)
+    private fun setTasks(listTask: List<Task>) {
+        tasksAdapter.submitList(listTask)
     }
 
     private fun setSections(listSectionEntities: List<SectionEntity>) {
         sectionAdapter?.submitList(listSectionEntities)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private fun setupFabCircleButton() {
         binding.fab.setOnClickListener {
             viewModel.addNewTask()
         }
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private fun setupResultListener() {
-        setFragmentResultListener("operationMode") { _, bundle ->
-            viewModel.onEditResultShow(bundle.getInt("mode"))
+        arguments?.let {
+            val resultType = it.getInt("event")
+            if (resultType != ZERO) {
+                when (resultType) {
+                    TASK_NEW -> getSnackBar(
+                        resources.getString(R.string.snack_bar_message_task_new),
+                        requireView()
+                    ).show()
+
+                    TASK_EDIT -> getSnackBar(
+                        resources.getString(R.string.snack_bar_message_task_edit),
+                        requireView()
+                    ).show()
+                }
+            }
+        }
+        arguments = null
+    }
+    
+    private fun stateObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksEvent.collect { allTasksEvent: AllTasksEvent ->
+                    when (allTasksEvent) {
+                        /**
+                         *  After deletion task show snackbar with undo button
+                         */
+                        is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
+                            getSnackBar(
+                                resources.getString(R.string.snack_bar_message_task_del),
+                                requireView(),
+                            ).apply {
+                                setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
+                                    viewModel.onUndoDeleteClick(allTasksEvent.task)
+                                }
+
+                            addCallback(
+                                object : Snackbar.Callback() {
+                                    override fun onDismissed(snackbar: Snackbar, event: Int) {
+                                        when (event) {
+                                            BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
+                                                viewModel.deletePasswordOfTask(allTasksEvent.task.id)
+                                            }
+
+                                            else -> {}
+                                        }
+                                    }
+
+                                    override fun onShown(snackbar: Snackbar) {
+                                        super.onShown(snackbar)
+                                    }
+                                }
+                            )
+                            }.show()
+                        }
+                        /**
+                         * Show dialog to delete all tasks with status finished
+                         */
+                        is AllTasksEvent.NavToDellFinishedTasks -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog(),
+                        )
+                        /**
+                         * After deletion all tasks with status finished show snackbar
+                         */
+                        is AllTasksEvent.ShowDellFinishedTasks -> getSnackBar(
+                            resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
+                            requireView(),
+                        ).show()
+                        /**
+                         * Show dialog to change language of Application
+                         */
+                        is AllTasksEvent.NavToChangeLanguage -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionGlobalChangeLanguageDialog(),
+                        )
+                        /**
+                         * After undo deletion of task show snackbar be careful
+                         */
+                        is AllTasksEvent.RestoreTaskWithoutPhoto -> Toast.makeText(
+                            requireContext(),
+                            getString(R.string.be_careful),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        /**
+                         * Navigation to edit task screen
+                         */
+                        is AllTasksEvent.NavToEditTask -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                allTasksEvent.task,
+                                resources.getString(R.string.new_edit_fragment_task_edit),
+                            )
+                        )
+                        /**
+                         * Navigation to edit task screen from security code checking
+                         */
+                        is AllTasksEvent.NavToEditTaskFromSecurity -> {
+                            Log.e("RESULT_TYPE", "NavToEditTaskFromSecurity")
+                            findNavController().navigate(
+                                AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                    allTasksEvent.task,
+                                    resources.getString(R.string.new_edit_fragment_task_edit),
+                                )
+                            )
+                            val transaction = childFragmentManager.beginTransaction()
+                            securityDialog?.let { transaction.remove(it) }
+                            transaction.commit()
+                        }
+                        /**
+                         * Navigation to creation task screen
+                         */
+                        is AllTasksEvent.NavToNewTask -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                null,
+                                resources.getString(R.string.new_edit_fragment_task_new),
+                            )
+                        )
+                        /**
+                         * Navigation to preferences screen
+                         */
+                        is AllTasksEvent.NavToChangePreferences -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionGlobalPreferencesFragment(),
+                        )
+                        /**
+                         * Navigation to sections screen
+                         */
+                        is AllTasksEvent.NavToSectionPreferences -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionGlobalSectionFragment(),
+                        )
+                        /**
+                         * Navigation to calendar screen
+                         */
+                        is AllTasksEvent.NavToCalendar -> findNavController().navigate(
+                            AllTasksFragmentDirections.actionGlobalCalendarFragment(),
+                        )
+                        /**
+                         * Check password code by security item id
+                         */
+                        is AllTasksEvent.CheckPassword -> {
+                            checkPasswordCode(allTasksEvent.securityItemId, allTasksEvent.task)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun stateObserver() {
-        viewModel.tasksEvent
-            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { event: AllTasksEvent ->
-                when (event) {
-                    is AllTasksEvent.ShowUndoDeleteTaskMessage -> getSnackBar(
-                        resources.getString(R.string.snack_bar_message_task_del),
-                        requireView(),
-                    ).setAction(resources.getString(R.string.snack_bar_btn_undo_deleted)) {
-                        viewModel.onUndoDeleteClick(event.task)
-                    }.show()
-
-                    is AllTasksEvent.NavToEditTask -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                            event.task,
-                            resources.getString(R.string.new_edit_fragment_task_edit),
-                        )
-                    )
-
-                    is AllTasksEvent.NavToNewTask -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
-                            null,
-                            resources.getString(R.string.new_edit_fragment_task_new),
-                        )
-                    )
-
-                    is AllTasksEvent.ShowAddEditTaskMessage -> {
-                        when (event.type) {
-                            EDIT -> getSnackBar(
-                                resources.getString(R.string.snack_bar_message_task_edit),
-                                requireView(),
-                            ).show()
-
-                            NEW -> getSnackBar(
-                                resources.getString(R.string.snack_bar_message_task_new),
-                                requireView(),
-                            ).show()
-                        }
-                    }
-
-                    is AllTasksEvent.NavToDellFinishedTasks -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionGlobalDeleteFinishedDialog(),
-                    )
-
-                    is AllTasksEvent.ShowDellFinishedTasks -> getSnackBar(
-                        resources.getString(R.string.snack_bar_all_finished_tasks_cleared),
-                        requireView(),
-                    ).show()
-
-                    is AllTasksEvent.NavToChangeLanguage -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionGlobalChangeLanguageDialog(),
-                    )
-
-                    is AllTasksEvent.RestoreTaskWithoutPhoto -> Toast.makeText(
-                        requireContext(),
-                        getString(R.string.be_careful),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-
-                    is AllTasksEvent.NavToChangePreferences -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionGlobalPreferencesFragment(),
-                    )
-
-                    is AllTasksEvent.NavToSectionPreferences -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionGlobalSectionFragment(),
-                    )
-
-                    is AllTasksEvent.NavToCalendar -> findNavController().navigate(
-                        AllTasksFragmentDirections.actionGlobalCalendarFragment(),
-                    )
-                }
-            }.launchIn(lifecycleScope)
-    }
-
     // Interface implementation for Adapter
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     override fun onTaskClick(task: Task) {
         viewModel.onTaskClick(task)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     private fun sectionSelected(sectionEntity: SectionEntity?) {
+        // TODO: Check if section has password.
+        //  If yes -> Ask for password and check it, after invoke viewModel normally
+        //  If no -> invoke viewModel normally
         viewModel.onSectionClick(sectionEntity?.id ?: ZERO)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     override fun onFinishedTaskClick(task: Task, mode: Boolean) {
         viewModel.onFinishedTaskClick(task, mode)
     }
 
     // Delete dialog for Adapter
-
+    
     private fun openDeleteDialog(task: Task) {
-        findNavController().navigate(AllTasksFragmentDirections.actionGlobalDeleteTask(task))
+        val dialog = DeleteTaskDialog().newInstance(
+            task = task,
+            onDelete = ::deleteTask
+        )
+        if (!dialog.isVisible) {
+            dialog.show(
+                childFragmentManager,
+                DeleteTaskDialog::class.simpleName
+            )
+        }
+    }
+
+    private fun deleteTask(task: Task) {
+        viewModel.onTaskSwipedDelete(task)
     }
 
     // Delete dialog for Adapter
@@ -283,7 +358,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     // Open dialog for Showing details of task
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun openTaskDetailsDialog(task: Task) {
         if(!viewModel.isManualSorting) {
             findNavController().navigate(
@@ -292,9 +366,23 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun updateAllTasks(listTaskEntities: List<Task>) {
         viewModel.updateAllTasks(listTaskEntities)
+    }
+    
+    // Security password code check dialog
+    
+    private fun checkPasswordCode(securityItemId: Int, task: Task) {
+        securityDialog = SecurityDialog().newInstance(
+            type = SecurityType.Check(SecurityPlace.TASK),
+            onSuccess = { viewModel.openTask(task) },
+            securityItemId = securityItemId,
+        )
+        securityDialog?.let {
+            if (!it.isVisible) {
+                it.show(childFragmentManager, SecurityDialog::class.simpleName)
+            }
+        }
     }
 
     // Empty List Welcome
@@ -313,7 +401,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     // Menu bar
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.bar_menu, menu)
 
@@ -344,7 +432,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_sort_by_date -> {
@@ -414,9 +502,11 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        securityDialog = null
         searchView?.setOnQueryTextListener(null)
         binding.tasksRecyclerView.adapter = null
         _binding = null
+        super.onDestroyView()
+
     }
 }

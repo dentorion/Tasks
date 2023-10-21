@@ -41,6 +41,9 @@ const val TASK_IS_EXPIRED = "isTaskExpired"
 const val TASK_IS_EVENT = "isEvent"
 const val TASK_IS_RANGE = "isRange"
 const val TASK_ALARM = "taskAlarm"
+const val TASK_HAS_PASSWORD = "hasPassword"
+const val TASK_PASSWORD = "password"
+const val IS_PASSWORD_TURN_ON = "isPasswordTurnOn"
 const val IS_ALARM = "isAlarm"
 const val GALLERY_PICKED_IMAGES = "galleryImages"
 
@@ -54,6 +57,8 @@ const val PHOTO_ATTACHED = "photoAttached"
 const val VOICE_ATTACHED = "voiceAttached"
 
 const val SHOW_IMAGE_DIALOG_ARGUMENT = "showDialogArgument"
+
+const val SECURITY_DIALOG_TYPE_ARGUMENT = "showDialogArgument"
 
 /**
  * Photo

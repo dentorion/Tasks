@@ -1,16 +1,15 @@
 package com.entin.lighttasks.presentation.screens.dialogs
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.entin.lighttasks.databinding.DeleteTaskDialogBinding
-import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -20,8 +19,15 @@ class DeleteTaskDialog : DialogFragment() {
 
     private var _binding: DeleteTaskDialogBinding? = null
     private val binding get() = _binding!!
-    private val args: DeleteTaskDialogArgs by navArgs()
-    private val vmLocal: AllTasksViewModel by viewModels()
+
+    private var task: Task? = null
+    private var onTaskSwipedDelete: ((Task) -> Unit)? = null
+
+    fun newInstance(task: Task, onDelete: (Task) -> Unit): DeleteTaskDialog =
+        DeleteTaskDialog().apply {
+            this.task = task
+            this.onTaskSwipedDelete = onDelete
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,16 +37,18 @@ class DeleteTaskDialog : DialogFragment() {
         isCancelable = false
         _binding = DeleteTaskDialogBinding.inflate(inflater, container, false)
 
-        val task: Task = args.task
-
         with(binding) {
             dialogDeleteTaskCancelButton.setOnClickListener {
                 dismiss()
             }
 
             dialogDeleteTaskOkButton.setOnClickListener {
-                vmLocal.onTaskSwipedDelete(task)
-                dismiss()
+                onTaskSwipedDelete?.let { onSwipe ->
+                    task?.let { task ->
+                        onSwipe(task)
+                    }
+                    dismiss()
+                }
             }
         }
 

@@ -217,6 +217,13 @@ class AllTasksAdapter(
         override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem == newItem
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.id == newItem.id && oldItem.position == newItem.position
+            oldItem.id == newItem.id &&
+                    oldItem.position == newItem.position &&
+                    oldItem.message == newItem.message &&
+                    oldItem.title == newItem.title &&
+                    oldItem.createdAt == newItem.createdAt &&
+                    oldItem.editedAt == newItem.editedAt &&
+                    oldItem.group == newItem.group &&
+                    oldItem.hasPassword == newItem.hasPassword
     }
 }

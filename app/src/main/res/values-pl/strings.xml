@@ -116,4 +116,10 @@
     <string name="images_from_gallery">Zdjęcia z galerii</string>
     <string name="nothing_attached_yet">Nic jeszcze nie dołączone</string>
     <string name="attached">Załącznik</string>
+    <string name="set_security_code">ustawić kod bezpieczeństwa</string>
+    <string name="minimum_4_characters">Minimum 4 znaki</string>
+    <string name="passwords_are_not_matching">Hasła nie pasują</string>
+    <string name="repeat_password">Powtórz hasło</string>
+    <string name="change_security_code">Zmień kod ochronny</string>
+    <string name="wrong_password">Nieprawidłowe hasło</string>
 </resources>

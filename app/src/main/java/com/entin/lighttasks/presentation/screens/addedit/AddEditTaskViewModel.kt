@@ -1,26 +1,26 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.repository.AlarmsRepository
 import com.entin.lighttasks.domain.repository.SectionsRepository
+import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.GALLERY_PICKED_IMAGES
 import com.entin.lighttasks.presentation.util.IS_ALARM
-import com.entin.lighttasks.presentation.util.LAST_HOUR
-import com.entin.lighttasks.presentation.util.LAST_MINUTE
-import com.entin.lighttasks.presentation.util.LAST_SECOND
+import com.entin.lighttasks.presentation.util.IS_PASSWORD_TURN_ON
 import com.entin.lighttasks.presentation.util.LINK_ATTACHED
-import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.PHOTO_ATTACHED
 import com.entin.lighttasks.presentation.util.SECTION
 import com.entin.lighttasks.presentation.util.TASK
@@ -29,6 +29,7 @@ import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_FIRST
 import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
+import com.entin.lighttasks.presentation.util.TASK_HAS_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_ICON
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
@@ -36,11 +37,13 @@ import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
 import com.entin.lighttasks.presentation.util.TASK_IS_RANGE
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
+import com.entin.lighttasks.presentation.util.TASK_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_TITLE
 import com.entin.lighttasks.presentation.util.VOICE_ATTACHED
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
-import com.entin.lighttasks.presentation.util.getTimeMls
+import com.entin.lighttasks.presentation.util.getDefaultFinishDateTime
+import com.entin.lighttasks.presentation.util.getDefaultStartDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -62,9 +65,13 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val taskRepository: TasksRepository,
+    private val securityRepository: SecurityRepository,
     private val sectionsRepository: SectionsRepository,
     private val alarmsRepository: AlarmsRepository,
 ) : ViewModel() {
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private val _editTaskChannel = Channel<EditTaskEventContract>()
     val editTaskChannel = _editTaskChannel.receiveAsFlow()
@@ -72,25 +79,11 @@ class AddEditTaskViewModel @Inject constructor(
     private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
     val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
 
-    // If task is editing - task from SavedStateHandle
+    /** If task is editing - task from SavedStateHandle */
     val taskEntity: Task? = state.get<Task>(TASK)
 
-    @Inject
-    lateinit var alarmScheduler: AlarmScheduler
-
-    // Start date for taskExpireFirstDate field
-    private val defaultStartDateTime: Long = getTimeMls(
-        hours = ZERO,
-        minutes = ONE,
-        seconds = ONE,
-    )
-
-    // Finish date for taskExpireSecondDate field
-    val defaultFinishDateTime: Long = getTimeMls(
-        hours = LAST_HOUR,
-        minutes = LAST_MINUTE,
-        seconds = LAST_SECOND - ONE,
-    ) + ONE_DAY_MLS
+    /** Get task id if exist */
+    fun getTaskId(): Int? = taskEntity?.id
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: taskEntity?.title ?: EMPTY_STRING
         set(value) {
@@ -115,16 +108,19 @@ class AddEditTaskViewModel @Inject constructor(
             field = value
             state[TASK_IMPORTANT] = value
         }
-
+    
+    /** Icon of task */
     var taskIcon: Int = state.get<Int>(TASK_ICON) ?: taskEntity?.group ?: ZERO
         set(value) {
             field = value
             state[TASK_ICON] = value
         }
 
+    /** Start and Finish dates for time limiting for task */
+
     var taskExpireFirstDate: Long =
         state.get<Long>(TASK_EXPIRE_DATE_FIRST) ?: taskEntity?.expireDateFirst
-        ?: defaultStartDateTime
+        ?: getDefaultStartDateTime()
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_FIRST] = value
@@ -132,11 +128,13 @@ class AddEditTaskViewModel @Inject constructor(
 
     var taskExpireSecondDate: Long =
         state.get<Long>(TASK_EXPIRE_DATE_SECOND) ?: taskEntity?.expireDateSecond
-        ?: defaultFinishDateTime
+        ?: getDefaultFinishDateTime()
         set(value) {
             field = value
             state[TASK_EXPIRE_DATE_SECOND] = value
         }
+
+    /** Task should be done in concrete day */
 
     var isEvent = state.get<Boolean>(TASK_IS_EVENT) ?: taskEntity?.isEvent ?: false
         set(value) {
@@ -144,21 +142,27 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_IS_EVENT] = value
         }
 
+    /** Task has a period of time to be done */
+
     var isRange = state.get<Boolean>(TASK_IS_RANGE) ?: taskEntity?.isRange ?: true
         set(value) {
             field = value
             state[TASK_IS_RANGE] = value
         }
 
+    /** If the checkbox of time limit is on */
+
     var isTaskExpired = state.get<Boolean>(TASK_IS_EXPIRED) ?: taskEntity?.isTaskExpired ?: false
         set(value) {
             field = value
             state[TASK_IS_EXPIRED] = value
             if (value) {
-                if (taskExpireFirstDate == ZERO_LONG) taskExpireFirstDate = defaultStartDateTime
-                if (taskExpireSecondDate == ZERO_LONG) taskExpireSecondDate = defaultFinishDateTime
+                if (taskExpireFirstDate == ZERO_LONG) taskExpireFirstDate = getDefaultStartDateTime()
+                if (taskExpireSecondDate == ZERO_LONG) taskExpireSecondDate = getDefaultFinishDateTime()
             }
         }
+
+    /** Link attach */
 
     var linkAttached = state.get<String>(LINK_ATTACHED) ?: taskEntity?.attachedLink ?: EMPTY_STRING
         set(value) {
@@ -175,6 +179,8 @@ class AddEditTaskViewModel @Inject constructor(
                 )
             }
         }
+
+    /** Photo from camera attach */
 
     var photoAttached =
         state.get<String>(PHOTO_ATTACHED) ?: taskEntity?.attachedPhoto ?: EMPTY_STRING
@@ -193,6 +199,8 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
+    /** Audio record attach */
+
     var voiceAttached =
         state.get<String>(VOICE_ATTACHED) ?: taskEntity?.attachedVoice ?: EMPTY_STRING
         set(value) {
@@ -209,6 +217,8 @@ class AddEditTaskViewModel @Inject constructor(
                 )
             }
         }
+
+    /** Picked images from gallery */
 
     var attachedGalleryImages: List<Uri> =
         state.get<List<Uri>>(GALLERY_PICKED_IMAGES) ?: taskEntity?.attachedGalleryImages ?: listOf()
@@ -227,6 +237,8 @@ class AddEditTaskViewModel @Inject constructor(
             }
         }
 
+    /**  Section */
+
     var sectionId: Int = state.get<Int>(SECTION) ?: taskEntity?.sectionId ?: ZERO
         set(value) {
             field = value
@@ -236,6 +248,8 @@ class AddEditTaskViewModel @Inject constructor(
     val sectionName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
+    /** Alarm */
 
     var taskAlarm = state.get<Long>(TASK_ALARM) ?: taskEntity?.alarmTime ?: ZERO_LONG
         set(value) {
@@ -251,8 +265,25 @@ class AddEditTaskViewModel @Inject constructor(
 
     private var alarmId: Long = ZERO_LONG
 
-    /** Get task id if exist */
-    fun getTaskId(): Int? = taskEntity?.id
+    /** Security */
+
+    var hasPasswordOnStart = state.get<Boolean>(TASK_HAS_PASSWORD) ?: taskEntity?.hasPassword ?: false
+        private set(value) {
+            field = value
+            state[TASK_HAS_PASSWORD] = value
+        }
+
+    var passwordNew: String? = null
+        set(value) {
+            field = value
+            state[TASK_PASSWORD] = value
+        }
+
+    var isPasswordSecurityTurnOn: Boolean = state.get<Boolean>(IS_PASSWORD_TURN_ON) ?: hasPasswordOnStart
+        set(value) {
+            field = value
+            state[IS_PASSWORD_TURN_ON] = value
+        }
 
     /** Get all icons */
     fun getTaskIcons() {
@@ -275,7 +306,9 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    /** OK button clicked while creating or editing task */
+    /** OK button clicked while creating or editing task.
+     *  Checks for errors and setup password, alarm
+     */
     fun saveTaskBtnClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             // Error: First date > Second date in range task, that has date of expire
@@ -292,37 +325,20 @@ class AddEditTaskViewModel @Inject constructor(
             }
             // Success: save task
             else {
-                // checkBox = true and alarm time set
-                if (alarmIsOn && taskAlarm != ZERO_LONG) {
-                    setAlarmAndTask()
-                }
-                // checkBox = true and alarm time not set
-                else if (alarmIsOn && taskAlarm == ZERO_LONG) {
-                    setTask(taskEntity)
-                }
-                // checkBox = false and time not set
-                else if (!alarmIsOn && taskAlarm == ZERO_LONG) {
-                    setTask(taskEntity)
-                }
-                // checkBox = false and alarm time set
-                else if (!alarmIsOn && taskAlarm != ZERO_LONG) {
-                    cancelAlarm()
-                    setTask(taskEntity)
-                }
+                // Password
+                setPassword()
+
+                // Alarm
+                setAlarmForTask()
+
+                // Save task
+                saveTask()
             }
         }
     }
 
-    private suspend fun setTask(taskEntity: Task?) {
-        val expireDateFirst = if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
-        val expireDateSecond = if (isTaskExpired && isEvent) {
-            expireDateFirst
-        } else if (isTaskExpired && isRange) {
-            taskExpireSecondDate
-        } else {
-            ZERO_LONG
-        }
-
+    /** Save task */
+    private suspend fun saveTask() {
         // Update
         if (taskEntity != null) {
             updateTask(
@@ -336,8 +352,8 @@ class AddEditTaskViewModel @Inject constructor(
                     editedAt = Date().time, // getTimeMls()
                     group = taskIcon,
                     position = taskEntity.position,
-                    expireDateFirst = expireDateFirst,
-                    expireDateSecond = expireDateSecond,
+                    expireDateFirst = getFirstExpireDateForTask(),
+                    expireDateSecond = getSecondExpireDateForTask(),
                     isTaskExpired = isTaskExpired,
                     isEvent = isEvent,
                     isRange = isRange,
@@ -363,8 +379,8 @@ class AddEditTaskViewModel @Inject constructor(
                     position = ZERO, // will be replaced in Repository
                     createdAt = Date().time, // getTimeMls()
                     editedAt = ZERO_LONG,
-                    expireDateFirst = expireDateFirst,
-                    expireDateSecond = expireDateSecond,
+                    expireDateFirst = getFirstExpireDateForTask(),
+                    expireDateSecond = getSecondExpireDateForTask(),
                     isTaskExpired = isTaskExpired,
                     isEvent = isEvent,
                     isRange = isRange,
@@ -379,15 +395,7 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    /** Update task with new data */
-    private suspend fun updateTask(taskEntity: TaskEntity) {
-        taskRepository.updateTask(taskEntity).apply {
-            state[TASK] = null
-            if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
-        }
-    }
-
-    /** Create new task */
+    /** Create new task implementation */
     private suspend fun saveNewTask(taskEntity: TaskEntity) {
         taskRepository.newTask(taskEntity).collect { result ->
             state[TASK] = null
@@ -399,12 +407,39 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    /** Set alarm for task */
-    private suspend fun setAlarmAndTask() {
+    /** Update task implementation */
+    private suspend fun updateTask(taskEntity: TaskEntity) {
+        taskRepository.updateTask(taskEntity).apply {
+            state[TASK] = null
+            if (this) _editTaskChannel.send(EditTaskEventContract.NavBackWithResult(TASK_EDIT))
+        }
+    }
+    
+    /** Set alarm for task while saving it */
+    private suspend fun setAlarmForTask() {
+        // checkBox = true and alarm time set
+        if (alarmIsOn && taskAlarm != ZERO_LONG) {
+            setAlarm()
+        }
+        // checkBox = true and alarm time not set
+        else if (alarmIsOn && taskAlarm == ZERO_LONG) {
+
+        }
+        // checkBox = false and time not set
+        else if (!alarmIsOn && taskAlarm == ZERO_LONG) {
+
+        }
+        // checkBox = false and alarm time set
+        else if (!alarmIsOn && taskAlarm != ZERO_LONG) {
+            cancelAlarm()
+        }
+    }
+
+    /** Set alarm implementation */
+    private suspend fun setAlarm() {
         // Set time for AlarmItem
         val localDateTimeOfAlarm = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(taskAlarm),
-            TimeZone.getDefault().toZoneId()
+            Instant.ofEpochMilli(taskAlarm), TimeZone.getDefault().toZoneId()
         ).atZone(ZoneId.systemDefault()).toEpochSecond() * ONE_SEC_MLS
 
         // TaskId for AlarmItem (next id of task)
@@ -422,11 +457,9 @@ class AddEditTaskViewModel @Inject constructor(
 
         // Add alarm to database and set alarmId
         alarmId = alarmsRepository.addAlarm(alarmItemEntity)
-
-        setTask(taskEntity)
     }
 
-    /** Cancel alarm for task */
+    /** Cancel alarm implementation */
     private fun cancelAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
             taskEntity?.let {
@@ -448,6 +481,54 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
+    /** Set password for task */
+    private suspend fun setPassword() {
+        val taskId = taskEntity?.id ?: taskRepository.getNextTaskId().first()
+
+        // Was password and new password set and security switch on
+        if (hasPasswordOnStart && passwordNew != null && isPasswordSecurityTurnOn) {
+            securityRepository.updateSecurityItemByTaskId(
+                taskId = taskId,
+                password = passwordNew!!,
+            )
+        }
+        // Was password and security switch off
+        if (hasPasswordOnStart && !isPasswordSecurityTurnOn) {
+            securityRepository.deleteSecurityItemByTaskId(taskEntity!!.id)
+        }
+        // Wasn't password and new password set and security switch on
+        if (!hasPasswordOnStart && passwordNew != null && isPasswordSecurityTurnOn) {
+            securityRepository.addSecurityItem(
+                SecurityEntity(password = passwordNew!!, taskId = taskId, sectionId = 0)
+            )
+        }
+        // Wasn't password and security switch off
+        if (!hasPasswordOnStart && !isPasswordSecurityTurnOn) {
+            // Do nothing
+        }
+    }
+    
+    /** Add to existing List of uri the List of uri of picked images from gallery to task  */
+    fun addListUriOfGalleryImages(listUri: List<Uri>) {
+        attachedGalleryImages = attachedGalleryImages.toMutableList().apply {
+            this.addAll(listUri)
+        }.toList()
+    }
+    
+    /** Dates that describe periods of time for task to be done. While saving task */
+    
+    private fun getFirstExpireDateForTask(): Long =
+        if (isTaskExpired) taskExpireFirstDate else ZERO_LONG
+
+    private fun getSecondExpireDateForTask(): Long =
+        if (isTaskExpired && isEvent) {
+            getFirstExpireDateForTask()
+        } else if (isTaskExpired && isRange) {
+            taskExpireSecondDate
+        } else {
+            ZERO_LONG
+        }
+
     /** Error to show: blank title */
     private suspend fun errorBlankText() {
         _editTaskChannel.send(EditTaskEventContract.ShowErrorBlankTitleAndMessage)
@@ -458,14 +539,9 @@ class AddEditTaskViewModel @Inject constructor(
         _editTaskChannel.send(EditTaskEventContract.ShowErrorDatesPicked)
     }
 
+    /** Error to show: error while setting alarm */
     private suspend fun errorAlarmTime() {
         _editTaskChannel.send(EditTaskEventContract.ShowErrorAlarmTime)
-    }
-
-    fun addListUriOfGalleryImages(listUri: List<Uri>) {
-        attachedGalleryImages = attachedGalleryImages.toMutableList().apply {
-            this.addAll(listUri)
-        }.toList()
     }
 
     companion object {

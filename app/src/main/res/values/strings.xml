@@ -130,4 +130,10 @@
     <string name="images_from_gallery">Images from gallery</string>
     <string name="nothing_attached_yet">Nothing attached yet</string>
     <string name="attached">Attached</string>
+    <string name="set_security_code">set security code</string>
+    <string name="minimum_4_characters">Minimum 4 characters</string>
+    <string name="passwords_are_not_matching">Passwords are not matching</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="change_security_code">Change security code</string>
+    <string name="wrong_password">Wrong password</string>
 </resources>

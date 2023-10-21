@@ -25,9 +25,12 @@ interface TaskDao {
     // SORT_BY_TITLE
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -38,9 +41,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -53,9 +59,12 @@ interface TaskDao {
     // SORT_BY_DATE
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -66,9 +75,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -81,9 +93,12 @@ interface TaskDao {
     // SORT_BY_IMPORTANT
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -94,9 +109,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -109,9 +127,12 @@ interface TaskDao {
     // SORT_BY_MANUAL
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND title LIKE '%' || :search || '%' " +
@@ -124,9 +145,12 @@ interface TaskDao {
     // SORT_BY_ICON
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND task_group = :groupId " +
@@ -137,9 +161,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
+                "FROM Tasks " +
+                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
                 "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
                 "AND task_group = :groupId " +
@@ -180,9 +207,12 @@ interface TaskDao {
     fun getLastPosition(): Flow<Int?>
 
     @Query(
-        "SELECT * " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
                 "FROM tasks " +
                 "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE expire_date_first >= :startExpireDate " +
                 "AND expire_date_first <= :finishExpireDate"
     )
@@ -191,9 +221,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
                 "FROM tasks " +
                 "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE expire_date_first >= :startExpireDate " +
                 "AND expire_date_first <= :finishExpireDate " +
                 "AND task_group = :iconGroup"
@@ -203,9 +236,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
                 "FROM tasks " +
                 "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
                 "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate)"
     )
@@ -214,9 +250,12 @@ interface TaskDao {
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT * " +
+        "SELECT DISTINCT Tasks.*, " +
+                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+                "Alarms.alarm_time AS alarm_time " +
                 "FROM tasks " +
                 "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
                 "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
                 "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate) " +
                 "AND (task_group = :iconGroup)"

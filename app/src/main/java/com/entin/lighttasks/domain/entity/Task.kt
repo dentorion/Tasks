@@ -29,7 +29,8 @@ data class Task(
     @ColumnInfo(name = "attached_voice") val attachedVoice: String,
     @ColumnInfo(name = "section_id") val sectionId: Int,
     @ColumnInfo(name = "alarm_time") val alarmTime: Long = ZERO_LONG,    // Join from Alarms
-    @ColumnInfo(name = "attached_gallery_images") val attachedGalleryImages: List<Uri>
+    @ColumnInfo(name = "attached_gallery_images") val attachedGalleryImages: List<Uri>,
+    @ColumnInfo(name = "has_password") val hasPassword: Boolean = false, // Join from Security
 ): Parcelable
 
 fun Task.toTaskEntity(alarmId: Long): TaskEntity = TaskEntity(
