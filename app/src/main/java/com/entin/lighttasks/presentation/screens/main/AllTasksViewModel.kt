@@ -134,7 +134,7 @@ class AllTasksViewModel @Inject constructor(
 
     fun openTask(task: Task) {
         viewModelScope.launch {
-            _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
+            _tasksEvent.send(AllTasksEvent.NavToEditTaskFromSecurity(task))
         }
     }
 
@@ -175,14 +175,6 @@ class AllTasksViewModel @Inject constructor(
 
     fun addNewTask() = viewModelScope.launch {
         _tasksEvent.send(AllTasksEvent.NavToNewTask)
-    }
-
-    // Messages
-    fun onEditResultShow(result: Int) = viewModelScope.launch {
-        when (result) {
-            TASK_NEW -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.NEW))
-            TASK_EDIT -> _tasksEvent.send(AllTasksEvent.ShowAddEditTaskMessage(AddEditTaskMessage.EDIT))
-        }
     }
 
     // Delete task with status finished

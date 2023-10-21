@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,13 +11,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
@@ -28,12 +27,12 @@ import com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
-import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.EDIT
-import com.entin.lighttasks.presentation.screens.main.AddEditTaskMessage.NEW
 import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
+import com.entin.lighttasks.presentation.util.TASK_EDIT
+import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
@@ -52,6 +51,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     private val binding get() = _binding!!
     
     private val viewModel: AllTasksViewModel by viewModels()
+    private var securityDialog: SecurityDialog? = null
 
     private val tasksAdapter: AllTasksAdapter = AllTasksAdapter(
         listener = this,
@@ -165,11 +165,23 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
     
     private fun setupResultListener() {
-        val args: AllTasksFragmentArgs by navArgs()
-        val resultType: Int = args.event
-        if(resultType != ZERO) {
-            viewModel.onEditResultShow(resultType)
+        arguments?.let {
+            val resultType = it.getInt("event")
+            if (resultType != ZERO) {
+                when (resultType) {
+                    TASK_NEW -> getSnackBar(
+                        resources.getString(R.string.snack_bar_message_task_new),
+                        requireView()
+                    ).show()
+
+                    TASK_EDIT -> getSnackBar(
+                        resources.getString(R.string.snack_bar_message_task_edit),
+                        requireView()
+                    ).show()
+                }
+            }
         }
+        arguments = null
     }
     
     private fun stateObserver() {
@@ -209,22 +221,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                             }.show()
                         }
                         /**
-                         * After adding new or editing existing task show snackbar
-                         */
-                        is AllTasksEvent.ShowAddEditTaskMessage -> {
-                            when (allTasksEvent.type) {
-                                EDIT -> getSnackBar(
-                                    resources.getString(R.string.snack_bar_message_task_edit),
-                                    requireView(),
-                                ).show()
-
-                                NEW -> getSnackBar(
-                                    resources.getString(R.string.snack_bar_message_task_new),
-                                    requireView(),
-                                ).show()
-                            }
-                        }
-                        /**
                          * Show dialog to delete all tasks with status finished
                          */
                         is AllTasksEvent.NavToDellFinishedTasks -> findNavController().navigate(
@@ -260,6 +256,21 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                                 resources.getString(R.string.new_edit_fragment_task_edit),
                             )
                         )
+                        /**
+                         * Navigation to edit task screen from security code checking
+                         */
+                        is AllTasksEvent.NavToEditTaskFromSecurity -> {
+                            Log.e("RESULT_TYPE", "NavToEditTaskFromSecurity")
+                            findNavController().navigate(
+                                AllTasksFragmentDirections.actionAllTasksFragmentToEditTaskFragment(
+                                    allTasksEvent.task,
+                                    resources.getString(R.string.new_edit_fragment_task_edit),
+                                )
+                            )
+                            val transaction = childFragmentManager.beginTransaction()
+                            securityDialog?.let { transaction.remove(it) }
+                            transaction.commit()
+                        }
                         /**
                          * Navigation to creation task screen
                          */
@@ -362,13 +373,15 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     // Security password code check dialog
     
     private fun checkPasswordCode(securityItemId: Int, task: Task) {
-        val dialog = SecurityDialog().newInstance(
+        securityDialog = SecurityDialog().newInstance(
             type = SecurityType.Check(SecurityPlace.TASK),
             onSuccess = { viewModel.openTask(task) },
             securityItemId = securityItemId,
         )
-        if (!dialog.isVisible) {
-            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+        securityDialog?.let {
+            if (!it.isVisible) {
+                it.show(childFragmentManager, SecurityDialog::class.simpleName)
+            }
         }
     }
 
@@ -489,9 +502,11 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        securityDialog = null
         searchView?.setOnQueryTextListener(null)
         binding.tasksRecyclerView.adapter = null
         _binding = null
+        super.onDestroyView()
+
     }
 }

@@ -38,7 +38,7 @@
             android:id="@+id/action_editTaskFragment_to_allTasksFragment2"
             app:destination="@id/allTasksFragment"
             app:popUpTo="@id/allTasksFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
     <dialog
         android:id="@+id/deleteFinishedDialog"

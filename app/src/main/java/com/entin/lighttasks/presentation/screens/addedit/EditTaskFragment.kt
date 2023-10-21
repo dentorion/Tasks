@@ -23,7 +23,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -47,7 +46,6 @@ import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryIm
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
-import com.entin.lighttasks.presentation.screens.main.AllTasksFragment
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
@@ -651,11 +649,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /** Event: navigate to AllTasksFragment with result */
-    private fun eventNavBackWithResult(event: Int) {
+    private fun navigateToMainScreen(event: Int) {
         binding.addEditTaskTitle.clearFocus()
         findNavController().navigate(R.id.action_editTaskFragment_to_allTasksFragment2,
             bundleOf("event" to event),
-            navOptions { // Use the Kotlin DSL for building NavOptions
+            navOptions {
                 anim {
                     enter = android.R.animator.fade_in
                     exit = android.R.animator.fade_out
@@ -671,7 +669,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 when (event) {
                     /** Navigation: Go back */
                     is EditTaskEventContract.NavBackWithResult -> {
-                        eventNavBackWithResult(event.typeNewOrEditorExist)
+                        navigateToMainScreen(event.typeNewOrEditorExist)
                     }
 
                     /** Error: Blank title text show */

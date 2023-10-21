@@ -1,6 +1,9 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +42,12 @@ class SecurityDialog : DialogFragment() {
             this.onSuccess = onSuccess
             this.securityItemId = securityItemId
         }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 
     private fun setDialogWidth(width: Double) {
         val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
@@ -168,6 +177,7 @@ class SecurityDialog : DialogFragment() {
     override fun onDestroyView() {
         viewModel.insertedPassword = null
         _binding = null
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         super.onDestroyView()
     }
 
