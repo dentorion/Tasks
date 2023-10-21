@@ -40,6 +40,7 @@ object DatabaseModule {
             .addMigrations(DbMigration().migrationFrom5To6)
             .addMigrations(DbMigration().migrationFrom6To7)
             .addMigrations(DbMigration().migrationFrom7To8)
+            .addMigrations(DbMigration().migrationFrom8To9)
             .addCallback(TaskGroupsCallback(provider))
             .build()
 

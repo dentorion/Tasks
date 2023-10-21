@@ -315,4 +315,21 @@ class DbMigration {
             database.execSQL("ALTER TABLE tasksNew RENAME TO tasks")
         }
     }
+
+    /**
+     * Migration From 8 to 9 version
+     */
+    val migrationFrom8To9 = object : Migration(8, 9) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Security
+
+            database.execSQL(
+                "CREATE TABLE security (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "password TEXT NOT NULL DEFAULT '', " +
+                        "section_id INTEGER NOT NULL DEFAULT 0, " +
+                        "task_id INTEGER NOT NULL DEFAULT 0)",
+            )
+        }
+    }
 }
