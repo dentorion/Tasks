@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
+import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.END
@@ -22,7 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class ItemTouchHelperCallback(
     private val tasksAdapterList: AllTasksAdapter,
     private val viewModel: AllTasksViewModel,
-) : ItemTouchHelper.SimpleCallback(UP or DOWN, START or END) {
+) : ItemTouchHelper.Callback() {
 
     /** ON MOVE */
     override fun onMove(
@@ -34,6 +35,11 @@ class ItemTouchHelperCallback(
             viewHolder.absoluteAdapterPosition,
             target.absoluteAdapterPosition,
         )
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        tasksAdapterList.clearView()
     }
 
     /** ON SWIPED */

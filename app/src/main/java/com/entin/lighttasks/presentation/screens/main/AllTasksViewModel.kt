@@ -196,11 +196,11 @@ class AllTasksViewModel @Inject constructor(
 
     // Update list after manual changing position of Task
     fun updateAllTasks(list: List<Task>) = diAppScope.launch {
-        list.forEach { task ->
+        val newListTask = list.map { task ->
             val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first()?.alarmId?.toLong() ?: ZERO_LONG
-            val taskEntity = task.toTaskEntity(alarmId)
-            taskRepository.updateTask(taskEntity)
+            task.toTaskEntity(alarmId)
         }
+        taskRepository.updateListTask(newListTask)
     }
 
     fun onTaskSortByIcon(task: Task) {

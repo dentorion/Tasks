@@ -25,155 +25,173 @@ interface TaskDao {
     // SORT_BY_TITLE
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, title ASC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, title ASC",
     )
     fun getTasksSortedByTitleAsc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, title DESC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, title DESC",
     )
     fun getTasksSortedByTitleDesc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     // SORT_BY_DATE
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, created_at ASC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, created_at ASC",
     )
     fun getTasksSortedByDateCreatedAsc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, created_at DESC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, created_at DESC",
     )
     fun getTasksSortedByDateCreatedDesc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     // SORT_BY_IMPORTANT
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, is_important ASC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, is_important ASC",
     )
     fun getTasksSortedByImportantAsc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY is_finished ASC, is_important DESC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY is_finished ASC, is_important DESC",
     )
     fun getTasksSortedByImportantDesc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     // SORT_BY_MANUAL
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND title LIKE '%' || :search || '%' " +
-                "ORDER BY position ASC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND title LIKE '%' || :search || '%' " +
+            "ORDER BY position ASC",
     )
     fun getTasksSortedByManualAsc(
-        search: String, hideFinished: Boolean, hideDatePick: Boolean
+        search: String,
+        hideFinished: Boolean,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     // SORT_BY_ICON
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND task_group = :groupId " +
-                "ORDER BY title ASC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND task_group = :groupId " +
+            "ORDER BY title ASC",
     )
     fun getTasksSortedByIconAsc(
-        hideFinished: Boolean, groupId: Int, hideDatePick: Boolean
+        hideFinished: Boolean,
+        groupId: Int,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM Tasks " +
-                "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
-                "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
-                "AND task_group = :groupId " +
-                "ORDER BY title DESC"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM Tasks " +
+            "LEFT JOIN Alarms ON Tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (is_finished != :hideFinished OR is_finished = 0) " +
+            "AND (is_task_expired != :hideDatePick OR is_task_expired = 0) " +
+            "AND task_group = :groupId " +
+            "ORDER BY title DESC",
     )
     fun getTasksSortedByIconDesc(
-        hideFinished: Boolean, groupId: Int, hideDatePick: Boolean
+        hideFinished: Boolean,
+        groupId: Int,
+        hideDatePick: Boolean,
     ): Flow<List<Task>>
 
     // Insert new Task with replace
@@ -207,61 +225,67 @@ interface TaskDao {
     fun getLastPosition(): Flow<Int?>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE expire_date_first >= :startExpireDate " +
-                "AND expire_date_first <= :finishExpireDate"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM tasks " +
+            "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE expire_date_first >= :startExpireDate " +
+            "AND expire_date_first <= :finishExpireDate",
     )
     fun getTasksWithStartExpireDate(
-        startExpireDate: Long, finishExpireDate: Long
+        startExpireDate: Long,
+        finishExpireDate: Long,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE expire_date_first >= :startExpireDate " +
-                "AND expire_date_first <= :finishExpireDate " +
-                "AND task_group = :iconGroup"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM tasks " +
+            "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE expire_date_first >= :startExpireDate " +
+            "AND expire_date_first <= :finishExpireDate " +
+            "AND task_group = :iconGroup",
     )
     fun getTasksWithStartExpireDateWithIcon(
-        startExpireDate: Long, finishExpireDate: Long, iconGroup: Int
+        startExpireDate: Long,
+        finishExpireDate: Long,
+        iconGroup: Int,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
-                "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate)"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM tasks " +
+            "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
+            "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate)",
     )
     fun getTasksWithStartFinishExpireDates(
-        startExpireDate: Long, finishExpireDate: Long
+        startExpireDate: Long,
+        finishExpireDate: Long,
     ): Flow<List<Task>>
 
     @Query(
-        "SELECT DISTINCT Tasks.*, " +
-                "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
-                "Alarms.alarm_time AS alarm_time " +
-                "FROM tasks " +
-                "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
-                "LEFT JOIN Security ON Tasks.id = Security.task_id " +
-                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
-                "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate) " +
-                "AND (task_group = :iconGroup)"
+        "SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM tasks " +
+            "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate) " +
+            "AND (expire_date_second >= expire_date_first AND expire_date_second <= :finishExpireDate) " +
+            "AND (task_group = :iconGroup)",
     )
     fun getTasksWithStartFinishExpireDatesWithIcon(
-        startExpireDate: Long, finishExpireDate: Long, iconGroup: Int
+        startExpireDate: Long,
+        finishExpireDate: Long,
+        iconGroup: Int,
     ): Flow<List<Task>>
 
     /**
@@ -293,8 +317,8 @@ interface TaskDao {
      */
     @Query(
         "SELECT COUNT(*) " +
-                "FROM tasks " +
-                "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)"
+            "FROM tasks " +
+            "WHERE (expire_date_first >= :startExpireDate AND expire_date_first <= :finishExpireDate)",
     )
     fun getCountTasksToday(startExpireDate: Long, finishExpireDate: Long): Flow<Int>
 }

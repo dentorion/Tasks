@@ -96,6 +96,10 @@ class TasksRepositoryImpl @Inject constructor(
     override suspend fun updateTask(taskEntity: TaskEntity): Boolean =
         tasksDao.updateTask(taskEntity) > ZERO
 
+    override suspend fun updateListTask(list: List<TaskEntity>) {
+        tasksDao.updateAllTasks(list)
+    }
+
     /**
      * Delete queries
      */

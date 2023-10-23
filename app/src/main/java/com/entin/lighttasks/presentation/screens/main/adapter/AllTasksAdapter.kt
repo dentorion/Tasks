@@ -1,5 +1,7 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
+import android.content.ClipData.Item
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.TaskItemBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
 import com.entin.lighttasks.presentation.util.convertDpToPixel
@@ -18,10 +21,10 @@ import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Collections
 import java.util.Date
+
 
 class AllTasksAdapter(
     private val listener: OnClickOnEmpty,
@@ -31,6 +34,7 @@ class AllTasksAdapter(
     private val updateDb: (List<Task>) -> Unit,
 ) : ListAdapter<Task, AllTasksAdapter.TaskViewHolder>(DiffCallback()), ItemTouchHelperAdapter {
 
+    private var newCurrentList: List<Task> = mutableListOf()
     private var job: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -44,7 +48,7 @@ class AllTasksAdapter(
     }
 
     inner class TaskViewHolder(
-        private val view: TaskItemBinding
+        private val view: TaskItemBinding,
     ) : RecyclerView.ViewHolder(view.root) {
         init {
             view.apply {
@@ -172,27 +176,26 @@ class AllTasksAdapter(
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        val newCurrentList = mutableListOf<Task>().apply { addAll(currentList) }
-
+        newCurrentList = mutableListOf<Task>().apply { addAll(currentList) }
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
-                Collections.swap(newCurrentList, i, i + 1)
+                Collections.swap(newCurrentList, i, i + ONE)
             }
         } else {
             for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(newCurrentList, i, i - 1)
+                Collections.swap(newCurrentList, i, i - ONE)
             }
         }
+        newCurrentList.mapIndexed { index, task -> task.position = index }
         submitList(newCurrentList)
+        return true
+    }
 
+    fun clearView() {
         job?.cancel()
         job = scope.launch {
-            delay(500L)
-            newCurrentList.mapIndexed { index, task -> task.position = index }
-            updateDb(newCurrentList)
+            updateDb(newCurrentList.toList())
         }
-
-        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -214,16 +217,20 @@ class AllTasksAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
-        override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem == newItem
+        override fun areItemsTheSame(oldItem: Task, newItem: Task) =
+            oldItem.id == newItem.id &&
+                    oldItem.title == newItem.title &&
+                    oldItem.message == newItem.message &&
+                    oldItem.isImportant == newItem.isImportant &&
+                    oldItem.alarmTime == newItem.alarmTime &&
+                    oldItem.position == newItem.position
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem.id == newItem.id &&
-                    oldItem.position == newItem.position &&
-                    oldItem.message == newItem.message &&
                     oldItem.title == newItem.title &&
-                    oldItem.createdAt == newItem.createdAt &&
-                    oldItem.editedAt == newItem.editedAt &&
-                    oldItem.group == newItem.group &&
-                    oldItem.hasPassword == newItem.hasPassword
+                    oldItem.message == newItem.message &&
+                    oldItem.isImportant == newItem.isImportant &&
+                    oldItem.alarmTime == newItem.alarmTime &&
+                    oldItem.position == newItem.position
     }
 }
