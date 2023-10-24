@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.section
 
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.domain.repository.SectionsRepository
+import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.ZERO
@@ -17,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +28,7 @@ import javax.inject.Named
 class SectionViewModel @Inject constructor(
     val state: SavedStateHandle,
     private val sectionRepository: SectionsRepository,
+    private val securityRepository: SecurityRepository,
     private val taskRepository: TasksRepository,
     private val preferences: Preferences,
     @Named("AppScopeDI") private val diAppScope: CoroutineScope,
@@ -134,5 +137,50 @@ class SectionViewModel @Inject constructor(
                 preferences.updateSection(ZERO)
             }
         }
+    }
+
+    fun checkPasswordForSectionById(sectionId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
+                sectionEvent.postValue(
+                    SectionsEventContract.CheckPassword(sectionId = sectionId, securityItemId = it)
+                )
+            }
+        }
+    }
+
+    fun checkPasswordForSectionDeletionById(section: SectionEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            securityRepository.getSecurityItemBySectionId(section.id).first()?.id?.let {
+                sectionEvent.postValue(
+                    SectionsEventContract.CheckPasswordDeletion(section = section, securityItemId = it)
+                )
+            }
+        }
+    }
+
+    fun setPassword(password: String, sectionId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            securityRepository.getSecurityItemBySectionId(sectionId).first()?.password?.let {
+                securityRepository.updateSecurityItemBySectionId(
+                    sectionId = sectionId,
+                    password = password,
+                )
+            } ?: kotlin.run {
+                securityRepository.addSecurityItem(
+                    SecurityEntity(password = password, taskId = ZERO, sectionId = sectionId)
+                )
+            }
+        }
+    }
+
+    fun deletePassword(sectionId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            securityRepository.deleteSecurityItemBySectionId(sectionId)
+        }
+    }
+
+    fun getSecurityItemIdBySectionId(id: Int): Int? {
+        TODO("Not yet implemented")
     }
 }

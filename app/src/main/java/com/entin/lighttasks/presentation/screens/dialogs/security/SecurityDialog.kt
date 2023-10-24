@@ -3,7 +3,6 @@ package com.entin.lighttasks.presentation.screens.dialogs.security
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -90,39 +89,9 @@ class SecurityDialog : DialogFragment() {
         isCancelable = true
         _binding = SecurityDialogBinding.inflate(inflater, container, false)
 
-        with(binding) {
+        stateObserver()
 
-            stateObserver()
-
-            securityDialogClear.setOnClickListener { clearInputCode() }
-
-            securityDialogNumber1.setOnClickListener { addSymbol(1) }
-            securityDialogNumber2.setOnClickListener { addSymbol(2) }
-            securityDialogNumber3.setOnClickListener { addSymbol(3) }
-            securityDialogNumber4.setOnClickListener { addSymbol(4) }
-            securityDialogNumber5.setOnClickListener { addSymbol(5) }
-            securityDialogNumber6.setOnClickListener { addSymbol(6) }
-            securityDialogNumber7.setOnClickListener { addSymbol(7) }
-            securityDialogNumber8.setOnClickListener { addSymbol(8) }
-            securityDialogNumber9.setOnClickListener { addSymbol(9) }
-            securityDialogNumber0.setOnClickListener { addSymbol(0) }
-
-            securityDialogSubmit.setOnClickListener {
-                val insertedPassword = binding.securityDialogPassword.text.toString()
-                type?.let {
-                    if(insertedPassword.isNotEmpty() && insertedPassword.isNotBlank()) {
-                        if(insertedPassword.length >= 4) {
-                            viewModel.onSubmitClicked(it, insertedPassword, securityItemId)
-                        } else {
-                            binding.securityDialogLabel.text =
-                                getString(R.string.minimum_4_characters)
-                        }
-                    } else {
-                        binding.securityDialogLabel.text = getString(R.string.minimum_4_characters)
-                    }
-                }
-            }
-        }
+        setupButtons()
 
         return binding.root
     }
@@ -148,13 +117,40 @@ class SecurityDialog : DialogFragment() {
                 }
                 // Check password
                 SecurityStateContract.ErrorOnCheckPassword -> {
-                    binding.securityDialogLabel.text =
-                        getString(R.string.wrong_password)
+                    binding.securityDialogLabel.text = getString(R.string.wrong_password)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
+
                 SecurityStateContract.SuccessOnCheckPassword -> {
                     onSuccess?.let {
                         it(EMPTY_STRING)
+                    }
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private fun setupButtons() {
+        with(binding) {
+            securityDialogClear.setOnClickListener { clearInputCode() }
+            securityDialogNumber1.setOnClickListener { addSymbol(1) }
+            securityDialogNumber2.setOnClickListener { addSymbol(2) }
+            securityDialogNumber3.setOnClickListener { addSymbol(3) }
+            securityDialogNumber4.setOnClickListener { addSymbol(4) }
+            securityDialogNumber5.setOnClickListener { addSymbol(5) }
+            securityDialogNumber6.setOnClickListener { addSymbol(6) }
+            securityDialogNumber7.setOnClickListener { addSymbol(7) }
+            securityDialogNumber8.setOnClickListener { addSymbol(8) }
+            securityDialogNumber9.setOnClickListener { addSymbol(9) }
+            securityDialogNumber0.setOnClickListener { addSymbol(0) }
+            securityDialogSubmit.setOnClickListener {
+                val insertedPassword = binding.securityDialogPassword.text.toString()
+                type?.let { securityType ->
+                    if (insertedPassword.isNotEmpty() && insertedPassword.isNotBlank() && insertedPassword.length >= 4) {
+                        viewModel.onSubmitClicked(securityType, insertedPassword, securityItemId)
+                    } else {
+                        binding.securityDialogLabel.text = getString(R.string.minimum_4_characters)
                     }
                 }
             }

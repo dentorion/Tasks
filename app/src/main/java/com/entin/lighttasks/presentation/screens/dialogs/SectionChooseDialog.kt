@@ -123,6 +123,8 @@ class SectionChooseDialog : DialogFragment() {
                     )
                     sectionChooseAdapter?.submitList(newListWithNoSection)
                 }
+
+                else -> {}
             }
         }
     }

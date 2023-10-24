@@ -13,6 +13,9 @@ import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.SectionPreferencesBinding
 import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionPreferencesAdapter
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionTouchHelperCallback
 import com.entin.lighttasks.presentation.util.ZERO
@@ -29,12 +32,9 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     private var sectionPreferencesAdapter: SectionPreferencesAdapter? = SectionPreferencesAdapter(
         onEdit = ::openEditSectionDialog,
         onDelete = ::openDeleteSectionDialog,
-        updateDb = ::updateAllSections
+        updateDb = ::updateAllSections,
+        onPasswordClick = ::onPasswordClick
     )
-
-    private fun updateAllSections(listTasks: List<SectionEntity>) {
-        viewModel.updateSections(listTasks)
-    }
 
     // Crate / Edit section dialog
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -97,10 +97,67 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     private fun stateObserver() {
         viewModel.sectionEvent.observe(viewLifecycleOwner) { event: SectionsEventContract ->
             when (event) {
-                is SectionsEventContract.ShowAllSections -> {
+                is SectionsEventContract.ShowAllSections ->
                     sectionPreferencesAdapter?.submitList(event.sectionEntities)
-                }
+
+                is SectionsEventContract.CheckPassword -> checkPassword(
+                    sectionId = event.sectionId, securityItemId = event.securityItemId
+                )
+
+                is SectionsEventContract.CheckPasswordDeletion -> checkPasswordForSectionDeletion(
+                    section = event.section, securityItemId = event.securityItemId
+                )
             }
+        }
+    }
+
+    private fun updateAllSections(listSection: List<SectionEntity>) {
+        viewModel.updateSections(listSection)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun onPasswordClick(section: SectionEntity) {
+        if (section.hasPassword) {
+            viewModel.checkPasswordForSectionById(section.id)
+        } else {
+            val dialog = SecurityDialog().newInstance(
+                type = SecurityType.Create(SecurityPlace.SECTION),
+                onSuccess = { password ->
+                    viewModel.setPassword(password, section.id)
+                }
+            )
+            if (!dialog.isVisible) {
+                dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun checkPassword(sectionId: Int, securityItemId: Int) {
+        val dialog = SecurityDialog().newInstance(
+            type = SecurityType.Check(SecurityPlace.SECTION),
+            onSuccess = { _ ->
+                viewModel.deletePassword(sectionId)
+            },
+            securityItemId = securityItemId
+        )
+        if (!dialog.isVisible) {
+            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun checkPasswordForSectionDeletion(section: SectionEntity, securityItemId: Int) {
+        val dialog = SecurityDialog().newInstance(
+            type = SecurityType.Check(SecurityPlace.SECTION),
+            onSuccess = { _ ->
+                setActualSection(section)
+                viewModel.deleteSection()
+            },
+            securityItemId = securityItemId
+        )
+        if (!dialog.isVisible) {
+            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
         }
     }
 
@@ -126,11 +183,15 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun openDeleteSectionDialog(sectionEntity: SectionEntity) {
-        if (!deleteSectionDialog.isVisible) {
-            setActualSection(sectionEntity)
-            deleteSectionDialog.show(
-                childFragmentManager, CreateEditSectionDialog::class.simpleName
-            )
+        if(sectionEntity.hasPassword) {
+            viewModel.checkPasswordForSectionDeletionById(sectionEntity)
+        } else {
+            if (!deleteSectionDialog.isVisible) {
+                setActualSection(sectionEntity)
+                deleteSectionDialog.show(
+                    childFragmentManager, CreateEditSectionDialog::class.simpleName
+                )
+            }
         }
     }
 

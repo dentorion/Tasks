@@ -1,14 +1,15 @@
 package com.entin.lighttasks.presentation.screens.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.domain.entity.SortPreferences
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.toTaskEntity
@@ -17,6 +18,7 @@ import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -121,7 +123,7 @@ class AllTasksViewModel @Inject constructor(
     fun onTaskClick(task: Task) {
         viewModelScope.launch {
             securityRepository.getSecurityItemByTaskId(task.id).first()?.id?.let {
-                _tasksEvent.send(AllTasksEvent.CheckPassword(securityItemId = it, task = task))
+                _tasksEvent.send(AllTasksEvent.CheckPasswordTask(securityItemId = it, task = task))
             } ?: kotlin.run {
                 _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
             }
@@ -219,7 +221,27 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
+    // Open section
     fun onSectionClick(sectionId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (sectionId == ZERO) {
+                openSection(sectionId)
+            } else {
+                securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
+                    _tasksEvent.send(
+                        AllTasksEvent.CheckPasswordSection(
+                            securityItemId = it,
+                            sectionId = sectionId
+                        )
+                    )
+                } ?: kotlin.run {
+                    openSection(sectionId)
+                }
+            }
+        }
+    }
+
+    fun openSection(sectionId: Int) {
         viewModelScope.launch {
             preferences.updateSection(sectionId)
         }

@@ -75,7 +75,6 @@ class CreateEditSectionDialog : DialogFragment() {
 
         with(binding) {
             /** Title */
-            Log.e("EBANINA", "Dialog section title should be: ${viewModel.currentSectionEntity?.title}")
             dialogAddEditSectionTitleValue.text =
                 SpannableStringBuilder(viewModel.sectionTitle)
 

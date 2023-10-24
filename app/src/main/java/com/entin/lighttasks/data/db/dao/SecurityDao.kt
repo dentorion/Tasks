@@ -26,7 +26,7 @@ interface SecurityDao {
      * Get security item by section_id
      */
     @Query("SELECT * FROM security WHERE section_id = :sectionId LIMIT 1")
-    fun getSecurityItemBySectionId(sectionId: Int): Flow<SecurityEntity>
+    fun getSecurityItemBySectionId(sectionId: Int): Flow<SecurityEntity?>
 
     /**
      * Add security item for task or section
@@ -45,6 +45,12 @@ interface SecurityDao {
      */
     @Query("UPDATE security SET password = :password WHERE task_id = :taskId")
     suspend fun updateSecurityItemByTaskId(taskId: Int, password: String)
+
+    /**
+     * Update password by task id
+     */
+    @Query("UPDATE security SET password = :password WHERE section_id = :sectionId")
+    suspend fun updateSecurityItemBySectionId(sectionId: Int, password: String)
 
     /**
      * Delete password by security item id

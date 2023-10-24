@@ -85,7 +85,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
         setupResultListener()
 
-        stateObserver()
+        eventObserver()
 
         setHasOptionsMenu(true)
     }
@@ -107,7 +107,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     
     private fun setupSectionsRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
-            // Create SectionAdapter with preinstalled selection
+            // Create SectionAdapter with prev.selection
             sectionId = viewModel.flowSortingPreferences.first().sectionId
             sectionAdapter = SectionAdapter(sectionId) { section ->
                 sectionSelected(section)
@@ -127,10 +127,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                 }
             }
 
-            // Fill sections
-            viewModel.sections.observe(viewLifecycleOwner) { listSections ->
-                setSections(listSections)
-            }
+            sectionsObserver()
         }
     }
     
@@ -150,6 +147,12 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
+    private fun sectionsObserver() {
+        viewModel.sections.observe(viewLifecycleOwner) { listSections ->
+            setSections(listSections)
+        }
+    }
+
     private fun setTasks(listTask: List<Task>) {
         tasksAdapter.submitList(listTask)
     }
@@ -157,7 +160,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     private fun setSections(listSectionEntities: List<SectionEntity>) {
         sectionAdapter?.submitList(listSectionEntities)
     }
-    
+
     private fun setupFabCircleButton() {
         binding.fab.setOnClickListener {
             viewModel.addNewTask()
@@ -183,8 +186,8 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
         arguments = null
     }
-    
-    private fun stateObserver() {
+
+    private fun eventObserver() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tasksEvent.collect { allTasksEvent: AllTasksEvent ->
@@ -301,8 +304,21 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                         /**
                          * Check password code by security item id
                          */
-                        is AllTasksEvent.CheckPassword -> {
-                            checkPasswordCode(allTasksEvent.securityItemId, allTasksEvent.task)
+                        is AllTasksEvent.CheckPasswordTask -> {
+                            checkPasswordCodeForTask(
+                                allTasksEvent.securityItemId,
+                                allTasksEvent.task
+                            )
+                        }
+
+                        /**
+                         * Check password code by security item id
+                         */
+                        is AllTasksEvent.CheckPasswordSection -> {
+                            checkPasswordCodeForSection(
+                                allTasksEvent.securityItemId,
+                                allTasksEvent.sectionId
+                            )
                         }
                     }
                 }
@@ -317,9 +333,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
     
     private fun sectionSelected(sectionEntity: SectionEntity?) {
-        // TODO: Check if section has password.
-        //  If yes -> Ask for password and check it, after invoke viewModel normally
-        //  If no -> invoke viewModel normally
         viewModel.onSectionClick(sectionEntity?.id ?: ZERO)
     }
     
@@ -369,18 +382,35 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     private fun updateAllTasks(listTaskEntities: List<Task>) {
         viewModel.updateAllTasks(listTaskEntities)
     }
-    
-    // Security password code check dialog
-    
-    private fun checkPasswordCode(securityItemId: Int, task: Task) {
+
+    // Security password code check dialog for task
+
+    private fun checkPasswordCodeForTask(securityItemId: Int, task: Task) {
         securityDialog = SecurityDialog().newInstance(
             type = SecurityType.Check(SecurityPlace.TASK),
             onSuccess = { viewModel.openTask(task) },
             securityItemId = securityItemId,
         )
-        securityDialog?.let {
-            if (!it.isVisible) {
-                it.show(childFragmentManager, SecurityDialog::class.simpleName)
+        securityDialog?.let { dialog ->
+            if (!dialog.isVisible) {
+                dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+            }
+        }
+    }
+
+    // Security password code check dialog for section
+
+    private fun checkPasswordCodeForSection(securityItemId: Int, sectionId: Int) {
+        securityDialog = SecurityDialog().newInstance(
+            type = SecurityType.Check(SecurityPlace.SECTION),
+            onSuccess = {
+                viewModel.openSection(sectionId)
+            },
+            securityItemId = securityItemId,
+        )
+        securityDialog?.let { dialog ->
+            if (!dialog.isVisible) {
+                dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
             }
         }
     }

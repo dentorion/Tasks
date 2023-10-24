@@ -29,54 +29,56 @@ class SecurityDialogViewModel @Inject constructor(
     var insertedPassword: String? = null
 
     fun onSubmitClicked(
-        type: SecurityType,
+        securityType: SecurityType,
         passwordFromUser: String,
         securityItemId: Int? = null
     ) {
-        when (type) {
+        when (securityType) {
             is SecurityType.Check -> {
-                when (type.securityPlace) {
-                    SecurityPlace.TASK -> {
-                        viewModelScope.launch(Dispatchers.IO) {
-                            securityItemId?.let { securityId ->
-                                val realPassword = securityRepository.getSecurityItemById(securityId).first().password
-                                if (realPassword == passwordFromUser) {
-                                    action.postValue(SecurityStateContract.SuccessOnCheckPassword)
-                                } else {
-                                    action.postValue(SecurityStateContract.ErrorOnCheckPassword)
-                                }
-                            }
-                        }
-                    }
+                when (securityType.securityPlace) {
+                    SecurityPlace.TASK -> checkPasswordCode(securityItemId, passwordFromUser)
 
-                    SecurityPlace.SECTION -> {
-
-                    }
+                    SecurityPlace.SECTION -> checkPasswordCode(securityItemId, passwordFromUser)
                 }
             }
 
             is SecurityType.Create -> {
-                when (type.securityPlace) {
-                    SecurityPlace.TASK -> {
-                        viewModelScope.launch {
-                            if(insertedPassword == null) {
-                                insertedPassword = passwordFromUser
-                                action.value = SecurityStateContract.RepeatPassword
-                            } else {
-                                if(insertedPassword.equals(passwordFromUser)) {
-                                    insertedPassword = null
-                                    action.value = SecurityStateContract.SuccessOnRepeatPassword
-                                } else {
-                                    insertedPassword = null
-                                    action.value = SecurityStateContract.ErrorOnRepeatPassword
-                                }
-                            }
-                        }
-                    }
+                when (securityType.securityPlace) {
+                    SecurityPlace.TASK -> createPasswordCode(passwordFromUser)
 
-                    SecurityPlace.SECTION -> {
+                    SecurityPlace.SECTION -> createPasswordCode(passwordFromUser)
+                }
+            }
+        }
+    }
 
-                    }
+    private fun createPasswordCode(passwordFromUser: String) {
+        viewModelScope.launch {
+            if (insertedPassword == null) {
+                insertedPassword = passwordFromUser
+                action.value = SecurityStateContract.RepeatPassword
+            } else {
+                if (insertedPassword.equals(passwordFromUser)) {
+                    insertedPassword = null
+                    action.value = SecurityStateContract.SuccessOnRepeatPassword
+                } else {
+                    insertedPassword = null
+                    action.value = SecurityStateContract.ErrorOnRepeatPassword
+                }
+            }
+        }
+    }
+
+    private fun checkPasswordCode(securityItemId: Int?, passwordFromUser: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            securityItemId?.let { securityId ->
+                val realPassword = securityRepository.getSecurityItemById(securityId)
+                    .first()
+                    .password
+                if (realPassword == passwordFromUser) {
+                    action.postValue(SecurityStateContract.SuccessOnCheckPassword)
+                } else {
+                    action.postValue(SecurityStateContract.ErrorOnCheckPassword)
                 }
             }
         }

@@ -1,19 +1,25 @@
 package com.entin.lighttasks.presentation.screens.section.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionItemPreferencesBinding
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,6 +29,7 @@ class SectionPreferencesAdapter(
     private val onEdit: (element: SectionEntity) -> Unit,
     private val onDelete: (element: SectionEntity) -> Unit,
     private val updateDb: (List<SectionEntity>) -> Unit,
+    private val onPasswordClick: ((element: SectionEntity) -> Unit)? = null,
 ) : ListAdapter<SectionEntity, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
     ItemTouchHelperAdapter {
 
@@ -54,6 +61,21 @@ class SectionPreferencesAdapter(
                 sectionTitle.text = sectionEntity.title
                 sectionIcon.setImageResource(getIconTaskDrawable(sectionEntity.icon))
                 sectionImportant.isVisible = sectionEntity.isImportant
+                sectionChoosePassword.apply {
+                    if (onPasswordClick == null) {
+                        visibility = View.INVISIBLE
+                    } else {
+                        val iconForPasswordButton = if (sectionEntity.hasPassword) {
+                            R.drawable.ic_unlock
+                        } else {
+                            R.drawable.ic_lock
+                        }
+                        setImageResource(iconForPasswordButton)
+                        setOnClickListener {
+                            onPasswordClick.let { onClick -> onClick(sectionEntity) }
+                        }
+                    }
+                }
                 sectionUpdate.setOnClickListener {
                     onEdit(sectionEntity)
                 }

@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionItemChooseBinding
 import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable

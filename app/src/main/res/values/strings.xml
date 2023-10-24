@@ -40,7 +40,7 @@
     <string name="dialog_delete_message">Clear all finished tasks?</string>
     <string name="dialog_delete_no">NO</string>
     <string name="dialog_delete_yes">YES</string>
-    <string name="dialog_delete_task">Delete Task?</string>
+    <string name="dialog_delete_task">Deletion confirm</string>
     <string name="dialog_delete_section">Delete Group?</string>
     <string name="dialog_sort_task">Sort task by image?</string>
 

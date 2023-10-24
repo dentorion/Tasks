@@ -19,7 +19,11 @@ interface SectionsDao {
     /**
      * Get all sections
      */
-    @Query("SELECT * FROM sections ORDER BY position ASC")
+    @Query("SELECT Sections.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password " +
+            "FROM sections " +
+            "LEFT JOIN Security ON Sections.id = Security.section_id " +
+            "ORDER BY position ASC")
     fun getAllSections(): Flow<List<SectionEntity>>
 
     /**

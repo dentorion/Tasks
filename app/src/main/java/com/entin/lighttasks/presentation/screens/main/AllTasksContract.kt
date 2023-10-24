@@ -35,22 +35,15 @@ sealed class AllTasksEvent {
     // Navigate to section preferences
     object NavToSectionPreferences : AllTasksEvent()
 
-    // Check password code for security item with id
-    data class CheckPassword(val securityItemId: Int, val task: Task): AllTasksEvent()
+    // Check password code for security item by task id
+    data class CheckPasswordTask(val securityItemId: Int, val task: Task): AllTasksEvent()
+
+    // Check password code for security item by section id
+    data class CheckPasswordSection(val securityItemId: Int, val sectionId: Int): AllTasksEvent()
 
     // Show snackBar undo delete task
     data class ShowUndoDeleteTaskMessage(val task: Task) : AllTasksEvent()
 
     // Show snackBar if task was deleted and returned with UNDO button show snackBar smile
     object RestoreTaskWithoutPhoto : AllTasksEvent()
-}
-
-/**
- * Task was:
- * - edited
- * - created
- */
-enum class AddEditTaskMessage {
-    EDIT,
-    NEW,
 }

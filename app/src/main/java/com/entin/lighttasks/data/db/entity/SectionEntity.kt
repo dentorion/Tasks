@@ -25,4 +25,5 @@ data class SectionEntity(
     @ColumnInfo(name = "icon") val icon: Int,
     @ColumnInfo(name = "is_important") val isImportant: Boolean,
     @ColumnInfo(name = "position") var position: Int,
+    @ColumnInfo(name = "has_password") val hasPassword: Boolean = false, // Join from Security
 ) : Parcelable

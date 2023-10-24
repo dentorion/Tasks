@@ -22,7 +22,7 @@ interface SecurityRepository {
     /**
      * Get security item by section_id
      */
-    fun getSecurityItemBySectionId(sectionId: Int): Flow<SecurityEntity>
+    fun getSecurityItemBySectionId(sectionId: Int): Flow<SecurityEntity?>
 
     /**
      * Add security item for task or section
@@ -38,6 +38,11 @@ interface SecurityRepository {
      * Update security item by task id
      */
     suspend fun updateSecurityItemByTaskId(taskId: Int, password: String)
+
+    /**
+     * Update security item by section id
+     */
+    suspend fun updateSecurityItemBySectionId(sectionId: Int, password: String)
 
     /**
      * Delete password by security item id
