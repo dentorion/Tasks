@@ -43,9 +43,11 @@ import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
 import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
+import com.entin.lighttasks.presentation.screens.dialogs.linkUrl.LinkUrlChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
+import com.entin.lighttasks.presentation.util.COMMA
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
@@ -87,12 +89,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     /** Gallery image pick */
     private var galleryImagePickLauncher: ActivityResultLauncher<PickVisualMediaRequest>? = null
-
-    /** Link add dialog */
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val linkAddEditDialog by lazy {
-        LinkAddToTaskDialog()
-    }
 
     /** Photo add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -443,8 +439,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Link Attached */
             addEditTaskLink.setOnClickListener {
-                if (!linkAddEditDialog.isVisible) {
-                    linkAddEditDialog.show(childFragmentManager, LinkAddToTaskDialog::class.simpleName)
+                val linkAddDialog = LinkAddToTaskDialog().newInstance(
+                    onLinkSaveAction = ::linkSave
+                )
+                if (!linkAddDialog.isVisible) {
+                    linkAddDialog.show(childFragmentManager, LinkAddToTaskDialog::class.simpleName)
                 }
             }
             /** Voice Attached */
@@ -457,9 +456,15 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskUrlTag.apply{
                 setTagUrlVisibility(viewModel.linkAttached.isNotEmpty())
                 setOnClickListener {
-                    findNavController().navigate(
-                        EditTaskFragmentDirections.actionGlobalUrlWebView(viewModel.linkAttached)
+                    val dialog = LinkUrlChooseDialog().newInstance(
+                        onLinkUrlClicked = ::urlSelected,
+                        onLinkUrlDelete = ::urlDelete,
+                        listLinks = viewModel.linkAttached.split(COMMA)
+                            .filter { it.isNotEmpty() || it.isNotEmpty() }
                     )
+                    if (!dialog.isVisible) {
+                        dialog.show(childFragmentManager, LinkUrlChooseDialog::class.simpleName)
+                    }
                 }
             }
             /** Tag photo */
@@ -763,6 +768,32 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun onSuccessPasswordAdd(newPassword: String) {
         viewModel.passwordNew = newPassword
         isSecurityPickerShown(hasPassword = true, isCheckboxSwitchOn = true)
+    }
+
+    /**
+     * Add link to list of links
+     */
+    private fun linkSave(linkUrl: String) {
+        viewModel.linkAttached = viewModel.linkAttached + linkUrl.trim() + COMMA
+    }
+
+    /**
+     * Open webview for link
+     */
+    private fun urlSelected(linkUrl: String) {
+        findNavController().navigate(
+            EditTaskFragmentDirections.actionGlobalUrlWebView(linkUrl)
+        )
+    }
+
+    /**
+     * Delete link from list of links
+     */
+    private fun urlDelete(linkUrl: String) {
+        viewModel.linkAttached = viewModel.linkAttached
+            .split(COMMA)
+            .filter { it != linkUrl }
+            .joinToString(COMMA)
     }
 
     override fun onDestroyView() {

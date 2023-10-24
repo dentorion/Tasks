@@ -44,7 +44,7 @@
             android:id="@+id/dialog_link_attached_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="36dp"
             android:background="@drawable/important_background"
             android:padding="8dp"
             android:paddingHorizontal="10dp"
@@ -54,32 +54,10 @@
             android:textColor="@color/main"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/dialog_link_attached_open_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/link_attached_value_layout" />
-
-        <TextView
-            android:id="@+id/dialog_link_attached_open_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/important_background"
-            android:padding="8dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="8dp"
-            android:text="@string/open"
-            android:textAllCaps="true"
-            android:textColor="@color/main"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_cancel_button"
             app:layout_constraintEnd_toStartOf="@+id/dialog_link_attached_save_button"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/dialog_link_attached_cancel_button"
-            app:layout_constraintTop_toTopOf="@+id/dialog_link_attached_cancel_button"
-            tools:visibility="visible" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/link_attached_value_layout" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/link_attached_value_layout"
@@ -88,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="@string/attached_link"
+            android:minWidth="200dp"
             android:saveEnabled="false"
             android:textColorHint="@color/main"
             app:boxBackgroundColor="@color/main_light_extra"
@@ -95,7 +74,6 @@
             app:boxStrokeErrorColor="@color/red"
             app:counterEnabled="true"
             app:counterMaxLength="172"
-            android:minWidth="200dp"
             app:counterTextColor="@color/main"
             app:endIconMode="clear_text"
             app:endIconTint="@color/main"
@@ -140,10 +118,10 @@
             android:background="@drawable/title_dialogs"
             android:paddingHorizontal="12dp"
             android:paddingVertical="2dp"
-            android:textAllCaps="true"
             android:text="@string/add_link"
-            android:textSize="4pt"
+            android:textAllCaps="true"
             android:textColor="@color/white"
+            android:textSize="4pt"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,11 +141,11 @@
             android:textColor="@color/main"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_open_button"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_link_attached_cancel_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/dialog_link_attached_open_button"
-            app:layout_constraintTop_toTopOf="@+id/dialog_link_attached_open_button" />
+            app:layout_constraintStart_toEndOf="@+id/dialog_link_attached_cancel_button"
+            app:layout_constraintTop_toTopOf="@+id/dialog_link_attached_cancel_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

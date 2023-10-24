@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

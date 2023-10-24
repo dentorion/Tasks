@@ -7,17 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.LinkAttachedDialogBinding
-import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
-import com.entin.lighttasks.presentation.screens.addedit.EditTaskFragmentDirections
+import com.entin.lighttasks.presentation.screens.dialogs.linkUrl.LinkUrlChooseDialog
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
-import com.entin.lighttasks.presentation.util.isUrlLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -27,7 +22,18 @@ class LinkAddToTaskDialog : DialogFragment() {
 
     private var _binding: LinkAttachedDialogBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AddEditTaskViewModel by viewModels(ownerProducer = { requireParentFragment() })
+
+    private var onLinkSave: ((String) -> Unit)? = null
+
+    fun newInstance(onLinkSaveAction: (String) -> Unit): LinkAddToTaskDialog =
+        LinkAddToTaskDialog().apply {
+            this.onLinkSave = onLinkSaveAction
+        }
+
+    private fun setDialogWidth(width: Double) {
+        val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
+        dialog?.window?.setLayout(newWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
 
     private fun hideSystemUI() {
         dialog?.let { dialog ->
@@ -46,6 +52,17 @@ class LinkAddToTaskDialog : DialogFragment() {
         hideSystemUI()
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.let { dialog ->
+            dialog.window?.apply {
+                attributes?.windowAnimations = R.style.NoPaddingDialogTheme
+                setGravity(Gravity.CENTER)
+            }
+            setDialogWidth(if (isOrientationLandscape(context)) LinkUrlChooseDialog.LANDSCAPE_MODE else LinkUrlChooseDialog.FULL_SCREEN)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,32 +73,21 @@ class LinkAddToTaskDialog : DialogFragment() {
 
         with(binding) {
             /** Set value of url from viewModel */
-            linkAttachedValue.setText(viewModel.linkAttached)
-
-            /** Show OPEN button */
-            dialogLinkAttachedOpenButton.apply {
-                isVisible = linkAttachedValue.text.toString().isUrlLink()
-                setOnClickListener {
-                    findNavController().navigate(
-                        EditTaskFragmentDirections.actionGlobalUrlWebView(viewModel.linkAttached)
-                    )
-                }
-            }
+            linkAttachedValue.setText(EMPTY_STRING)
 
             /** Close dialog */
             dialogLinkAttachedCancelButton.setOnClickListener {
-                linkAttachedValue.setText(viewModel.linkAttached)
                 dismiss()
             }
 
             /** Save */
             dialogLinkAttachedSaveButton.setOnClickListener {
-                if (linkAttachedValue.text.toString().isUrlLink() ||
-                    linkAttachedValue.text.toString().isEmpty()
+                if (linkAttachedValue.text.toString().isNotEmpty() &&
+                    linkAttachedValue.text.toString().isNotBlank()
                 ) {
                     linkAttachedValueExample.visibility = View.INVISIBLE
                     linkAttachedValueIncorrect.visibility = View.INVISIBLE
-                    viewModel.linkAttached = linkAttachedValue.text.toString()
+                    onLinkSave?.let { action -> action(linkAttachedValue.text.toString()) }
                     dismiss()
                 } else {
                     linkAttachedValueExample.visibility = View.INVISIBLE
