@@ -26,6 +26,7 @@ class SectionPreferencesAdapter(
 ) : ListAdapter<SectionEntity, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
     ItemTouchHelperAdapter {
 
+    private var newCurrentList: List<SectionEntity> = mutableListOf()
     private var job: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -68,29 +69,32 @@ class SectionPreferencesAdapter(
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        val newCurrentList = mutableListOf<SectionEntity>().apply { addAll(currentList) }
-
-        if (fromPosition < toPosition) {
-            for (i in fromPosition until toPosition) {
-                Collections.swap(newCurrentList, i, i + 1)
+        try {
+            newCurrentList = mutableListOf<SectionEntity>().apply { addAll(currentList) }
+            if (fromPosition < toPosition) {
+                for (i in fromPosition until toPosition) {
+                    Collections.swap(newCurrentList, i, i + 1)
+                }
+            } else {
+                for (i in fromPosition downTo toPosition + 1) {
+                    Collections.swap(newCurrentList, i, i - 1)
+                }
             }
-        } else {
-            for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(newCurrentList, i, i - 1)
-            }
-        }
-        submitList(newCurrentList)
-
-        job?.cancel()
-        job = scope.launch {
-            delay(500L)
             newCurrentList
                 .filter { it.id != ZERO }
                 .mapIndexed { index, task -> task.position = index + ONE }
-            updateDb(newCurrentList)
+            submitList(newCurrentList)
+            return true
+        } catch (e: IndexOutOfBoundsException) {
+            return false
         }
+    }
 
-        return true
+    fun clearView() {
+        job?.cancel()
+        job = scope.launch {
+            updateDb(newCurrentList.toList())
+        }
     }
 
     companion object {

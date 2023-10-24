@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -18,15 +17,12 @@ import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
-import com.entin.lighttasks.presentation.util.TASK_EDIT
-import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -195,12 +191,14 @@ class AllTasksViewModel @Inject constructor(
     }
 
     // Update list after manual changing position of Task
-    fun updateAllTasks(list: List<Task>) = diAppScope.launch {
-        val newListTask = list.map { task ->
-            val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first()?.alarmId?.toLong() ?: ZERO_LONG
-            task.toTaskEntity(alarmId)
+    fun updateAllTasks(list: List<Task>) {
+        diAppScope.launch {
+            val listTaskEntity = list.map { task ->
+                val alarmId = alarmsRepository.getAlarmByTaskId(task.id).first()?.alarmId?.toLong() ?: ZERO_LONG
+                task.toTaskEntity(alarmId)
+            }
+            taskRepository.updateListTask(listTaskEntity)
         }
-        taskRepository.updateListTask(newListTask)
     }
 
     fun onTaskSortByIcon(task: Task) {

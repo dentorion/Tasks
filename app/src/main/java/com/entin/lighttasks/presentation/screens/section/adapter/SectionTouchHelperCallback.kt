@@ -22,8 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class SectionTouchHelperCallback(
-    private val sectionsAdapterList: SectionPreferencesAdapter,
-    private val viewModel: SectionViewModel,
+    private val sectionsAdapterList: SectionPreferencesAdapter
 ) : ItemTouchHelper.SimpleCallback(UP or DOWN, START or END) {
 
     /** ON MOVE */
@@ -38,9 +37,14 @@ class SectionTouchHelperCallback(
         )
     }
 
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        sectionsAdapterList.clearView()
+    }
+
     /** ON SWIPED */
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
+        // do nothing
     }
 
     /** TURN ON / OFF moving items */

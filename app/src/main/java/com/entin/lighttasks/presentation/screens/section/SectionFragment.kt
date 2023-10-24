@@ -88,8 +88,7 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         sectionPreferencesAdapter?.let { adapter ->
             ItemTouchHelper(
                 SectionTouchHelperCallback(
-                    sectionsAdapterList = adapter,
-                    viewModel = viewModel,
+                    sectionsAdapterList = adapter
                 ),
             ).attachToRecyclerView(binding.sectionPreferencesRecyclerView)
         }

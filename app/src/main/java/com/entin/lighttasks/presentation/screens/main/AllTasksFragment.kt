@@ -151,7 +151,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     private fun setTasks(listTask: List<Task>) {
-        Log.e("MOVE", "setTasks() !!!!!!!!!!!!!!")
         tasksAdapter.submitList(listTask)
     }
 

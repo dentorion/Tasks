@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.END
@@ -11,12 +10,8 @@ import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
- * ItemTouchHelper Callback for AllTasksAdapter
- * has 2 actions:
- *  - onSwipe -> change order of items
- *  - onMove -> for delete item.
- *
- *  If sorting is Manual -> item can be moved UP / DOWN by user
+ * ItemTouchHelper Callback for AllTasksAdapter.
+ * If sorting is Manual -> item can be moved UP / DOWN by user
  */
 
 @ExperimentalCoroutinesApi
