@@ -1,6 +1,7 @@
 package com.entin.lighttasks.domain.repository
 
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.domain.entity.Section
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -12,7 +13,7 @@ interface SectionsRepository {
     /**
      * Get all sections
      */
-    fun getAllSections(): Flow<List<SectionEntity>>
+    fun getAllSections(): Flow<List<Section>>
 
     /** Get max position of section table */
     fun getMaxPosition(): Flow<Int>
@@ -35,8 +36,8 @@ interface SectionsRepository {
     /**
      * Delete section
      */
-    suspend fun deleteSection(sectionEntity: SectionEntity): Int
+    suspend fun deleteSectionById(sectionId: Int): Int
 
     /** Get section by id */
-    suspend fun getSectionById(sectionId: Int): SectionEntity
+    fun getSectionById(sectionId: Int): Flow<String>
 }

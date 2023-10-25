@@ -19,9 +19,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.AllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
@@ -157,8 +157,8 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         tasksAdapter.submitList(listTask)
     }
 
-    private fun setSections(listSectionEntities: List<SectionEntity>) {
-        sectionAdapter?.submitList(listSectionEntities)
+    private fun setSections(listSection: List<Section>) {
+        sectionAdapter?.submitList(listSection)
     }
 
     private fun setupFabCircleButton() {
@@ -166,7 +166,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             viewModel.addNewTask()
         }
     }
-    
+
     private fun setupResultListener() {
         arguments?.let {
             val resultType = it.getInt("event")
@@ -327,21 +327,21 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     // Interface implementation for Adapter
-    
+
     override fun onTaskClick(task: Task) {
         viewModel.onTaskClick(task)
     }
-    
-    private fun sectionSelected(sectionEntity: SectionEntity?) {
-        viewModel.onSectionClick(sectionEntity?.id ?: ZERO)
+
+    private fun sectionSelected(section: Section?) {
+        viewModel.onSectionClick(section?.id ?: ZERO)
     }
-    
+
     override fun onFinishedTaskClick(task: Task, mode: Boolean) {
         viewModel.onFinishedTaskClick(task, mode)
     }
 
     // Delete dialog for Adapter
-    
+
     private fun openDeleteDialog(task: Task) {
         val dialog = DeleteTaskDialog().newInstance(
             task = task,

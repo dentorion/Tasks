@@ -2,6 +2,7 @@ package com.entin.lighttasks.data.repository
 
 import com.entin.lighttasks.data.db.dao.SectionsDao
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.ONE
@@ -27,7 +28,7 @@ class SectionsRepositoryImpl @Inject constructor(
         sectionsDao.getLastId().map { max -> max?.let { it + ONE } ?: ONE }
 
     /** Get all sections */
-    override fun getAllSections(): Flow<List<SectionEntity>> =
+    override fun getAllSections(): Flow<List<Section>> =
         sectionsDao.getAllSections()
 
     /**
@@ -51,10 +52,10 @@ class SectionsRepositoryImpl @Inject constructor(
     /**
      * Delete section
      */
-    override suspend fun deleteSection(sectionEntity: SectionEntity): Int =
-        sectionsDao.deleteSection(sectionEntity)
+    override suspend fun deleteSectionById(sectionId: Int): Int =
+        sectionsDao.deleteSection(sectionId)
 
     /** Get section by id */
-    override suspend fun getSectionById(sectionId: Int): SectionEntity =
+    override fun getSectionById(sectionId: Int): Flow<String> =
         sectionsDao.getSectionById(sectionId)
 }

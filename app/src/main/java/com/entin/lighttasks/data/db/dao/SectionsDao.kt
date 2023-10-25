@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.domain.entity.Section
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,7 +25,7 @@ interface SectionsDao {
             "FROM sections " +
             "LEFT JOIN Security ON Sections.id = Security.section_id " +
             "ORDER BY position ASC")
-    fun getAllSections(): Flow<List<SectionEntity>>
+    fun getAllSections(): Flow<List<Section>>
 
     /**
      * Create section
@@ -47,10 +48,10 @@ interface SectionsDao {
     /**
      * Delete section
      */
-    @Delete
-    suspend fun deleteSection(sectionEntity: SectionEntity): Int
+    @Query("DELETE FROM sections WHERE id = :sectionId")
+    suspend fun deleteSection(sectionId: Int): Int
 
     /** Get section by id */
-    @Query("SELECT * FROM sections WHERE id = :sectionId LIMIT 1")
-    suspend fun getSectionById(sectionId: Int): SectionEntity
+    @Query("SELECT name FROM sections WHERE id = :sectionId LIMIT 1")
+    fun getSectionById(sectionId: Int): Flow<String>
 }

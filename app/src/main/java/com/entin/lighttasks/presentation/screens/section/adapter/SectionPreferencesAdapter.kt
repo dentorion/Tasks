@@ -9,31 +9,26 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionItemPreferencesBinding
-import com.entin.lighttasks.data.db.entity.SectionEntity
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperAdapter
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Collections
 
 class SectionPreferencesAdapter(
-    private val onEdit: (element: SectionEntity) -> Unit,
-    private val onDelete: (element: SectionEntity) -> Unit,
-    private val updateDb: (List<SectionEntity>) -> Unit,
-    private val onPasswordClick: ((element: SectionEntity) -> Unit)? = null,
-) : ListAdapter<SectionEntity, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
+    private val onEdit: (element: Section) -> Unit,
+    private val onDelete: (element: Section) -> Unit,
+    private val updateDb: (List<Section>) -> Unit,
+    private val onPasswordClick: ((element: Section) -> Unit)? = null,
+) : ListAdapter<Section, SectionPreferencesAdapter.SectionViewHolder>(RadioButtonAdapterDiffCallback),
     ItemTouchHelperAdapter {
 
-    private var newCurrentList: List<SectionEntity> = mutableListOf()
+    private var newCurrentList: List<Section> = mutableListOf()
     private var job: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -54,7 +49,7 @@ class SectionPreferencesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            sectionEntity: SectionEntity,
+            sectionEntity: Section,
             position: Int,
         ) {
             binding.apply {
@@ -92,7 +87,7 @@ class SectionPreferencesAdapter(
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         try {
-            newCurrentList = mutableListOf<SectionEntity>().apply { addAll(currentList) }
+            newCurrentList = mutableListOf<Section>().apply { addAll(currentList) }
             if (fromPosition < toPosition) {
                 for (i in fromPosition until toPosition) {
                     Collections.swap(newCurrentList, i, i + 1)
@@ -120,17 +115,17 @@ class SectionPreferencesAdapter(
     }
 
     companion object {
-        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<SectionEntity>() {
+        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
             override fun areItemsTheSame(
-                oldItem: SectionEntity,
-                newItem: SectionEntity,
+                oldItem: Section,
+                newItem: Section,
             ): Boolean {
                 return oldItem.createdAt == newItem.createdAt && oldItem.editedAt == newItem.editedAt && oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(
-                oldItem: SectionEntity,
-                newItem: SectionEntity,
+                oldItem: Section,
+                newItem: Section,
             ): Boolean {
                 return oldItem == newItem
             }

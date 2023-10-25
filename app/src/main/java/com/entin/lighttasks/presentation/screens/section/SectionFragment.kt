@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.SectionPreferencesBinding
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
@@ -111,12 +111,12 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    private fun updateAllSections(listSection: List<SectionEntity>) {
+    private fun updateAllSections(listSection: List<Section>) {
         viewModel.updateSections(listSection)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun onPasswordClick(section: SectionEntity) {
+    private fun onPasswordClick(section: Section) {
         if (section.hasPassword) {
             viewModel.checkPasswordForSectionById(section.id)
         } else {
@@ -147,7 +147,7 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun checkPasswordForSectionDeletion(section: SectionEntity, securityItemId: Int) {
+    private fun checkPasswordForSectionDeletion(section: Section, securityItemId: Int) {
         val dialog = SecurityDialog().newInstance(
             type = SecurityType.Check(SecurityPlace.SECTION),
             onSuccess = { _ ->
@@ -172,9 +172,9 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun openEditSectionDialog(sectionEntity: SectionEntity) {
+    private fun openEditSectionDialog(section: Section) {
         if (!createEditSectionDialog.isVisible) {
-            setActualSection(sectionEntity)
+            setActualSection(section)
             createEditSectionDialog.show(
                 childFragmentManager, CreateEditSectionDialog::class.simpleName
             )
@@ -182,12 +182,12 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun openDeleteSectionDialog(sectionEntity: SectionEntity) {
-        if(sectionEntity.hasPassword) {
-            viewModel.checkPasswordForSectionDeletionById(sectionEntity)
+    private fun openDeleteSectionDialog(section: Section) {
+        if (section.hasPassword) {
+            viewModel.checkPasswordForSectionDeletionById(section)
         } else {
             if (!deleteSectionDialog.isVisible) {
-                setActualSection(sectionEntity)
+                setActualSection(section)
                 deleteSectionDialog.show(
                     childFragmentManager, CreateEditSectionDialog::class.simpleName
                 )
@@ -201,8 +201,8 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    private fun setActualSection(sectionEntity: SectionEntity?) {
-        viewModel.currentSectionEntity = sectionEntity
+    private fun setActualSection(section: Section?) {
+        viewModel.currentSectionEntity = section
     }
 
     override fun onDestroyView() {

@@ -9,9 +9,7 @@ import com.entin.lighttasks.presentation.util.ZERO
 import kotlinx.parcelize.Parcelize
 
 /**
- * Domain model Task
- * - represents item that user creates and use
- * - need to bee @keep to not be shrinks by Proguard
+ * Database model of Section
  */
 
 @Keep
@@ -25,5 +23,4 @@ data class SectionEntity(
     @ColumnInfo(name = "icon") val icon: Int,
     @ColumnInfo(name = "is_important") val isImportant: Boolean,
     @ColumnInfo(name = "position") var position: Int,
-    @ColumnInfo(name = "has_password") val hasPassword: Boolean = false, // Join from Security
 ) : Parcelable

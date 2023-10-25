@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.OrderSort
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.SortPreferences
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.domain.entity.toTaskEntity
@@ -88,7 +88,7 @@ class AllTasksViewModel @Inject constructor(
 
     /** Get sections (group of tasks) */
     private val sectionFlow = sectionsRepository.getAllSections()
-    var sections: LiveData<List<SectionEntity>> = sectionFlow.asLiveData()
+    var sections: LiveData<List<Section>> = sectionFlow.asLiveData()
 
     // SORTING Tasks
 

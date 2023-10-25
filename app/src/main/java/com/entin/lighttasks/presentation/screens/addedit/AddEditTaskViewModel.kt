@@ -297,8 +297,8 @@ class AddEditTaskViewModel @Inject constructor(
     fun getSectionById() {
         if(sectionId != ZERO) {
             viewModelScope.launch(Dispatchers.IO) {
-                val name = sectionsRepository.getSectionById(sectionId).title
-                sectionName.postValue(name)
+                val sectionTitle = sectionsRepository.getSectionById(sectionId).first()
+                sectionName.postValue(sectionTitle)
             }
         } else {
             sectionName.value = EMPTY_STRING

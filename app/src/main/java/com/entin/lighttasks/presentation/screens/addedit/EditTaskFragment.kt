@@ -32,8 +32,8 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
@@ -219,11 +219,11 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     /** Observe and setup section name from ViewModel  */
     private fun setupSectionNameObserver() {
-        viewModel.sectionName.observe(viewLifecycleOwner) {
-            binding.addEditTaskSectionSelection.text = if(it == EMPTY_STRING) {
+        viewModel.sectionName.observe(viewLifecycleOwner) { sectionTitle ->
+            binding.addEditTaskSectionSelection.text = if(sectionTitle == EMPTY_STRING) {
                 resources.getString(R.string.no_section)
             } else {
-                it
+                sectionTitle
             }
         }
     }
@@ -722,8 +722,8 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    private fun onSectionSelect(sectionEntity: SectionEntity) {
-        viewModel.sectionId = sectionEntity.id
+    private fun onSectionSelect(section: Section) {
+        viewModel.sectionId = section.id
         getSection()
     }
 

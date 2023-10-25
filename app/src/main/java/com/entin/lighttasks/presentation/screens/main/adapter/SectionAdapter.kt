@@ -8,21 +8,21 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionItemBinding
-import com.entin.lighttasks.data.db.entity.SectionEntity
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 
 class SectionAdapter(
     private val initialSection: Int,
-    private val onClick: (element: SectionEntity?) -> Unit,
-) : ListAdapter<SectionEntity, SectionAdapter.SectionViewHolder>(
+    private val onClick: (element: Section?) -> Unit,
+) : ListAdapter<Section, SectionAdapter.SectionViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
-    var selectedItem: SectionEntity? = null
+    var selectedItem: Section? = null
         private set
 
     override fun onCurrentListChanged(
-        previousList: MutableList<SectionEntity>,
-        currentList: MutableList<SectionEntity>
+        previousList: MutableList<Section>,
+        currentList: MutableList<Section>
     ) {
         super.onCurrentListChanged(previousList, currentList)
         if(selectedItem == null) {
@@ -49,33 +49,33 @@ class SectionAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            sectionEntity: SectionEntity,
+            section: Section,
             position: Int,
         ) {
             binding.apply {
                 val context = root.context
                 sectionRoot.apply {
-                    if (selectedItem == sectionEntity) {
+                    if (selectedItem == section) {
                         setBackgroundResource(R.drawable.section_selected_background)
                     } else {
                         setBackgroundResource(R.drawable.section_background)
                     }
-                    setOnClickListener { selectItem(sectionEntity, position) }
+                    setOnClickListener { selectItem(section, position) }
                 }
-                sectionTitle.text = sectionEntity.title
-                val color = if (sectionEntity.isImportant) {
+                sectionTitle.text = section.title
+                val color = if (section.isImportant) {
                     R.color.dark_red
                 } else {
                     R.color.rose
                 }
                 sectionTitle.setTextColor(context.getColor(color))
-                sectionIcon.setImageResource(getIconTaskDrawable(sectionEntity.icon))
+                sectionIcon.setImageResource(getIconTaskDrawable(section.icon))
             }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun selectItem(value: SectionEntity, position: Int?) {
+    private fun selectItem(value: Section, position: Int?) {
         when {
             value == selectedItem -> {
                 selectedItem = null
@@ -91,17 +91,17 @@ class SectionAdapter(
     }
 
     companion object {
-        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<SectionEntity>() {
+        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
             override fun areItemsTheSame(
-                oldItem: SectionEntity,
-                newItem: SectionEntity,
+                oldItem: Section,
+                newItem: Section,
             ): Boolean {
                 return oldItem.createdAt == newItem.createdAt && oldItem.editedAt == newItem.editedAt && oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(
-                oldItem: SectionEntity,
-                newItem: SectionEntity,
+                oldItem: Section,
+                newItem: Section,
             ): Boolean {
                 return oldItem == newItem
             }

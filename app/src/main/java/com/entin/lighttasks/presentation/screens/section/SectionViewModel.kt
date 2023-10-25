@@ -4,10 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.data.db.entity.SecurityEntity
+import com.entin.lighttasks.data.util.datastore.Preferences
+import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.domain.entity.toSectionEntity
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
@@ -44,7 +45,7 @@ class SectionViewModel @Inject constructor(
     var sectionTitle: String = EMPTY_STRING
     var sectionIcon: Int = ZERO
     var sectionImportant: Boolean = false
-    var currentSectionEntity: SectionEntity? = null
+    var currentSectionEntity: Section? = null
         set(value) {
             field = value
             sectionTitle = value?.title ?: EMPTY_STRING
@@ -80,7 +81,7 @@ class SectionViewModel @Inject constructor(
     fun onSaveButtonClick() {
         if (currentSectionEntity == null) {
             createSection(
-                SectionEntity(
+                Section(
                     id = ZERO,
                     title = sectionTitle,
                     createdAt = System.currentTimeMillis(),
@@ -102,27 +103,29 @@ class SectionViewModel @Inject constructor(
         }
     }
 
-    private fun createSection(sectionEntity: SectionEntity) {
+    private fun createSection(section: Section) {
         diAppScope.launch {
-            sectionRepository.createSection(sectionEntity)
+            sectionRepository.createSection(section.toSectionEntity())
         }
     }
 
     /**
      * Edit section
      */
-    private fun updateSection(sectionEntity: SectionEntity) {
+    private fun updateSection(section: Section) {
         viewModelScope.launch(Dispatchers.IO) {
-            sectionRepository.updateSection(sectionEntity)
+            sectionRepository.updateSection(section.toSectionEntity())
         }
     }
 
     /**
      * Edit list of sections
      */
-    fun updateSections(sectionEntities: List<SectionEntity>) {
+    fun updateSections(listSection: List<Section>) {
         diAppScope.launch(Dispatchers.IO) {
-            sectionRepository.updateSections(sectionEntities)
+            sectionRepository.updateSections(
+                listSection.map { it.toSectionEntity() }
+            )
         }
     }
 
@@ -132,7 +135,7 @@ class SectionViewModel @Inject constructor(
     fun deleteSection() {
         viewModelScope.launch(Dispatchers.IO) {
             currentSectionEntity?.let {
-                sectionRepository.deleteSection(it)
+                sectionRepository.deleteSectionById(it.id)
                 taskRepository.updateAllTasksWithDeletedSection(it.id)
                 preferences.updateSection(ZERO)
             }
@@ -149,11 +152,14 @@ class SectionViewModel @Inject constructor(
         }
     }
 
-    fun checkPasswordForSectionDeletionById(section: SectionEntity) {
+    fun checkPasswordForSectionDeletionById(section: Section) {
         viewModelScope.launch(Dispatchers.IO) {
             securityRepository.getSecurityItemBySectionId(section.id).first()?.id?.let {
                 sectionEvent.postValue(
-                    SectionsEventContract.CheckPasswordDeletion(section = section, securityItemId = it)
+                    SectionsEventContract.CheckPasswordDeletion(
+                        section = section,
+                        securityItemId = it
+                    )
                 )
             }
         }

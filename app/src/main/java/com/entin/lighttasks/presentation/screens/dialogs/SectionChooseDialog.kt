@@ -11,8 +11,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.databinding.SectionChooseDialogBinding
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SectionChooseAdapter
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import com.entin.lighttasks.presentation.screens.section.SectionsEventContract
@@ -25,7 +25,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SectionChooseDialog : DialogFragment() {
 
-    private var onSelect: ((SectionEntity) -> Unit)? = null
+    private var onSelect: ((Section) -> Unit)? = null
 
     private var _binding: SectionChooseDialogBinding? = null
     private val binding get() = _binding!!
@@ -36,7 +36,7 @@ class SectionChooseDialog : DialogFragment() {
         dismiss()
     }
 
-    fun setOnSelect(action: (SectionEntity) -> Unit) {
+    fun setOnSelect(action: (Section) -> Unit) {
         onSelect = action
     }
 
@@ -111,14 +111,15 @@ class SectionChooseDialog : DialogFragment() {
                     // Add first "No category" item to list
                     val newListWithNoSection = event.sectionEntities.toMutableList()
                     newListWithNoSection.add(
-                        SectionEntity(
+                        Section(
                             id = 0,
                             title = requireContext().resources.getString(R.string.no_section),
                             createdAt = 0,
                             editedAt = 0,
                             icon = 0,
                             isImportant = false,
-                            position = 0
+                            position = 0,
+                            hasPassword = false,
                         )
                     )
                     sectionChooseAdapter?.submitList(newListWithNoSection)
