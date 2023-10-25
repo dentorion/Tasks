@@ -16,18 +16,28 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 20
-        versionName = "Security code"
+        versionCode = 21
+        versionName = "Security code for task groups. List of links."
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                val outputFile = output.outputFile
+                val projectName = "LightTasks_"
+                val versionName = "v${variant.versionName}"
+                outputFile.renameTo(File(outputFile.parent, "$projectName$versionName.apk"))
+            }
         }
     }
     compileOptions {
