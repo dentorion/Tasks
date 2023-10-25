@@ -1,6 +1,7 @@
 package com.entin.lighttasks.domain.entity
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import com.entin.lighttasks.data.db.entity.SectionEntity
 import com.entin.lighttasks.presentation.util.ZERO
@@ -11,6 +12,7 @@ import kotlinx.parcelize.Parcelize
  */
 
 @Parcelize
+@Keep
 data class Section(
     @ColumnInfo(name = "id") val id: Int = ZERO,
     @ColumnInfo(name = "name") val title: String,

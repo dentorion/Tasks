@@ -2,6 +2,7 @@ package com.entin.lighttasks.domain.entity
 
 import android.net.Uri
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Index
 import com.entin.lighttasks.data.db.entity.TaskEntity
@@ -10,6 +11,7 @@ import com.entin.lighttasks.presentation.util.ZERO_LONG
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Keep
 data class Task(
     @ColumnInfo(name = "id") val id: Int = ZERO,
     @ColumnInfo(name = "title", index = true) val title: String,

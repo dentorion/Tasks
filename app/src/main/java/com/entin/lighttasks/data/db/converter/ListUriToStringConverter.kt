@@ -1,10 +1,12 @@
 package com.entin.lighttasks.data.db.converter
 
 import android.net.Uri
+import androidx.annotation.Keep
 import androidx.room.TypeConverter
 import com.entin.lighttasks.presentation.util.COMMA
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 
+@Keep
 class ListUriToStringConverter {
     @TypeConverter
     fun fromUriList(uriList: List<Uri>?): String {

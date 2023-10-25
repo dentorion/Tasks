@@ -1,7 +1,9 @@
 package com.entin.lighttasks.domain.entity
 
+import androidx.annotation.Keep
 import com.entin.lighttasks.presentation.util.ZERO
 
+@Keep
 enum class OrderSort {
     SORT_BY_DATE,
     SORT_BY_TITLE,

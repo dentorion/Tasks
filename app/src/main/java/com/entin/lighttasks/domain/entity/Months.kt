@@ -1,5 +1,8 @@
 package com.entin.lighttasks.domain.entity
 
+import androidx.annotation.Keep
+
+@Keep
 enum class Months(val number: Int) {
     January(1),
     February(2),

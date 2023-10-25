@@ -1,5 +1,6 @@
 package com.entin.lighttasks.data.db
 
+import androidx.annotation.Keep
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -31,6 +32,7 @@ import com.entin.lighttasks.data.db.entity.TaskEntity
         ListUriToStringConverter::class,
     ]
 )
+@Keep
 abstract class DataBase : RoomDatabase() {
 
     abstract fun getTaskDAO(): TaskDao

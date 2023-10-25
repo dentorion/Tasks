@@ -16,6 +16,7 @@
 
     <application
         android:name=".presentation.application.App"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:exported="true"
         android:icon="@mipmap/ic_launcher"

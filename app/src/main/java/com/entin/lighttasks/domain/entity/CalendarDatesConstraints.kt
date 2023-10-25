@@ -1,6 +1,7 @@
 package com.entin.lighttasks.domain.entity
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -9,6 +10,7 @@ import kotlinx.android.parcel.Parcelize
  */
 
 @Parcelize
+@Keep
 sealed class  CalendarDatesConstraints : Parcelable {
     data class StartInMonth(val start: Long, val finish: Long, val iconGroup: Int?) : CalendarDatesConstraints()
     data class StartFinishInMonth(val start: Long, val finish: Long, val iconGroup: Int?) : CalendarDatesConstraints()
