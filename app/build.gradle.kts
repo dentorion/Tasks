@@ -21,6 +21,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -30,16 +38,8 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
-
-        applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                val outputFile = output.outputFile
-                val projectName = "LightTasks_"
-                val versionName = "v${variant.versionName}"
-                outputFile.renameTo(File(outputFile.parent, "$projectName$versionName.apk"))
-            }
-        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
