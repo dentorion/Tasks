@@ -33,4 +33,5 @@ object Dependencies {
     val retrofit = Retrofit
     val lottieAnimations = Lottie
     val jwt = Jwt
+    val hyperion = Hyperion
 }

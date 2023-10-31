@@ -108,7 +108,7 @@ object Versions {
     /**
      * Canary Leak
      */
-    const val canary = "2.8.1"
+    const val canary = "2.12"
 
     /**
      * Splash screen
@@ -133,4 +133,19 @@ object Versions {
 
     /** JWT */
     const val jwtVersion = "4.4.0"
+
+    /**
+     * Hyperion
+     */
+    const val hyperionCore = "0.9.34"
+    const val hyperionaAttr = "0.9.34"
+    const val hyperionBuildConfig = "0.9.34"
+    const val hyperionCrash = "0.9.34"
+    const val hyperionDisk = "0.9.34"
+    const val hyperionGeigerCounter = "0.9.34"
+    const val hyperionMeasurement = "0.9.34"
+    const val hyperionPhoenix = "0.9.34"
+    const val hyperionRecorder = "0.9.34"
+    const val hyperionSharedPreferences = "0.9.34"
+    const val hyperionTimber = "0.9.34"
 }

@@ -127,8 +127,28 @@ dependencies {
         implementation(recyclerview)
     }
 
+    // Coil images
     Dependencies.coil.apply {
         api(coil)
+    }
+
+    // LeakCanary
+    Dependencies.leakCanary.apply {
+        debugImplementation(canary)
+    }
+
+    // Hyperion
+    Dependencies.hyperion.apply {
+        debugImplementation (core)
+        debugImplementation (buildConfig)
+        debugImplementation (crash)
+        debugImplementation (disk)
+        debugImplementation (geigerCounter)
+        debugImplementation (measurement)
+        debugImplementation (phoenix)
+        debugImplementation (recorder)
+        debugImplementation (sharedPreferences)
+        debugImplementation (timber)
     }
 }
 
