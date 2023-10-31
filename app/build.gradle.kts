@@ -16,7 +16,7 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 21
+        versionCode = 22
         versionName = "Security code for task groups. List of links."
     }
 
