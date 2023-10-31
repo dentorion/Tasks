@@ -61,9 +61,9 @@ class SectionPreferencesAdapter(
                         visibility = View.INVISIBLE
                     } else {
                         val iconForPasswordButton = if (sectionEntity.hasPassword) {
-                            R.drawable.ic_unlock
-                        } else {
                             R.drawable.ic_lock
+                        } else {
+                            R.drawable.ic_unlock
                         }
                         setImageResource(iconForPasswordButton)
                         setOnClickListener {
