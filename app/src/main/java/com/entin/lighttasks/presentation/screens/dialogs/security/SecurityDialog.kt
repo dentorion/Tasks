@@ -1,19 +1,21 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
-import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SecurityDialogBinding
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD
+import com.entin.lighttasks.presentation.util.SUCCESS_CREATE_PASSWORD
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,25 +30,6 @@ class SecurityDialog : DialogFragment() {
     private val viewModel: SecurityDialogViewModel by viewModels()
 
     private var type: SecurityType? = null
-    private var onSuccess: ((String) -> Unit)? = null
-    private var securityItemId: Int? = null
-
-    fun newInstance(
-        type: SecurityType,
-        onSuccess: (String) -> Unit,
-        securityItemId: Int? = null,
-    ): SecurityDialog =
-        SecurityDialog().apply {
-            this.type = type
-            this.onSuccess = onSuccess
-            this.securityItemId = securityItemId
-        }
-
-    @SuppressLint("SourceLockedOrientationActivity")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    }
 
     private fun setDialogWidth(width: Double) {
         val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
@@ -81,11 +64,29 @@ class SecurityDialog : DialogFragment() {
         }
     }
 
+    fun newInstance(
+        type: SecurityType,
+    ): SecurityDialog =
+        SecurityDialog().apply {
+            this.type = type
+            this.arguments = bundleOf(ARG_SECURITY_TYPE to type)
+        }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(ARG_SECURITY_TYPE, type)
+        super.onSaveInstanceState(bundleOf())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        if (savedInstanceState != null) {
+            val securityType = arguments?.getParcelable<SecurityType>(ARG_SECURITY_TYPE)
+            this.type = securityType
+        }
+
         isCancelable = true
         _binding = SecurityDialogBinding.inflate(inflater, container, false)
 
@@ -99,10 +100,9 @@ class SecurityDialog : DialogFragment() {
     private fun stateObserver() {
         viewModel.action.observe(viewLifecycleOwner) { state: SecurityStateContract ->
             when(state) {
-                // Create password
+                /** Create password */
                 SecurityStateContract.ErrorOnRepeatPassword -> {
-                    binding.securityDialogLabel.text =
-                        getString(R.string.passwords_are_not_matching)
+                    binding.securityDialogLabel.text = getString(R.string.passwords_are_not_matching)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
                 SecurityStateContract.RepeatPassword -> {
@@ -110,30 +110,39 @@ class SecurityDialog : DialogFragment() {
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
                 SecurityStateContract.SuccessOnRepeatPassword -> {
-                    onSuccess?.let {
-                        it(binding.securityDialogPassword.text.toString())
-                    }
+                    requireParentFragment().setFragmentResult(
+                        SUCCESS_CREATE_PASSWORD,
+                        bundleOf(SUCCESS_CREATE_PASSWORD to type)
+                    )
                     dismiss()
                 }
-                // Check password
+                /** Check password */
                 SecurityStateContract.ErrorOnCheckPassword -> {
                     binding.securityDialogLabel.text = getString(R.string.wrong_password)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
-
                 SecurityStateContract.SuccessOnCheckPassword -> {
-                    onSuccess?.let {
-                        it(EMPTY_STRING)
-                    }
+                    requireParentFragment().setFragmentResult(
+                        SUCCESS_CHECK_PASSWORD,
+                        bundleOf(SUCCESS_CHECK_PASSWORD to type)
+                    )
                     dismiss()
                 }
+                /** Can't found security item */
+                SecurityStateContract.NotFoundSecurityItem -> dismiss()
             }
         }
     }
 
     private fun setupButtons() {
         with(binding) {
-            securityDialogClear.setOnClickListener { clearInputCode() }
+            securityDialogClear.setOnClickListener {
+                if (binding.securityDialogPassword.text.isNotEmpty()) {
+                    clearInputCode()
+                } else {
+                    dismiss()
+                }
+            }
             securityDialogNumber1.setOnClickListener { addSymbol(1) }
             securityDialogNumber2.setOnClickListener { addSymbol(2) }
             securityDialogNumber3.setOnClickListener { addSymbol(3) }
@@ -148,7 +157,7 @@ class SecurityDialog : DialogFragment() {
                 val insertedPassword = binding.securityDialogPassword.text.toString()
                 type?.let { securityType ->
                     if (insertedPassword.isNotEmpty() && insertedPassword.isNotBlank() && insertedPassword.length >= 4) {
-                        viewModel.onSubmitClicked(securityType, insertedPassword, securityItemId)
+                        viewModel.onSubmitClicked(securityType, insertedPassword)
                     } else {
                         binding.securityDialogLabel.text = getString(R.string.minimum_4_characters)
                     }
@@ -173,12 +182,15 @@ class SecurityDialog : DialogFragment() {
     override fun onDestroyView() {
         viewModel.insertedPassword = null
         _binding = null
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         super.onDestroyView()
     }
 
     companion object {
         const val FULL_SCREEN = 0.92
-        const val LANDSCAPE_MODE = 0.65
+        const val LANDSCAPE_MODE = 0.92
+
+        const val ARG_SECURITY_TYPE = "ARG_SECURITY_TYPE"
+        const val ARG_ON_SUCCESS = "ARG_ON_SUCCESS"
+        const val ARG_SECURITY_ITEM_ID = "ARG_SECURITY_ITEM_ID"
     }
 }

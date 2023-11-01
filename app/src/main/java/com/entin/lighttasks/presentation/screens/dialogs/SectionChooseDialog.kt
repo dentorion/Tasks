@@ -131,6 +131,8 @@ class SectionChooseDialog : DialogFragment() {
     }
 
     override fun onDestroyView() {
+        sectionChooseAdapter = null
+        binding.sectionChooseRecyclerView.adapter = null
         _binding = null
         super.onDestroyView()
     }

@@ -276,6 +276,9 @@ class AddEditTaskViewModel @Inject constructor(
         set(value) {
             field = value
             state[TASK_PASSWORD] = value
+            viewModelScope.launch {
+                _editTaskChannel.send(EditTaskEventContract.OnSuccessPasswordAdd)
+            }
         }
 
     var isPasswordSecurityTurnOn: Boolean = state.get<Boolean>(IS_PASSWORD_TURN_ON) ?: hasPasswordOnStart

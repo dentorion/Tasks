@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -31,22 +30,27 @@ class SecurityDialogViewModel @Inject constructor(
     fun onSubmitClicked(
         securityType: SecurityType,
         passwordFromUser: String,
-        securityItemId: Int? = null
     ) {
         when (securityType) {
             is SecurityType.Check -> {
                 when (securityType.securityPlace) {
-                    SecurityPlace.TASK -> checkPasswordCode(securityItemId, passwordFromUser)
+                    is SecurityPlace.TaskPlace -> checkPasswordCode(
+                        passwordFromUser,
+                        securityType.securityPlace
+                    )
 
-                    SecurityPlace.SECTION -> checkPasswordCode(securityItemId, passwordFromUser)
+                    is SecurityPlace.SectionPlace -> checkPasswordCode(
+                        passwordFromUser,
+                        securityType.securityPlace
+                    )
                 }
             }
 
             is SecurityType.Create -> {
                 when (securityType.securityPlace) {
-                    SecurityPlace.TASK -> createPasswordCode(passwordFromUser)
+                    is SecurityPlace.TaskPlace -> createPasswordCode(passwordFromUser)
 
-                    SecurityPlace.SECTION -> createPasswordCode(passwordFromUser)
+                    is SecurityPlace.SectionPlace -> createPasswordCode(passwordFromUser)
                 }
             }
         }
@@ -69,17 +73,34 @@ class SecurityDialogViewModel @Inject constructor(
         }
     }
 
-    private fun checkPasswordCode(securityItemId: Int?, passwordFromUser: String) {
+    private fun checkPasswordCode(passwordFromUser: String, securityType: SecurityPlace) {
         viewModelScope.launch(Dispatchers.IO) {
-            securityItemId?.let { securityId ->
-                val realPassword = securityRepository.getSecurityItemById(securityId)
-                    .first()
-                    .password
-                if (realPassword == passwordFromUser) {
-                    action.postValue(SecurityStateContract.SuccessOnCheckPassword)
-                } else {
-                    action.postValue(SecurityStateContract.ErrorOnCheckPassword)
+            when (securityType) {
+                // Task
+                is SecurityPlace.TaskPlace -> {
+                    securityType.task?.id?.let {
+                        securityRepository.getSecurityItemByTaskId(it).first()?.id
+                    }
                 }
+                // Section
+                is SecurityPlace.SectionPlace -> {
+                    securityType.sectionId?.let {
+                        securityRepository.getSecurityItemBySectionId(it).first()?.id
+                    }
+                }
+            }.also { securityId: Int? ->
+                securityId?.let {
+                    securityRepository.getSecurityItemById(securityId)
+                        .first()
+                        .password
+                        .also { realPassword: String ->
+                            if (realPassword == passwordFromUser) {
+                                action.postValue(SecurityStateContract.SuccessOnCheckPassword)
+                            } else {
+                                action.postValue(SecurityStateContract.ErrorOnCheckPassword)
+                            }
+                        }
+                } ?: kotlin.run { action.postValue(SecurityStateContract.NotFoundSecurityItem) }
             }
         }
     }

@@ -304,7 +304,7 @@ interface TaskDao {
     suspend fun updateAllTasksWithDeletedSection(sectionId: Int)
 
     @Query("UPDATE tasks SET is_finished = :finished WHERE id = :id")
-    fun onFinishedTaskClick(id: Int, finished: Boolean)
+    suspend fun onFinishedTaskClick(id: Int, finished: Boolean)
 
     @Query("SELECT attached_gallery_images FROM tasks WHERE id = :id")
     fun getAttachedGalleryImagesByTaskId(id: Int): Flow<String>

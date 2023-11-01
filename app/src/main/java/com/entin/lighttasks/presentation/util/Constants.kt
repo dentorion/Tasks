@@ -94,3 +94,9 @@ const val ONE_WEEK_MLS = 604800000
 /** Broadcast receiver */
 
 const val INTENT_MESSAGE = "intentMessage"
+
+/**
+ * Bundle from Security Fragment
+ */
+const val SUCCESS_CHECK_PASSWORD = "successOnCheckPassword"
+const val SUCCESS_CREATE_PASSWORD = "successOnCheckPassword"

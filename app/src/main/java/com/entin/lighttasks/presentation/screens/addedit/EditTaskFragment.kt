@@ -90,6 +90,14 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /** Gallery image pick */
     private var galleryImagePickLauncher: ActivityResultLauncher<PickVisualMediaRequest>? = null
 
+    /**
+     * Security dialog
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val securityDialog by lazy {
+        SecurityDialog()
+    }
+
     /** Photo add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val photoAddEditDialog by lazy {
@@ -312,13 +320,15 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.apply {
                 setOnClickListener {
-                    val dialog = SecurityDialog().newInstance(
-                        type = SecurityType.Create(SecurityPlace.TASK),
-                        onSuccess = ::onSuccessPasswordAdd,
-                    )
-                    if (!dialog.isVisible) {
-                        dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
-                    }
+//                    val currentSecurityDialog = securityDialog.newInstance(
+//                        type = SecurityType.Create(SecurityPlace.TASK),
+//                        onSuccess = ::onSuccessPasswordAdd,
+//                    )
+//                    currentSecurityDialog.let { dialog ->
+//                        if (!dialog.isVisible) {
+//                            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+//                        }
+//                    }
                 }
             }
             /** Expired */
@@ -628,11 +638,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             // Code picker
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isCheckboxSwitchOn
             if(hasPassword) {
-                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text =
-                    getString(R.string.change_security_code)
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = getString(R.string.change_security_code)
             } else {
-                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text =
-                    resources.getString(R.string.set_security_code)
+                addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
             }
         }
     }
@@ -717,6 +725,10 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         setTagVoiceVisibility(event.voice)
                         setTagGalleryImagesVisibility(event.galleryImages)
                     }
+
+                    is EditTaskEventContract.OnSuccessPasswordAdd -> {
+                        isSecurityPickerShown(hasPassword = true, isCheckboxSwitchOn = true)
+                    }
                 }
             }
         }
@@ -767,7 +779,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     /** Set security password for saving */
     private fun onSuccessPasswordAdd(newPassword: String) {
         viewModel.passwordNew = newPassword
-        isSecurityPickerShown(hasPassword = true, isCheckboxSwitchOn = true)
     }
 
     /**

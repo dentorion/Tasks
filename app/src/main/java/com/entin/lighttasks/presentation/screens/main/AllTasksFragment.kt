@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +32,7 @@ import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
+import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO
@@ -49,10 +51,17 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private var _binding: AllTasksBinding? = null
     private val binding get() = _binding!!
-    
-    private val viewModel: AllTasksViewModel by viewModels()
-    private var securityDialog: SecurityDialog? = null
 
+    private val viewModel: AllTasksViewModel by viewModels()
+
+    /**
+     * Security dialog
+     */
+    private val securityDialog by lazy { SecurityDialog() }
+
+    /**
+     * All tasks adapter
+     */
     private val tasksAdapter: AllTasksAdapter = AllTasksAdapter(
         listener = this,
         navigateToDeleteDialog = ::openDeleteDialog,
@@ -61,17 +70,31 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         updateDb = ::updateAllTasks
     )
 
+    /**
+     * Section adapter
+     */
     private var sectionAdapter: SectionAdapter? = null
+
+    /**
+     * Search view
+     */
     private var searchView: SearchView? = null
+
+    /**
+     * Section id for default view
+     */
     private var sectionId: Int = ZERO
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = AllTasksBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    /**
+     * Creation of fragment
+     */
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = AllTasksBinding.inflate(inflater, container, false)
 
         setupSectionsRecyclerView()
 
@@ -83,13 +106,26 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
         tasksObserver()
 
-        setupResultListener()
-
         eventObserver()
 
         setHasOptionsMenu(true)
+
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupResultListener()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener()
+    }
+
+    /**
+     * RecyclerView - all tasks
+     */
     private fun setupTasksRecyclerView() {
         with(binding) {
             tasksRecyclerView.apply {
@@ -104,12 +140,25 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             }
         }
     }
-    
+
+    private fun setupTasksRecyclerViewItemTouchListener() {
+        ItemTouchHelper(
+            ItemTouchHelperCallback(
+                tasksAdapterList = tasksAdapter,
+                viewModel = viewModel,
+            ),
+        ).attachToRecyclerView(binding.tasksRecyclerView)
+    }
+
+    /**
+     * RecyclerView - sections
+     */
     private fun setupSectionsRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
             // Create SectionAdapter with prev.selection
             sectionId = viewModel.flowSortingPreferences.first().sectionId
-            sectionAdapter = SectionAdapter(sectionId) { section ->
+            sectionAdapter = SectionAdapter(sectionId) { section: Section? ->
+                // null - section is not selected, should be shown all common tasks without sections
                 sectionSelected(section)
             }
 
@@ -130,16 +179,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
             sectionsObserver()
         }
     }
-    
-    private fun setupTasksRecyclerViewItemTouchListener() {
-        ItemTouchHelper(
-            ItemTouchHelperCallback(
-                tasksAdapterList = tasksAdapter,
-                viewModel = viewModel,
-            ),
-        ).attachToRecyclerView(binding.tasksRecyclerView)
-    }
 
+    /**
+     * Observe all tasks from viewModel
+     */
     private fun tasksObserver() {
         viewModel.tasks.observe(viewLifecycleOwner) { listTask ->
             showWelcome(listTask.isEmpty())
@@ -147,26 +190,41 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
+    /**
+     * Observe sections from viewModel
+     */
     private fun sectionsObserver() {
         viewModel.sections.observe(viewLifecycleOwner) { listSections ->
             setSections(listSections)
         }
     }
 
+    /**
+     * Set tasks into recyclerview
+     */
     private fun setTasks(listTask: List<Task>) {
         tasksAdapter.submitList(listTask)
     }
 
+    /**
+     * Set sections into recyclerview
+     */
     private fun setSections(listSection: List<Section>) {
         sectionAdapter?.submitList(listSection)
     }
 
+    /**
+     * Setup circle button for add task
+     */
     private fun setupFabCircleButton() {
         binding.fab.setOnClickListener {
             viewModel.addNewTask()
         }
     }
 
+    /**
+     * Setup result listener from create / edit task for showing snack bar
+     */
     private fun setupResultListener() {
         arguments?.let {
             val resultType = it.getInt("event")
@@ -187,6 +245,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         arguments = null
     }
 
+    /**
+     * Observe events using [AllTasksEvent]
+     */
     private fun eventObserver() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -204,23 +265,23 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                                     viewModel.onUndoDeleteClick(allTasksEvent.task)
                                 }
 
-                            addCallback(
-                                object : Snackbar.Callback() {
-                                    override fun onDismissed(snackbar: Snackbar, event: Int) {
-                                        when (event) {
-                                            BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                                viewModel.deletePasswordOfTask(allTasksEvent.task.id)
-                                            }
+                                addCallback(
+                                    object : Snackbar.Callback() {
+                                        override fun onDismissed(snackbar: Snackbar, event: Int) {
+                                            when (event) {
+                                                BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
+                                                    viewModel.deletePasswordOfTask(allTasksEvent.task.id)
+                                                }
 
-                                            else -> {}
+                                                else -> {}
+                                            }
+                                        }
+
+                                        override fun onShown(snackbar: Snackbar) {
+                                            super.onShown(snackbar)
                                         }
                                     }
-
-                                    override fun onShown(snackbar: Snackbar) {
-                                        super.onShown(snackbar)
-                                    }
-                                }
-                            )
+                                )
                             }.show()
                         }
                         /**
@@ -270,9 +331,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                                     resources.getString(R.string.new_edit_fragment_task_edit),
                                 )
                             )
-                            val transaction = childFragmentManager.beginTransaction()
-                            securityDialog?.let { transaction.remove(it) }
-                            transaction.commit()
+                            childFragmentManager.beginTransaction().apply {
+                                this.remove(securityDialog)
+                                this.commit()
+                            }
                         }
                         /**
                          * Navigation to creation task screen
@@ -306,7 +368,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                          */
                         is AllTasksEvent.CheckPasswordTask -> {
                             checkPasswordCodeForTask(
-                                allTasksEvent.securityItemId,
                                 allTasksEvent.task
                             )
                         }
@@ -316,7 +377,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                          */
                         is AllTasksEvent.CheckPasswordSection -> {
                             checkPasswordCodeForSection(
-                                allTasksEvent.securityItemId,
                                 allTasksEvent.sectionId
                             )
                         }
@@ -326,13 +386,18 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    // Interface implementation for Adapter
-
+    /**
+     * On task clicked - interface implementation for [AllTasksAdapter]
+     */
     override fun onTaskClick(task: Task) {
         viewModel.onTaskClick(task)
     }
 
+    /**
+     * On section clicked - implementation for [SectionAdapter]
+     */
     private fun sectionSelected(section: Section?) {
+        // null - section is not selected, should be shown all common tasks without sections
         viewModel.onSectionClick(section?.id ?: ZERO)
     }
 
@@ -340,12 +405,14 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         viewModel.onFinishedTaskClick(task, mode)
     }
 
-    // Delete dialog for Adapter
-
+    // TODO: not working after rotation!
+    /**
+     * Delete task dialog
+     */
     private fun openDeleteDialog(task: Task) {
         val dialog = DeleteTaskDialog().newInstance(
             task = task,
-            onDelete = ::deleteTask
+            onDelete = { viewModel.onTaskSwipedDelete(task) }
         )
         if (!dialog.isVisible) {
             dialog.show(
@@ -355,12 +422,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun deleteTask(task: Task) {
-        viewModel.onTaskSwipedDelete(task)
-    }
-
-    // Delete dialog for Adapter
-
+    /**
+     * Dialog show tasks with icon, which selected task has
+     */
     private fun openSortDialog(task: Task) {
         findNavController().navigate(
             AllTasksFragmentDirections.actionGlobalSortTasksByIconDialog(
@@ -369,54 +433,96 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         )
     }
 
-    // Open dialog for Showing details of task
-
+    /**
+     * Dialog task's details show
+     */
     private fun openTaskDetailsDialog(task: Task) {
-        if(!viewModel.isManualSorting) {
+        if (!viewModel.isManualSorting) {
             findNavController().navigate(
                 AllTasksFragmentDirections.actionGlobalTaskDetailsDialog(task)
             )
         }
     }
 
+    /**
+     * Update all tasks in [AllTasksAdapter] on manual sorting, "updateDb" function
+     */
     private fun updateAllTasks(listTaskEntities: List<Task>) {
         viewModel.updateAllTasks(listTaskEntities)
     }
 
-    // Security password code check dialog for task
+    /**
+     * Listener fot Security dialog
+     */
+    private fun setFragmentResultListener() {
+        setFragmentResultListener(SUCCESS_CHECK_PASSWORD) { _, bundle ->
+            bundle.getParcelable<SecurityType>(SUCCESS_CHECK_PASSWORD).also { securityType ->
+                when (securityType) {
+                    is SecurityType.Check -> {
+                        when (securityType.securityPlace) {
+                            is SecurityPlace.SectionPlace -> onSuccessPasswordCheckSection(
+                                securityType.securityPlace.sectionId
+                            )
 
-    private fun checkPasswordCodeForTask(securityItemId: Int, task: Task) {
-        securityDialog = SecurityDialog().newInstance(
-            type = SecurityType.Check(SecurityPlace.TASK),
-            onSuccess = { viewModel.openTask(task) },
-            securityItemId = securityItemId,
+                            is SecurityPlace.TaskPlace -> onSuccessPasswordCheckTask(securityType.securityPlace.task)
+                            else -> {
+                                /** In this fragment check password only for: task, section */
+                            }
+                        }
+                    }
+
+                    else -> {
+                        /** Check password only */
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *  Dialog security password check for task
+     */
+    private fun checkPasswordCodeForTask(task: Task) {
+        val currentSecurityDialog = securityDialog.newInstance(
+            type = SecurityType.Check(SecurityPlace.TaskPlace(task))
         )
-        securityDialog?.let { dialog ->
+        currentSecurityDialog.let { dialog ->
             if (!dialog.isVisible) {
                 dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
             }
         }
     }
 
-    // Security password code check dialog for section
+    private fun onSuccessPasswordCheckTask(task: Task?) {
+        task?.let {
+            viewModel.openTask(it)
+        }
+    }
 
-    private fun checkPasswordCodeForSection(securityItemId: Int, sectionId: Int) {
-        securityDialog = SecurityDialog().newInstance(
-            type = SecurityType.Check(SecurityPlace.SECTION),
-            onSuccess = {
-                viewModel.openSection(sectionId)
-            },
-            securityItemId = securityItemId,
+    /**
+     * Dialog security password check for section
+     */
+
+    private fun checkPasswordCodeForSection(sectionId: Int) {
+        val currentSecurityDialog = securityDialog.newInstance(
+            type = SecurityType.Check(SecurityPlace.SectionPlace(sectionId))
         )
-        securityDialog?.let { dialog ->
+        currentSecurityDialog.let { dialog ->
             if (!dialog.isVisible) {
                 dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
             }
         }
     }
 
-    // Empty List Welcome
+    private fun onSuccessPasswordCheckSection(sectionId: Int?) {
+        sectionId?.let {
+            viewModel.openSection(it)
+        }
+    }
 
+    /**
+     * Empty List Welcome
+     */
     private fun showWelcome(show: Boolean) {
         binding.apply {
             if (show) {
@@ -429,8 +535,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    // Menu bar
-
+    /**
+     * Menu bar
+     */
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.bar_menu, menu)
@@ -532,11 +639,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     override fun onDestroyView() {
-        securityDialog = null
         searchView?.setOnQueryTextListener(null)
         binding.tasksRecyclerView.adapter = null
+        binding.sectionsRecyclerView.adapter = null
         _binding = null
         super.onDestroyView()
-
     }
 }

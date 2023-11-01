@@ -2,7 +2,6 @@ package com.entin.lighttasks.presentation.screens.dialogs
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -164,6 +163,8 @@ class CreateEditSectionDialog : DialogFragment() {
     }
 
     override fun onDestroyView() {
+        iconAdapter = null
+        binding.dialogAddEditSectionCategoryRecyclerview.adapter = null
         _binding = null
         super.onDestroyView()
     }

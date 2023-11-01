@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -90,7 +89,9 @@ class AllTasksViewModel @Inject constructor(
     private val sectionFlow = sectionsRepository.getAllSections()
     var sections: LiveData<List<Section>> = sectionFlow.asLiveData()
 
-    // SORTING Tasks
+    /**
+     * SORTING Tasks
+     */
 
     fun updateShowFinishedTask(showFinished: Boolean) {
         viewModelScope.launch {
@@ -118,12 +119,13 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
-    // TASK
-
+    /**
+     * On task click
+     */
     fun onTaskClick(task: Task) {
         viewModelScope.launch {
             securityRepository.getSecurityItemByTaskId(task.id).first()?.id?.let {
-                _tasksEvent.send(AllTasksEvent.CheckPasswordTask(securityItemId = it, task = task))
+                _tasksEvent.send(AllTasksEvent.CheckPasswordTask(task = task))
             } ?: kotlin.run {
                 _tasksEvent.send(AllTasksEvent.NavToEditTask(task))
             }
@@ -142,6 +144,9 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
+    /**
+     * On task delete with swipe
+     */
     fun onTaskSwipedDelete(task: Task) {
         diAppScope.launch {
             taskRepository.deleteTask(task)
@@ -229,10 +234,7 @@ class AllTasksViewModel @Inject constructor(
             } else {
                 securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
                     _tasksEvent.send(
-                        AllTasksEvent.CheckPasswordSection(
-                            securityItemId = it,
-                            sectionId = sectionId
-                        )
+                        AllTasksEvent.CheckPasswordSection(sectionId = sectionId)
                     )
                 } ?: kotlin.run {
                     openSection(sectionId)

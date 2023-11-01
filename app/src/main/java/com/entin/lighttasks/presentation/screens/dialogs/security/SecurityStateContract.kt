@@ -9,4 +9,6 @@ sealed class SecurityStateContract {
     // Check password
     object ErrorOnCheckPassword: SecurityStateContract()
     object SuccessOnCheckPassword: SecurityStateContract()
+    // Error
+    object NotFoundSecurityItem: SecurityStateContract()
 }

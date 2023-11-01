@@ -22,6 +22,7 @@ import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 class SectionFragment : Fragment(R.layout.section_preferences) {
 
@@ -37,13 +38,11 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     )
 
     // Crate / Edit section dialog
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val createEditSectionDialog by lazy {
         CreateEditSectionDialog()
     }
 
     // Delete section dialog
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val deleteSectionDialog by lazy {
         DeleteSectionDialog()
     }
@@ -83,7 +82,6 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupSectionsRecyclerViewItemTouchListener() {
         sectionPreferencesAdapter?.let { adapter ->
             ItemTouchHelper(
@@ -115,53 +113,49 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         viewModel.updateSections(listSection)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun onPasswordClick(section: Section) {
         if (section.hasPassword) {
             viewModel.checkPasswordForSectionById(section.id)
         } else {
-            val dialog = SecurityDialog().newInstance(
-                type = SecurityType.Create(SecurityPlace.SECTION),
-                onSuccess = { password ->
-                    viewModel.setPassword(password, section.id)
-                }
-            )
-            if (!dialog.isVisible) {
-                dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
-            }
+//            val dialog = SecurityDialog().newInstance(
+//                type = SecurityType.Create(SecurityPlace.SECTION),
+//                onSuccess = { password ->
+//                    viewModel.setPassword(password, section.id)
+//                }
+//            )
+//            if (!dialog.isVisible) {
+//                dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+//            }
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun checkPassword(sectionId: Int, securityItemId: Int) {
-        val dialog = SecurityDialog().newInstance(
-            type = SecurityType.Check(SecurityPlace.SECTION),
-            onSuccess = { _ ->
-                viewModel.deletePassword(sectionId)
-            },
-            securityItemId = securityItemId
-        )
-        if (!dialog.isVisible) {
-            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
-        }
+//        val dialog = SecurityDialog().newInstance(
+//            type = SecurityType.Check(SecurityPlace.SECTION),
+//            onSuccess = { _ ->
+//                viewModel.deletePassword(sectionId)
+//            },
+//            securityItemId = securityItemId
+//        )
+//        if (!dialog.isVisible) {
+//            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+//        }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun checkPasswordForSectionDeletion(section: Section, securityItemId: Int) {
-        val dialog = SecurityDialog().newInstance(
-            type = SecurityType.Check(SecurityPlace.SECTION),
-            onSuccess = { _ ->
-                setActualSection(section)
-                viewModel.deleteSection()
-            },
-            securityItemId = securityItemId
-        )
-        if (!dialog.isVisible) {
-            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
-        }
+//        val dialog = SecurityDialog().newInstance(
+//            type = SecurityType.Check(SecurityPlace.SECTION),
+//            onSuccess = { _ ->
+//                setActualSection(section)
+//                viewModel.deleteSection()
+//            },
+//            securityItemId = securityItemId
+//        )
+//        if (!dialog.isVisible) {
+//            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+//        }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun openCreateSectionDialog() {
         if (!createEditSectionDialog.isVisible) {
             setActualSection(null)
@@ -171,7 +165,6 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun openEditSectionDialog(section: Section) {
         if (!createEditSectionDialog.isVisible) {
             setActualSection(section)
@@ -181,7 +174,6 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun openDeleteSectionDialog(section: Section) {
         if (section.hasPassword) {
             viewModel.checkPasswordForSectionDeletionById(section)
@@ -206,7 +198,10 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
     }
 
     override fun onDestroyView() {
+        if (createEditSectionDialog.isVisible) createEditSectionDialog.dismiss()
+        if (deleteSectionDialog.isVisible) deleteSectionDialog.dismiss()
         sectionPreferencesAdapter = null
+        binding.sectionPreferencesRecyclerView.adapter = null
         _binding = null
         super.onDestroyView()
     }
