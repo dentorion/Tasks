@@ -1,20 +1,18 @@
 package com.entin.lighttasks.presentation.screens.section
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
-import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.data.util.datastore.Preferences
 import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.toSectionEntity
 import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.domain.repository.SecurityRepository
 import com.entin.lighttasks.domain.repository.TasksRepository
-import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.ZERO
-import com.entin.lighttasks.presentation.util.ZERO_LONG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +20,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,16 +41,16 @@ class SectionViewModel @Inject constructor(
     private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
     val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
 
-    var sectionTitle: String = EMPTY_STRING
-    var sectionIcon: Int = ZERO
-    var sectionImportant: Boolean = false
-    var currentSectionEntity: Section? = null
-        set(value) {
-            field = value
-            sectionTitle = value?.title ?: EMPTY_STRING
-            sectionIcon = value?.icon ?: ZERO
-            sectionImportant = value?.isImportant ?: false
-        }
+//    var sectionTitle: String = EMPTY_STRING
+//    var sectionIcon: Int = ZERO
+//    var sectionImportant: Boolean = false
+//    var currentSectionEntity: Section? = null
+//        set(value) {
+//            field = value
+//            sectionTitle = value?.title ?: EMPTY_STRING
+//            sectionIcon = value?.icon ?: ZERO
+//            sectionImportant = value?.isImportant ?: false
+//        }
 
     init {
         getAllSections()
@@ -78,28 +77,14 @@ class SectionViewModel @Inject constructor(
     /**
      * Create section
      */
-    fun onSaveButtonClick() {
-        if (currentSectionEntity == null) {
-            createSection(
-                Section(
-                    id = ZERO,
-                    title = sectionTitle,
-                    createdAt = System.currentTimeMillis(),
-                    editedAt = ZERO_LONG,
-                    icon = sectionIcon,
-                    isImportant = sectionImportant,
-                    position = ZERO, // will be replaced in Repository
-                )
-            )
+    fun onSaveButtonClick(
+        section: Section,
+        isUpdate: Boolean
+    ) {
+        if (isUpdate) {
+            updateSection(section.copy(editedAt = Date().time))
         } else {
-            updateSection(
-                currentSectionEntity!!.copy(
-                    title = sectionTitle,
-                    editedAt = System.currentTimeMillis(),
-                    icon = sectionIcon,
-                    isImportant = sectionImportant,
-                )
-            )
+            createSection(section) // position will be replaced in Repository
         }
     }
 
@@ -132,11 +117,12 @@ class SectionViewModel @Inject constructor(
     /**
      * Delete section
      */
-    fun deleteSection() {
+    fun deleteSection(sectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            currentSectionEntity?.let {
-                sectionRepository.deleteSectionById(it.id)
-                taskRepository.updateAllTasksWithDeletedSection(it.id)
+            sectionRepository.getSectionById(sectionId).first().also { section ->
+                Log.e("DELETE_SECTION", "section: ${section.title}")
+                sectionRepository.deleteSectionById(section.id)
+                taskRepository.updateAllTasksWithDeletedSection(section.id)
                 preferences.updateSection(ZERO)
             }
         }
@@ -144,39 +130,17 @@ class SectionViewModel @Inject constructor(
 
     fun checkPasswordForSectionById(sectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
-                sectionEvent.postValue(
-                    SectionsEventContract.CheckPassword(sectionId = sectionId, securityItemId = it)
-                )
-            }
+            sectionEvent.postValue(
+                SectionsEventContract.CheckPassword(sectionId = sectionId)
+            )
         }
     }
 
     fun checkPasswordForSectionDeletionById(section: Section) {
         viewModelScope.launch(Dispatchers.IO) {
-            securityRepository.getSecurityItemBySectionId(section.id).first()?.id?.let {
-                sectionEvent.postValue(
-                    SectionsEventContract.CheckPasswordDeletion(
-                        section = section,
-                        securityItemId = it
-                    )
-                )
-            }
-        }
-    }
-
-    fun setPassword(password: String, sectionId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            securityRepository.getSecurityItemBySectionId(sectionId).first()?.password?.let {
-                securityRepository.updateSecurityItemBySectionId(
-                    sectionId = sectionId,
-                    password = password,
-                )
-            } ?: kotlin.run {
-                securityRepository.addSecurityItem(
-                    SecurityEntity(password = password, taskId = ZERO, sectionId = sectionId)
-                )
-            }
+            sectionEvent.postValue(
+                SectionsEventContract.CheckPasswordDeletion(sectionId = section.id)
+            )
         }
     }
 
@@ -184,9 +148,5 @@ class SectionViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             securityRepository.deleteSecurityItemBySectionId(sectionId)
         }
-    }
-
-    fun getSecurityItemIdBySectionId(id: Int): Int? {
-        TODO("Not yet implemented")
     }
 }

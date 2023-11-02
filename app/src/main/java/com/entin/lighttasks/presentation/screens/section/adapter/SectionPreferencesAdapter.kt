@@ -99,7 +99,7 @@ class SectionPreferencesAdapter(
             }
             newCurrentList
                 .filter { it.id != ZERO }
-                .mapIndexed { index, task -> task.position = index + ONE }
+                .mapIndexed { index, section -> section.position = index + ONE }
             submitList(newCurrentList)
             return true
         } catch (e: IndexOutOfBoundsException) {

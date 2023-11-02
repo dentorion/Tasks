@@ -52,6 +52,10 @@ interface SectionsDao {
     suspend fun deleteSection(sectionId: Int): Int
 
     /** Get section by id */
-    @Query("SELECT name FROM sections WHERE id = :sectionId LIMIT 1")
-    fun getSectionById(sectionId: Int): Flow<String>
+    @Query("SELECT Sections.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password " +
+            "FROM sections " +
+            "LEFT JOIN Security ON Sections.id = Security.section_id " +
+            "WHERE Sections.id = :sectionId")
+    fun getSectionById(sectionId: Int): Flow<Section>
 }

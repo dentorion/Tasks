@@ -39,5 +39,5 @@ interface SectionsRepository {
     suspend fun deleteSectionById(sectionId: Int): Int
 
     /** Get section by id */
-    fun getSectionById(sectionId: Int): Flow<String>
+    fun getSectionById(sectionId: Int): Flow<Section>
 }

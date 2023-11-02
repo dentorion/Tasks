@@ -26,8 +26,9 @@ import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
+import com.entin.lighttasks.presentation.screens.dialogs.security.Place
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose
+import com.entin.lighttasks.presentation.screens.dialogs.security.Security
 import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
@@ -254,7 +255,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                 viewModel.tasksEvent.collect { allTasksEvent: AllTasksEvent ->
                     when (allTasksEvent) {
                         /**
-                         *  After deletion task show snackbar with undo button
+                         *  After deletion task show snackbar with undo button and
+                         *  delete password if exist after it totally hidden,
+                         *  before it user can make undo
                          */
                         is AllTasksEvent.ShowUndoDeleteTaskMessage -> {
                             getSnackBar(
@@ -367,18 +370,14 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                          * Check password code by security item id
                          */
                         is AllTasksEvent.CheckPasswordTask -> {
-                            checkPasswordCodeForTask(
-                                allTasksEvent.task
-                            )
+                            checkPasswordCodeForTask(allTasksEvent.task)
                         }
 
                         /**
                          * Check password code by security item id
                          */
                         is AllTasksEvent.CheckPasswordSection -> {
-                            checkPasswordCodeForSection(
-                                allTasksEvent.sectionId
-                            )
+                            checkPasswordCodeForSection(allTasksEvent.sectionId)
                         }
                     }
                 }
@@ -456,15 +455,18 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      */
     private fun setFragmentResultListener() {
         setFragmentResultListener(SUCCESS_CHECK_PASSWORD) { _, bundle ->
-            bundle.getParcelable<SecurityType>(SUCCESS_CHECK_PASSWORD).also { securityType ->
+            bundle.getParcelable<Security>(SUCCESS_CHECK_PASSWORD).also { securityType ->
                 when (securityType) {
-                    is SecurityType.Check -> {
-                        when (securityType.securityPlace) {
-                            is SecurityPlace.SectionPlace -> onSuccessPasswordCheckSection(
-                                securityType.securityPlace.sectionId
+                    is Security.Check -> {
+                        when (securityType.place) {
+                            is Place.SectionPlace -> onSuccessPasswordCheckSection(
+                                securityType.place.sectionId
                             )
 
-                            is SecurityPlace.TaskPlace -> onSuccessPasswordCheckTask(securityType.securityPlace.task)
+                            is Place.TaskPlace -> onSuccessPasswordCheckTask(
+                                securityType.place.taskId
+                            )
+
                             else -> {
                                 /** In this fragment check password only for: task, section */
                             }
@@ -484,7 +486,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      */
     private fun checkPasswordCodeForTask(task: Task) {
         val currentSecurityDialog = securityDialog.newInstance(
-            type = SecurityType.Check(SecurityPlace.TaskPlace(task))
+            type = Security.Check(
+                place = Place.TaskPlace(task.id),
+                purpose = SecurityPurpose.CHECK_TASK_OPEN
+            )
         )
         currentSecurityDialog.let { dialog ->
             if (!dialog.isVisible) {
@@ -493,9 +498,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun onSuccessPasswordCheckTask(task: Task?) {
-        task?.let {
-            viewModel.openTask(it)
+    private fun onSuccessPasswordCheckTask(taskId: Int?) {
+        taskId?.let {
+            viewModel.openTaskAfterSuccessPasswordCheck(it)
         }
     }
 
@@ -505,7 +510,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private fun checkPasswordCodeForSection(sectionId: Int) {
         val currentSecurityDialog = securityDialog.newInstance(
-            type = SecurityType.Check(SecurityPlace.SectionPlace(sectionId))
+            type = Security.Check(
+                Place.SectionPlace(sectionId = sectionId),
+                purpose = SecurityPurpose.CHECK_SECTION_TASKS_SHOW
+            )
         )
         currentSecurityDialog.let { dialog ->
             if (!dialog.isVisible) {

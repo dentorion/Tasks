@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.dialogs.security
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,10 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SecurityDialogBinding
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD
+import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PURPOSE
 import com.entin.lighttasks.presentation.util.SUCCESS_CREATE_PASSWORD
+import com.entin.lighttasks.presentation.util.WAS_CREATE_PASSWORD
+import com.entin.lighttasks.presentation.util.WAS_UPDATE_PASSWORD
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +33,7 @@ class SecurityDialog : DialogFragment() {
 
     private val viewModel: SecurityDialogViewModel by viewModels()
 
-    private var type: SecurityType? = null
+    private var type: Security? = null
 
     private fun setDialogWidth(width: Double) {
         val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
@@ -65,7 +69,7 @@ class SecurityDialog : DialogFragment() {
     }
 
     fun newInstance(
-        type: SecurityType,
+        type: Security,
     ): SecurityDialog =
         SecurityDialog().apply {
             this.type = type
@@ -74,7 +78,7 @@ class SecurityDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(ARG_SECURITY_TYPE, type)
-        super.onSaveInstanceState(bundleOf())
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(
@@ -83,8 +87,8 @@ class SecurityDialog : DialogFragment() {
         savedInstanceState: Bundle?,
     ): View {
         if (savedInstanceState != null) {
-            val securityType = arguments?.getParcelable<SecurityType>(ARG_SECURITY_TYPE)
-            this.type = securityType
+            val security = arguments?.getParcelable<Security>(ARG_SECURITY_TYPE)
+            this.type = security
         }
 
         isCancelable = true
@@ -105,14 +109,30 @@ class SecurityDialog : DialogFragment() {
                     binding.securityDialogLabel.text = getString(R.string.passwords_are_not_matching)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
+
                 SecurityStateContract.RepeatPassword -> {
                     binding.securityDialogLabel.text = getString(R.string.repeat_password)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
-                SecurityStateContract.SuccessOnRepeatPassword -> {
+
+                SecurityStateContract.SuccessOnCreatePassword -> {
                     requireParentFragment().setFragmentResult(
                         SUCCESS_CREATE_PASSWORD,
-                        bundleOf(SUCCESS_CREATE_PASSWORD to type)
+                        bundleOf(
+                            WAS_CREATE_PASSWORD to true,
+                            WAS_UPDATE_PASSWORD to false
+                        )
+                    )
+                    dismiss()
+                }
+
+                SecurityStateContract.SuccessOnUpdatePassword -> {
+                    requireParentFragment().setFragmentResult(
+                        SUCCESS_CREATE_PASSWORD,
+                        bundleOf(
+                            WAS_CREATE_PASSWORD to false,
+                            WAS_UPDATE_PASSWORD to true
+                        )
                     )
                     dismiss()
                 }
@@ -121,15 +141,30 @@ class SecurityDialog : DialogFragment() {
                     binding.securityDialogLabel.text = getString(R.string.wrong_password)
                     binding.securityDialogPassword.text = EMPTY_STRING
                 }
-                SecurityStateContract.SuccessOnCheckPassword -> {
+
+                is SecurityStateContract.SuccessOnCheckPassword -> {
+
                     requireParentFragment().setFragmentResult(
                         SUCCESS_CHECK_PASSWORD,
-                        bundleOf(SUCCESS_CHECK_PASSWORD to type)
+                        bundleOf(
+                            SUCCESS_CHECK_PASSWORD to type,
+                            SUCCESS_CHECK_PURPOSE to (type as Security.Check).purpose
+                        )
                     )
                     dismiss()
                 }
                 /** Can't found security item */
-                SecurityStateContract.NotFoundSecurityItem -> dismiss()
+                is SecurityStateContract.ErrorNotFoundSecurityItem -> {
+                    dismiss()
+                }
+                /** Can't found section id */
+                is SecurityStateContract.ErrorSectionIdIsNull -> {
+                    dismiss()
+                }
+                /** Can't found task id */
+                is SecurityStateContract.ErrorTaskIdIsNull -> {
+                    dismiss()
+                }
             }
         }
     }
@@ -190,7 +225,5 @@ class SecurityDialog : DialogFragment() {
         const val LANDSCAPE_MODE = 0.92
 
         const val ARG_SECURITY_TYPE = "ARG_SECURITY_TYPE"
-        const val ARG_ON_SUCCESS = "ARG_ON_SUCCESS"
-        const val ARG_SECURITY_ITEM_ID = "ARG_SECURITY_ITEM_ID"
     }
 }

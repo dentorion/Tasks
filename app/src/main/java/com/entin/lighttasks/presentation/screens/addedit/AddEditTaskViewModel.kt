@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
-import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.domain.entity.Task
@@ -30,13 +29,13 @@ import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
 import com.entin.lighttasks.presentation.util.TASK_HAS_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_ICON
+import com.entin.lighttasks.presentation.util.TASK_ID
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
 import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
 import com.entin.lighttasks.presentation.util.TASK_IS_RANGE
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
-import com.entin.lighttasks.presentation.util.TASK_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_TITLE
 import com.entin.lighttasks.presentation.util.VOICE_ATTACHED
 import com.entin.lighttasks.presentation.util.ZERO
@@ -83,6 +82,11 @@ class AddEditTaskViewModel @Inject constructor(
 
     /** Get task id if exist */
     fun getTaskId(): Int? = taskEntity?.id
+
+    /**
+     * Get next task id
+     */
+    var nextTaskId: Int = Int.MIN_VALUE
 
     var taskTitle = state.get<String>(TASK_TITLE) ?: taskEntity?.title ?: EMPTY_STRING
         set(value) {
@@ -266,26 +270,27 @@ class AddEditTaskViewModel @Inject constructor(
 
     /** Security */
 
-    var hasPasswordOnStart = state.get<Boolean>(TASK_HAS_PASSWORD) ?: taskEntity?.hasPassword ?: false
+    private var hasPasswordOnStart =
+        state.get<Boolean>(TASK_HAS_PASSWORD) ?: taskEntity?.hasPassword ?: false
         private set(value) {
             field = value
             state[TASK_HAS_PASSWORD] = value
-        }
-
-    var passwordNew: String? = null
-        set(value) {
-            field = value
-            state[TASK_PASSWORD] = value
-            viewModelScope.launch {
-                _editTaskChannel.send(EditTaskEventContract.OnSuccessPasswordAdd)
-            }
         }
 
     var isPasswordSecurityTurnOn: Boolean = state.get<Boolean>(IS_PASSWORD_TURN_ON) ?: hasPasswordOnStart
         set(value) {
             field = value
             state[IS_PASSWORD_TURN_ON] = value
+            viewModelScope.launch {
+                _editTaskChannel.send(EditTaskEventContract.OnSuccessPasswordCreateOrUpdate)
+            }
         }
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            nextTaskId = taskRepository.getNextTaskId().first()
+        }
+    }
 
     /** Get all icons */
     fun getTaskIcons() {
@@ -300,7 +305,7 @@ class AddEditTaskViewModel @Inject constructor(
     fun getSectionById() {
         if(sectionId != ZERO) {
             viewModelScope.launch(Dispatchers.IO) {
-                val sectionTitle = sectionsRepository.getSectionById(sectionId).first()
+                val sectionTitle = sectionsRepository.getSectionById(sectionId).first().title
                 sectionName.postValue(sectionTitle)
             }
         } else {
@@ -328,7 +333,7 @@ class AddEditTaskViewModel @Inject constructor(
             // Success: save task
             else {
                 // Password
-                setPassword()
+                checkPasswordForDeletion()
 
                 // Alarm
                 setAlarmForTask()
@@ -484,29 +489,12 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     /** Set password for task */
-    private suspend fun setPassword() {
-        val taskId = taskEntity?.id ?: taskRepository.getNextTaskId().first()
-
-        // Was password and new password set and security switch on
-        if (hasPasswordOnStart && passwordNew != null && isPasswordSecurityTurnOn) {
-            securityRepository.updateSecurityItemByTaskId(
-                taskId = taskId,
-                password = passwordNew!!,
-            )
-        }
+    private suspend fun checkPasswordForDeletion() {
         // Was password and security switch off
         if (hasPasswordOnStart && !isPasswordSecurityTurnOn) {
-            securityRepository.deleteSecurityItemByTaskId(taskEntity!!.id)
-        }
-        // Wasn't password and new password set and security switch on
-        if (!hasPasswordOnStart && passwordNew != null && isPasswordSecurityTurnOn) {
-            securityRepository.addSecurityItem(
-                SecurityEntity(password = passwordNew!!, taskId = taskId, sectionId = 0)
-            )
-        }
-        // Wasn't password and security switch off
-        if (!hasPasswordOnStart && !isPasswordSecurityTurnOn) {
-            // Do nothing
+            taskEntity?.id?.let { taskId ->
+                securityRepository.deleteSecurityItemByTaskId(taskId)
+            }
         }
     }
     

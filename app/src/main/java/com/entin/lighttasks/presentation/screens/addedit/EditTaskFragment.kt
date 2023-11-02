@@ -23,6 +23,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,7 +35,6 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.Section
-import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel.Companion.ONE_DAY_MLS
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
@@ -44,14 +44,19 @@ import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
 import com.entin.lighttasks.presentation.screens.dialogs.linkUrl.LinkUrlChooseDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.Security
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPlace
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityType
+import com.entin.lighttasks.presentation.screens.dialogs.security.Place
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose
 import com.entin.lighttasks.presentation.util.COMMA
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
+import com.entin.lighttasks.presentation.util.ONE_DAY_MLS
+import com.entin.lighttasks.presentation.util.SUCCESS_CREATE_PASSWORD
 import com.entin.lighttasks.presentation.util.TWO
+import com.entin.lighttasks.presentation.util.WAS_CREATE_PASSWORD
+import com.entin.lighttasks.presentation.util.WAS_UPDATE_PASSWORD
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
@@ -94,33 +99,23 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      * Security dialog
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val securityDialog by lazy {
-        SecurityDialog()
-    }
+    private val securityDialog by lazy { SecurityDialog() }
 
     /** Photo add dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val photoAddEditDialog by lazy {
-        PhotoAddToTaskDialog()
-    }
+    private val photoAddEditDialog by lazy { PhotoAddToTaskDialog() }
 
     /** Photo show dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val photoShowDialog by lazy {
-        PhotoShowDialog()
-    }
+    private val photoShowDialog by lazy { PhotoShowDialog() }
 
     /** Voice add Dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val voiceAddEditDialog by lazy {
-        VoiceAddToTaskDialog()
-    }
+    private val voiceAddEditDialog by lazy { VoiceAddToTaskDialog() }
 
     /** Voice add Dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val galleryImagesDialog by lazy {
-        GalleryImagesDialog()
-    }
+    private val galleryImagesDialog by lazy { GalleryImagesDialog() }
 
     /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -130,6 +125,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
+    /**
+     * Creation of fragment
+     */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,7 +148,12 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         return binding.root
     }
 
-    /** Permissions */
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener()
+    }
+
+    /** Permissions of notification for alert */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun setActivityResultLauncher() {
         activityResultLauncher = registerForActivityResult(
@@ -161,6 +164,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 if (it.key in REQUIRED_PERMISSIONS && !it.value) permissionGranted = false
             }
             if (!permissionGranted) {
+                // TODO: dialog to say why it's important
                 Log.e("Error", "permissions are not granted!")
             } else {
                 pickDateTime()
@@ -301,34 +305,31 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             /** Security password code */
             addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.apply {
                 this.isChecked = viewModel.isPasswordSecurityTurnOn
-                isSecurityPickerShown(
-                    hasPassword = viewModel.hasPasswordOnStart,
-                    isCheckboxSwitchOn = this.isChecked
-                )
+                isSecurityPickerShown(isPasswordSecurityTurnOn = viewModel.isPasswordSecurityTurnOn)
                 this.jumpDrawablesToCurrentState()
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.setOnCheckedChangeListener { _, isCheck ->
-                // If checkbox switched to off -> set new password (if it was) to null
-                if(!isCheck) {
-                    viewModel.passwordNew = null
-                }
-                viewModel.isPasswordSecurityTurnOn = isCheck
-                isSecurityPickerShown(
-                    hasPassword = viewModel.hasPasswordOnStart || (viewModel.passwordNew != null),
-                    isCheckboxSwitchOn = isCheck
-                )
+                // Set check button to true doesn't mean that vm.isPasswordSecurityTurnOn==true,
+                // but button that open dialog to set password should be visible
+                isSecurityPickerShown(isPasswordSecurityTurnOn = isCheck)
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.apply {
                 setOnClickListener {
-//                    val currentSecurityDialog = securityDialog.newInstance(
-//                        type = SecurityType.Create(SecurityPlace.TASK),
-//                        onSuccess = ::onSuccessPasswordAdd,
-//                    )
-//                    currentSecurityDialog.let { dialog ->
-//                        if (!dialog.isVisible) {
-//                            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
-//                        }
-//                    }
+                    val currentSecurityDialog = securityDialog.newInstance(
+                        type = Security.Create(
+                            place = Place.TaskPlace(taskId = viewModel.getTaskId() ?: viewModel.nextTaskId),
+                            purpose = if(viewModel.isPasswordSecurityTurnOn) {
+                                SecurityPurpose.UPDATE_TASK_PASSWORD
+                            } else {
+                                SecurityPurpose.CREATE_TASK_PASSWORD
+                            }
+                        ),
+                    )
+                    currentSecurityDialog.let { dialog ->
+                        if (!dialog.isVisible) {
+                            dialog.show(childFragmentManager, SecurityDialog::class.simpleName)
+                        }
+                    }
                 }
             }
             /** Expired */
@@ -630,14 +631,16 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
         }
     }
 
-    private fun isSecurityPickerShown(hasPassword: Boolean, isCheckboxSwitchOn: Boolean) {
+    private fun isSecurityPickerShown(
+        isPasswordSecurityTurnOn: Boolean
+    ) {
         binding.apply {
             // Label
-            addEditTaskIncludeSecurity.addEditTaskSecurityLabel.isVisible = isCheckboxSwitchOn.not()
-            addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isCheckboxSwitchOn.not()
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabel.isVisible = isPasswordSecurityTurnOn.not()
+            addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isPasswordSecurityTurnOn.not()
             // Code picker
-            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isCheckboxSwitchOn
-            if(hasPassword) {
+            addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isPasswordSecurityTurnOn
+            if(viewModel.isPasswordSecurityTurnOn) {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = getString(R.string.change_security_code)
             } else {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
@@ -726,8 +729,9 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                         setTagGalleryImagesVisibility(event.galleryImages)
                     }
 
-                    is EditTaskEventContract.OnSuccessPasswordAdd -> {
-                        isSecurityPickerShown(hasPassword = true, isCheckboxSwitchOn = true)
+                    /** Refresh view of password add/edit after new password set */
+                    is EditTaskEventContract.OnSuccessPasswordCreateOrUpdate -> {
+                        isSecurityPickerShown(isPasswordSecurityTurnOn = true)
                     }
                 }
             }
@@ -762,7 +766,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /** Show label of attach instead of tags */
-
     private fun setLabelOfAttached() {
         binding.addEditTaskAttachedNothingLabel.visibility =
             if (viewModel.attachedGalleryImages.isEmpty() &&
@@ -774,11 +777,6 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             } else {
                 View.INVISIBLE
             }
-    }
-
-    /** Set security password for saving */
-    private fun onSuccessPasswordAdd(newPassword: String) {
-        viewModel.passwordNew = newPassword
     }
 
     /**
@@ -805,6 +803,20 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             .split(COMMA)
             .filter { it != linkUrl }
             .joinToString(COMMA)
+    }
+
+    /**
+     * Listener fot Security dialog
+     */
+    private fun setFragmentResultListener() {
+        setFragmentResultListener(SUCCESS_CREATE_PASSWORD) { _, bundle ->
+            if(bundle.getBoolean(WAS_CREATE_PASSWORD)) {
+                viewModel.isPasswordSecurityTurnOn = true
+            }
+            if(bundle.getBoolean(WAS_UPDATE_PASSWORD)) {
+                viewModel.isPasswordSecurityTurnOn = true
+            }
+        }
     }
 
     override fun onDestroyView() {

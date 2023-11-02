@@ -56,6 +56,6 @@ class SectionsRepositoryImpl @Inject constructor(
         sectionsDao.deleteSection(sectionId)
 
     /** Get section by id */
-    override fun getSectionById(sectionId: Int): Flow<String> =
+    override fun getSectionById(sectionId: Int): Flow<Section> =
         sectionsDao.getSectionById(sectionId)
 }

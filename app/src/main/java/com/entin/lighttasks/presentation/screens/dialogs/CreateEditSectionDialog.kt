@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -16,15 +17,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
-import com.entin.lighttasks.databinding.CreateEditSectionDialogBinding
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.databinding.CreateEditSectionDialogBinding
+import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
+import com.entin.lighttasks.presentation.util.EMPTY_STRING
+import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -34,12 +40,46 @@ class CreateEditSectionDialog : DialogFragment() {
     private val binding get() = _binding!!
     private val viewModel: SectionViewModel by viewModels(ownerProducer = { requireParentFragment() })
     private var iconAdapter: IconsTaskAdapter? = null
+    private lateinit var sectionForSave: Section
+    private var isUpdate: Boolean = false
+
+    fun newInstance(
+        section: Section? = null,
+        isUpdate: Boolean = section != null
+    ): CreateEditSectionDialog =
+        CreateEditSectionDialog().apply {
+            val sectionNew = section ?: Section(
+                title = EMPTY_STRING,
+                createdAt = Date().time,
+                editedAt = ZERO_LONG,
+                icon = ZERO,
+                isImportant = false,
+                position = ZERO,
+                hasPassword = false
+            )
+            this.sectionForSave = sectionNew
+            this.isUpdate = isUpdate
+            this.arguments = bundleOf(
+                SECTION to this.sectionForSave,
+                IS_UPDATE to this.isUpdate
+            )
+        }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(SECTION, sectionForSave)
+        super.onSaveInstanceState(outState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        if (savedInstanceState != null) {
+            this.sectionForSave = arguments?.get(SECTION) as Section
+            this.isUpdate = arguments?.get(IS_UPDATE) as Boolean
+        }
+
         isCancelable = false
         _binding = CreateEditSectionDialogBinding.inflate(inflater, container, false)
 
@@ -75,14 +115,14 @@ class CreateEditSectionDialog : DialogFragment() {
         with(binding) {
             /** Title */
             dialogAddEditSectionTitleValue.text =
-                SpannableStringBuilder(viewModel.sectionTitle)
+                SpannableStringBuilder(sectionForSave.title)
 
             /** Important */
             dialogAddEditSectionImportantCheckbox.apply {
-                this.isChecked = viewModel.sectionImportant
+                this.isChecked = sectionForSave?.isImportant ?: false
                 this.jumpDrawablesToCurrentState()
                 setOnCheckedChangeListener { _, isCheck ->
-                    viewModel.sectionImportant = isCheck
+                    sectionForSave = sectionForSave.copy(isImportant = isCheck)
                 }
             }
 
@@ -93,11 +133,14 @@ class CreateEditSectionDialog : DialogFragment() {
 
             /** Save */
             dialogAddEditSectionSaveButton.setOnClickListener {
-                if (dialogAddEditSectionTitleValue.text?.isNotEmpty() == true && dialogAddEditSectionTitleValue.text?.isNotBlank() == true) {
-                    dialogAddEditSectionValueIncorrect.isVisible = false
+                if (dialogAddEditSectionTitleValue.text?.isNotEmpty() == true &&
+                    dialogAddEditSectionTitleValue.text?.isNotBlank() == true
+                ) {
 
-                    viewModel.sectionTitle = dialogAddEditSectionTitleValue.text.toString()
-                    viewModel.onSaveButtonClick()
+                    dialogAddEditSectionValueIncorrect.isVisible = false
+                    sectionForSave =
+                        sectionForSave.copy(title = dialogAddEditSectionTitleValue.text.toString())
+                    viewModel.onSaveButtonClick(sectionForSave, isUpdate = isUpdate)
                     dismiss()
                 } else {
                     dialogAddEditSectionValueIncorrect.isVisible = true
@@ -110,7 +153,7 @@ class CreateEditSectionDialog : DialogFragment() {
      * Icon
      */
     private fun setupIconRecyclerView() {
-        iconAdapter = IconsTaskAdapter(viewModel.sectionIcon) { element, position ->
+        iconAdapter = IconsTaskAdapter(sectionForSave?.icon ?: ZERO) { element, position ->
             onGroupIconSelected(element, position)
         }
 
@@ -129,7 +172,7 @@ class CreateEditSectionDialog : DialogFragment() {
      */
     private fun onGroupIconSelected(element: IconTaskEntity, position: Int?) {
         position?.let {
-            viewModel.sectionIcon = element.groupId
+            sectionForSave = sectionForSave.copy(icon = element.groupId)
             binding.dialogAddEditSectionCategoryRecyclerview.smoothScrollToPosition(it)
         }
     }
@@ -138,7 +181,7 @@ class CreateEditSectionDialog : DialogFragment() {
      * On list of icons get
      */
     private fun onIconsGet(icons: List<IconTaskEntity>) {
-        val selectedIcon = icons.first { it.groupId == viewModel.sectionIcon }
+        val selectedIcon = icons.first { it.groupId == sectionForSave.icon }
         val indexOfSelectedIcon = icons.indexOf(selectedIcon)
         iconAdapter?.submitList(icons)
         val marginElements = if (indexOfSelectedIcon >= 2) 2 else 0
@@ -172,5 +215,8 @@ class CreateEditSectionDialog : DialogFragment() {
     companion object {
         const val FULL_SCREEN = 0.92
         const val LANDSCAPE_MODE = 0.65
+
+        const val SECTION = "SECTION"
+        const val IS_UPDATE = "IS_UPDATE"
     }
 }

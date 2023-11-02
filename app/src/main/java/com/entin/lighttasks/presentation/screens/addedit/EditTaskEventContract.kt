@@ -11,7 +11,7 @@ sealed class EditTaskEventContract {
     object ShowErrorDatesPicked : EditTaskEventContract()
     object ShowErrorAlarmTime : EditTaskEventContract()
     object TaskNotSaved : EditTaskEventContract()
-    object OnSuccessPasswordAdd : EditTaskEventContract()
+    object OnSuccessPasswordCreateOrUpdate : EditTaskEventContract()
     data class RefreshTagsVisibility(
         val url: Boolean = false,
         val photo: Boolean = false,

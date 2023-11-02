@@ -30,6 +30,7 @@ const val DATE_FORMAT_NAME = "yyyy_MM_dd_HH_mm_ss_SSS"
  */
 
 const val TASK = "task"
+const val TASK_ID = "taskId"
 const val TASK_TITLE = "taskTitle"
 const val TASK_MESSAGE = "taskMessage"
 const val TASK_FINISHED = "taskFinished"
@@ -95,8 +96,9 @@ const val ONE_WEEK_MLS = 604800000
 
 const val INTENT_MESSAGE = "intentMessage"
 
-/**
- * Bundle from Security Fragment
- */
+const val SUCCESS_CREATE_PASSWORD = "successOnCreatePassword"
+const val WAS_CREATE_PASSWORD = "successOnCreatePassword"
+const val WAS_UPDATE_PASSWORD = "successOnUpdatePassword"
+
 const val SUCCESS_CHECK_PASSWORD = "successOnCheckPassword"
-const val SUCCESS_CREATE_PASSWORD = "successOnCheckPassword"
+const val SUCCESS_CHECK_PURPOSE = "successCheckPurpose"

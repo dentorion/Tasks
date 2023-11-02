@@ -8,6 +8,6 @@ import com.entin.lighttasks.domain.entity.Section
 
 sealed class SectionsEventContract {
     data class ShowAllSections(val sectionEntities: List<Section> = listOf()): SectionsEventContract()
-    data class CheckPassword(val sectionId: Int, val securityItemId: Int): SectionsEventContract()
-    data class CheckPasswordDeletion(val section: Section, val securityItemId: Int): SectionsEventContract()
+    data class CheckPassword(val sectionId: Int): SectionsEventContract()
+    data class CheckPasswordDeletion(val sectionId: Int): SectionsEventContract()
 }

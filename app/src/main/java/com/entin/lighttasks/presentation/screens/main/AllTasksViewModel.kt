@@ -132,9 +132,11 @@ class AllTasksViewModel @Inject constructor(
         }
     }
 
-    fun openTask(task: Task) {
+    fun openTaskAfterSuccessPasswordCheck(taskId: Int) {
         viewModelScope.launch {
-            _tasksEvent.send(AllTasksEvent.NavToEditTaskFromSecurity(task))
+            taskRepository.getTaskById(taskId).first().also { task ->
+                _tasksEvent.send(AllTasksEvent.NavToEditTaskFromSecurity(task))
+            }
         }
     }
 

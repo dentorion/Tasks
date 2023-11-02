@@ -194,6 +194,12 @@ class TasksRepositoryImpl @Inject constructor(
         tasksDao.updateAttachedGalleryImagesByTaskId(id, listUri.joinToString(COMMA) { it.toString() })
     }
 
+    /**
+     * Get task by id
+     */
+    override fun getTaskById(taskId: Int): Flow<Task> =
+        tasksDao.getTaskById(taskId)
+
     /** WIDGET */
     override fun getCountTasksForWidget(): Flow<Int> =
         tasksDao.getCountTasksToday(

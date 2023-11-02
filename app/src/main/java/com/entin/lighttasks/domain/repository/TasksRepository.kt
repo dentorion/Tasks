@@ -54,4 +54,6 @@ interface TasksRepository {
     fun getAttachedGalleryImagesByTaskId(id: Int): Flow<List<Uri>>
 
     suspend fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>)
+
+    fun getTaskById(taskId: Int): Flow<Task>
 }

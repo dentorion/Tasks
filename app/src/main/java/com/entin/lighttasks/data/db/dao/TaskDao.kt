@@ -312,6 +312,16 @@ interface TaskDao {
     @Query("UPDATE tasks SET attached_gallery_images = :listUri WHERE id = :id")
     fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: String)
 
+    @Query("SELECT Tasks.*, " +
+            "CASE WHEN Security.password IS NOT NULL THEN 1 ELSE 0 END AS has_password, " +
+            "Alarms.alarm_time AS alarm_time " +
+            "FROM tasks " +
+            "LEFT JOIN Alarms ON tasks.alarm_id = Alarms.alarm_id " +
+            "LEFT JOIN Security ON Tasks.id = Security.task_id " +
+            "WHERE Tasks.id = :taskId",
+        )
+    fun getTaskById(taskId: Int): Flow<Task>
+
     /**
      * WIDGET
      */
