@@ -48,7 +48,7 @@ class CreateEditSectionDialog : DialogFragment() {
         isUpdate: Boolean = section != null
     ): CreateEditSectionDialog =
         CreateEditSectionDialog().apply {
-            val sectionNew = section ?: Section(
+            this.sectionForSave = section ?: Section(
                 title = EMPTY_STRING,
                 createdAt = Date().time,
                 editedAt = ZERO_LONG,
@@ -57,7 +57,6 @@ class CreateEditSectionDialog : DialogFragment() {
                 position = ZERO,
                 hasPassword = false
             )
-            this.sectionForSave = sectionNew
             this.isUpdate = isUpdate
             this.arguments = bundleOf(
                 SECTION to this.sectionForSave,
@@ -67,6 +66,7 @@ class CreateEditSectionDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(SECTION, sectionForSave)
+        outState.putBoolean(IS_UPDATE, isUpdate)
         super.onSaveInstanceState(outState)
     }
 
@@ -77,7 +77,7 @@ class CreateEditSectionDialog : DialogFragment() {
     ): View {
         if (savedInstanceState != null) {
             this.sectionForSave = arguments?.get(SECTION) as Section
-            this.isUpdate = arguments?.get(IS_UPDATE) as Boolean
+            this.isUpdate = arguments?.getBoolean(IS_UPDATE) as Boolean
         }
 
         isCancelable = false
@@ -138,9 +138,10 @@ class CreateEditSectionDialog : DialogFragment() {
                 ) {
 
                     dialogAddEditSectionValueIncorrect.isVisible = false
-                    sectionForSave =
-                        sectionForSave.copy(title = dialogAddEditSectionTitleValue.text.toString())
-                    viewModel.onSaveButtonClick(sectionForSave, isUpdate = isUpdate)
+                    sectionForSave = sectionForSave.copy(
+                        title = dialogAddEditSectionTitleValue.text.toString()
+                    )
+                    viewModel.onSaveButtonClick(section = sectionForSave, isUpdate = isUpdate)
                     dismiss()
                 } else {
                     dialogAddEditSectionValueIncorrect.isVisible = true

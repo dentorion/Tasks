@@ -53,10 +53,11 @@ import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.NEW_LINE
 import com.entin.lighttasks.presentation.util.ONE
 import com.entin.lighttasks.presentation.util.ONE_DAY_MLS
-import com.entin.lighttasks.presentation.util.SUCCESS_CREATE_PASSWORD
+import com.entin.lighttasks.presentation.util.SUCCESS_ADD_PASSWORD_RESULT
 import com.entin.lighttasks.presentation.util.TWO
-import com.entin.lighttasks.presentation.util.WAS_CREATE_PASSWORD
-import com.entin.lighttasks.presentation.util.WAS_UPDATE_PASSWORD
+import com.entin.lighttasks.presentation.util.BUNDLE_IS_PASSWORD_CREATION
+import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
+import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_VALUE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
@@ -82,7 +83,7 @@ import java.util.Date
  */
 
 @AndroidEntryPoint
-class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
+class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private var _binding: FragmentEditTaskBinding? = null
     private val binding get() = _binding!!
 
@@ -309,8 +310,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
                 this.jumpDrawablesToCurrentState()
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCheckbox.setOnCheckedChangeListener { _, isCheck ->
-                // Set check button to true doesn't mean that vm.isPasswordSecurityTurnOn==true,
-                // but button that open dialog to set password should be visible
+                viewModel.isPasswordSecurityTurnOn = isCheck
                 isSecurityPickerShown(isPasswordSecurityTurnOn = isCheck)
             }
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.apply {
@@ -640,7 +640,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isPasswordSecurityTurnOn.not()
             // Code picker
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isPasswordSecurityTurnOn
-            if(viewModel.isPasswordSecurityTurnOn) {
+            if(isPasswordSecurityTurnOn) {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = getString(R.string.change_security_code)
             } else {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
@@ -791,7 +791,7 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      */
     private fun urlSelected(linkUrl: String) {
         findNavController().navigate(
-            EditTaskFragmentDirections.actionGlobalUrlWebView(linkUrl)
+            AddEditTaskFragmentDirections.actionGlobalUrlWebView(linkUrl)
         )
     }
 
@@ -809,13 +809,18 @@ class EditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      * Listener fot Security dialog
      */
     private fun setFragmentResultListener() {
-        setFragmentResultListener(SUCCESS_CREATE_PASSWORD) { _, bundle ->
-            if(bundle.getBoolean(WAS_CREATE_PASSWORD)) {
-                viewModel.isPasswordSecurityTurnOn = true
-            }
-            if(bundle.getBoolean(WAS_UPDATE_PASSWORD)) {
-                viewModel.isPasswordSecurityTurnOn = true
-            }
+        Log.e("SECURITY_DIALOG", "setFragmentResultListener()")
+        setFragmentResultListener(SUCCESS_ADD_PASSWORD_RESULT) { _, bundle ->
+            val security = bundle.get(BUNDLE_PASSWORD_RESULT_SECURITY_TYPE) as Security
+            // Task password should be create or update
+            val isPasswordCreation = bundle.getBoolean(BUNDLE_IS_PASSWORD_CREATION)
+            // Task new password
+            val password = bundle.getString(BUNDLE_PASSWORD_VALUE) as String
+            Log.e("SECURITY_DIALOG", "setFragmentResultListener(). isPasswordCreation: $isPasswordCreation, password: $password")
+
+            viewModel.isPasswordSecurityTurnOn = true
+            viewModel.isPasswordCreation = isPasswordCreation
+            viewModel.taskNewPassword = password
         }
     }
 

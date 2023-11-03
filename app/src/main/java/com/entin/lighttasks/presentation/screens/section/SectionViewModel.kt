@@ -120,7 +120,6 @@ class SectionViewModel @Inject constructor(
     fun deleteSection(sectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             sectionRepository.getSectionById(sectionId).first().also { section ->
-                Log.e("DELETE_SECTION", "section: ${section.title}")
                 sectionRepository.deleteSectionById(section.id)
                 taskRepository.updateAllTasksWithDeletedSection(section.id)
                 preferences.updateSection(ZERO)

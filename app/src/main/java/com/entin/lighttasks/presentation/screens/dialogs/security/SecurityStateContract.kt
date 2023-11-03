@@ -7,11 +7,13 @@ sealed class SecurityStateContract {
     object ErrorOnRepeatPassword: SecurityStateContract()
     object SuccessOnCreatePassword: SecurityStateContract()
     object SuccessOnUpdatePassword: SecurityStateContract()
+    data class CreateTaskPassword(val passwordFromUser: String): SecurityStateContract()
+    data class UpdateTaskPassword(val passwordFromUser: String): SecurityStateContract()
     // Check password
     object ErrorOnCheckPassword: SecurityStateContract()
     object SuccessOnCheckPassword: SecurityStateContract()
     // Error
-    data class ErrorNotFoundSecurityItem(val line: Int): SecurityStateContract()
-    data class ErrorSectionIdIsNull(val line: Int): SecurityStateContract()
-    data class ErrorTaskIdIsNull(val line: Int): SecurityStateContract()
+    object ErrorNotFoundSecurityItemToCheckPassword: SecurityStateContract()
+    object ErrorSectionIdIsNull: SecurityStateContract()
+    object ErrorTaskIdIsNull: SecurityStateContract()
 }

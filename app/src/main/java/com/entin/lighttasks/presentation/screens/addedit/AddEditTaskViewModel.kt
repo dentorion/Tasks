@@ -1,12 +1,14 @@
 package com.entin.lighttasks.presentation.screens.addedit
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.entin.lighttasks.data.db.entity.AlarmItemEntity
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
+import com.entin.lighttasks.data.db.entity.SecurityEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
 import com.entin.lighttasks.data.util.alarm.AlarmScheduler
 import com.entin.lighttasks.domain.entity.Task
@@ -17,6 +19,7 @@ import com.entin.lighttasks.domain.repository.TasksRepository
 import com.entin.lighttasks.presentation.util.EMPTY_STRING
 import com.entin.lighttasks.presentation.util.GALLERY_PICKED_IMAGES
 import com.entin.lighttasks.presentation.util.IS_ALARM
+import com.entin.lighttasks.presentation.util.IS_PASSWORD_CREATION
 import com.entin.lighttasks.presentation.util.IS_PASSWORD_TURN_ON
 import com.entin.lighttasks.presentation.util.LINK_ATTACHED
 import com.entin.lighttasks.presentation.util.PHOTO_ATTACHED
@@ -29,13 +32,13 @@ import com.entin.lighttasks.presentation.util.TASK_EXPIRE_DATE_SECOND
 import com.entin.lighttasks.presentation.util.TASK_FINISHED
 import com.entin.lighttasks.presentation.util.TASK_HAS_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_ICON
-import com.entin.lighttasks.presentation.util.TASK_ID
 import com.entin.lighttasks.presentation.util.TASK_IMPORTANT
 import com.entin.lighttasks.presentation.util.TASK_IS_EVENT
 import com.entin.lighttasks.presentation.util.TASK_IS_EXPIRED
 import com.entin.lighttasks.presentation.util.TASK_IS_RANGE
 import com.entin.lighttasks.presentation.util.TASK_MESSAGE
 import com.entin.lighttasks.presentation.util.TASK_NEW
+import com.entin.lighttasks.presentation.util.TASK_NEW_PASSWORD
 import com.entin.lighttasks.presentation.util.TASK_TITLE
 import com.entin.lighttasks.presentation.util.VOICE_ATTACHED
 import com.entin.lighttasks.presentation.util.ZERO
@@ -277,7 +280,20 @@ class AddEditTaskViewModel @Inject constructor(
             state[TASK_HAS_PASSWORD] = value
         }
 
-    var isPasswordSecurityTurnOn: Boolean = state.get<Boolean>(IS_PASSWORD_TURN_ON) ?: hasPasswordOnStart
+    var isPasswordCreation: Boolean = state.get<Boolean>(IS_PASSWORD_CREATION) ?: false
+        set(value) {
+            field = value
+            state[IS_PASSWORD_CREATION] = value
+        }
+
+    var taskNewPassword: String = state.get<String>(TASK_NEW_PASSWORD) ?: EMPTY_STRING
+        set(value) {
+            field = value
+            state[TASK_NEW_PASSWORD] = value
+        }
+
+    var isPasswordSecurityTurnOn: Boolean =
+        state.get<Boolean>(IS_PASSWORD_TURN_ON) ?: hasPasswordOnStart
         set(value) {
             field = value
             state[IS_PASSWORD_TURN_ON] = value
@@ -333,7 +349,7 @@ class AddEditTaskViewModel @Inject constructor(
             // Success: save task
             else {
                 // Password
-                checkPasswordForDeletion()
+                passwordForTask()
 
                 // Alarm
                 setAlarmForTask()
@@ -489,11 +505,29 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     /** Set password for task */
-    private suspend fun checkPasswordForDeletion() {
+    private suspend fun passwordForTask() {
+        Log.e("SECURITY_DIALOG", "passwordForTask()")
+
         // Was password and security switch off
         if (hasPasswordOnStart && !isPasswordSecurityTurnOn) {
             taskEntity?.id?.let { taskId ->
                 securityRepository.deleteSecurityItemByTaskId(taskId)
+            }
+        }
+
+        if (taskNewPassword != EMPTY_STRING && isPasswordSecurityTurnOn) {
+            when (isPasswordCreation) {
+                true -> securityRepository.addSecurityItem(
+                    SecurityEntity(
+                        password = taskNewPassword,
+                        taskId = getTaskId() ?: nextTaskId,
+                        sectionId = ZERO
+                    )
+                )
+                false -> securityRepository.updateSecurityItemByTaskId(
+                    taskId = getTaskId() ?: nextTaskId,
+                    password = taskNewPassword
+                )
             }
         }
     }

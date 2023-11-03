@@ -1,7 +1,6 @@
 package com.entin.lighttasks.presentation.screens.section
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,14 +18,11 @@ import com.entin.lighttasks.presentation.screens.dialogs.security.Place
 import com.entin.lighttasks.presentation.screens.dialogs.security.Security
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityStateContract
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionPreferencesAdapter
 import com.entin.lighttasks.presentation.screens.section.adapter.SectionTouchHelperCallback
-import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD
-import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PURPOSE
-import com.entin.lighttasks.presentation.util.SUCCESS_CREATE_PASSWORD
-import com.entin.lighttasks.presentation.util.WAS_CREATE_PASSWORD
-import com.entin.lighttasks.presentation.util.WAS_UPDATE_PASSWORD
+import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD_RESULT
+import com.entin.lighttasks.presentation.util.SUCCESS_ADD_PASSWORD_RESULT
+import com.entin.lighttasks.presentation.util.BUNDLE_IS_PASSWORD_CREATION
 import com.entin.lighttasks.presentation.util.ZERO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -209,17 +205,16 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
      * Listener fot Security dialog
      */
     private fun setFragmentResultListener() {
-        setFragmentResultListener(SUCCESS_CREATE_PASSWORD) { _, bundle ->
-            if (bundle.getBoolean(WAS_CREATE_PASSWORD)) {
+        setFragmentResultListener(SUCCESS_ADD_PASSWORD_RESULT) { _, bundle ->
+            if (bundle.getBoolean(BUNDLE_IS_PASSWORD_CREATION)) {
                 /** Password is setup by [SecurityDialog] */
             }
-            if (bundle.getBoolean(WAS_UPDATE_PASSWORD)) {
-                /** Password is updated by [SecurityDialog] */
-            }
+//            if (bundle.getBoolean(WAS_UPDATE_PASSWORD)) {
+//                /** Password is updated by [SecurityDialog] */
+//            }
         }
-        setFragmentResultListener(SUCCESS_CHECK_PASSWORD) { _, bundle ->
-            val securityType = bundle.get(SUCCESS_CHECK_PASSWORD) as Security
-            val purpose = bundle.get(SUCCESS_CHECK_PURPOSE) as SecurityPurpose
+        setFragmentResultListener(SUCCESS_CHECK_PASSWORD_RESULT) { _, bundle ->
+            val securityType = bundle.get(SUCCESS_CHECK_PASSWORD_RESULT) as Security
 
             when (securityType) {
                 is Security.Check -> {
@@ -228,15 +223,15 @@ class SectionFragment : Fragment(R.layout.section_preferences) {
                         is Place.SectionPlace -> {
 
                             securityType.place.sectionId?.let {
-                                when(purpose) {
-                                    SecurityPurpose.CHECK_SECTION_DELETE -> {
-                                        viewModel.deleteSection(it)
-                                    }
-                                    SecurityPurpose.CHECK_SECTION_PASSWORD_DELETE -> {
-                                        viewModel.deletePassword(it)
-                                    }
-                                    else -> { /** Check password only for section deletion or unlocking */ }
-                                }
+//                                when(purpose) {
+//                                    SecurityPurpose.CHECK_SECTION_DELETE -> {
+//                                        viewModel.deleteSection(it)
+//                                    }
+//                                    SecurityPurpose.CHECK_SECTION_PASSWORD_DELETE -> {
+//                                        viewModel.deletePassword(it)
+//                                    }
+//                                    else -> { /** Check password only for section deletion or unlocking */ }
+//                                }
                             }
                         }
                         else -> { /** In this fragment check password only for: section */ }

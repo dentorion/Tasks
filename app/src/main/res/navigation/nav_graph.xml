@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
-        android:name="com.entin.lighttasks.presentation.screens.addedit.EditTaskFragment"
+        android:name="com.entin.lighttasks.presentation.screens.addedit.AddEditTaskFragment"
         android:label="{label}"
         tools:layout="@layout/fragment_edit_task">
         <argument

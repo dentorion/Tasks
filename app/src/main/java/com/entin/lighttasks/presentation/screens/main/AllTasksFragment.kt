@@ -33,7 +33,8 @@ import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
-import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD
+import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
+import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD_RESULT
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO
@@ -454,28 +455,19 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      * Listener fot Security dialog
      */
     private fun setFragmentResultListener() {
-        setFragmentResultListener(SUCCESS_CHECK_PASSWORD) { _, bundle ->
-            bundle.getParcelable<Security>(SUCCESS_CHECK_PASSWORD).also { securityType ->
-                when (securityType) {
+        setFragmentResultListener(SUCCESS_CHECK_PASSWORD_RESULT) { _, bundle ->
+            bundle.getParcelable<Security>(BUNDLE_PASSWORD_RESULT_SECURITY_TYPE).also { security ->
+                when (security) {
                     is Security.Check -> {
-                        when (securityType.place) {
-                            is Place.SectionPlace -> onSuccessPasswordCheckSection(
-                                securityType.place.sectionId
-                            )
 
-                            is Place.TaskPlace -> onSuccessPasswordCheckTask(
-                                securityType.place.taskId
-                            )
-
-                            else -> {
-                                /** In this fragment check password only for: task, section */
-                            }
+                        when (security.place) {
+                            is Place.SectionPlace -> onSuccessPasswordCheckSection(security.place.sectionId)
+                            is Place.TaskPlace -> onSuccessPasswordCheckTask(security.place.taskId)
+                            else -> { /** Fragment checks password only for: task, section */ }
                         }
                     }
 
-                    else -> {
-                        /** Check password only */
-                    }
+                    else -> { /** Check password only */ }
                 }
             }
         }
@@ -498,10 +490,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
-    private fun onSuccessPasswordCheckTask(taskId: Int?) {
-        taskId?.let {
-            viewModel.openTaskAfterSuccessPasswordCheck(it)
-        }
+    private fun onSuccessPasswordCheckTask(taskId: Int) {
+        Log.e("SECURITY_DIALOG", "taskId: $taskId")
+        viewModel.openTaskAfterSuccessPasswordCheck(taskId)
     }
 
     /**

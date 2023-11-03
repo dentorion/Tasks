@@ -11,8 +11,8 @@ sealed class Security: Parcelable {
 
 @Parcelize
 sealed class Place: Parcelable {
-    data class TaskPlace(val taskId: Int? = null): Place()
-    data class SectionPlace(val sectionId: Int? = null): Place()
+    data class TaskPlace(val taskId: Int): Place()
+    data class SectionPlace(val sectionId: Int): Place()
 }
 
 /**
@@ -24,7 +24,6 @@ enum class SecurityPurpose {
     CREATE_TASK_PASSWORD,
     UPDATE_TASK_PASSWORD,
     CREATE_SECTION_PASSWORD,
-    UPDATE_SECTION_PASSWORD,
 
     // Check
     CHECK_TASK_OPEN,
