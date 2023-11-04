@@ -273,7 +273,7 @@ class AddEditTaskViewModel @Inject constructor(
 
     /** Security */
 
-    private var hasPasswordOnStart =
+    var hasPasswordOnStart =
         state.get<Boolean>(TASK_HAS_PASSWORD) ?: taskEntity?.hasPassword ?: false
         private set(value) {
             field = value
@@ -290,6 +290,9 @@ class AddEditTaskViewModel @Inject constructor(
         set(value) {
             field = value
             state[TASK_NEW_PASSWORD] = value
+            viewModelScope.launch {
+                _editTaskChannel.send(EditTaskEventContract.OnSuccessPasswordCreateOrUpdate)
+            }
         }
 
     var isPasswordSecurityTurnOn: Boolean =

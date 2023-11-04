@@ -1,6 +1,5 @@
 package com.entin.lighttasks.presentation.screens.section
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -40,17 +39,6 @@ class SectionViewModel @Inject constructor(
 
     private val _iconTaskEntityChannel = Channel<List<IconTaskEntity>>()
     val iconTaskChannel = _iconTaskEntityChannel.receiveAsFlow()
-
-//    var sectionTitle: String = EMPTY_STRING
-//    var sectionIcon: Int = ZERO
-//    var sectionImportant: Boolean = false
-//    var currentSectionEntity: Section? = null
-//        set(value) {
-//            field = value
-//            sectionTitle = value?.title ?: EMPTY_STRING
-//            sectionIcon = value?.icon ?: ZERO
-//            sectionImportant = value?.isImportant ?: false
-//        }
 
     init {
         getAllSections()

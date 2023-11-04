@@ -16,7 +16,7 @@ sealed class Place: Parcelable {
 }
 
 /**
- * Used to understand for what kind of operation password was created or edited
+ * Used to understand for what kind of operation password was created or checked
  * Fragment will invoke necessary function based on purpose
  */
 enum class SecurityPurpose {

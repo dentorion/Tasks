@@ -1,5 +1,6 @@
 package com.entin.lighttasks.presentation.screens.addedit.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -13,8 +14,16 @@ import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 class SectionChooseAdapter(
     private val onSelect: (element: Section) -> Unit,
 ) : ListAdapter<Section, SectionChooseAdapter.SectionViewHolder>(
-    RadioButtonAdapterDiffCallback,
+    SectionChooseAdapterDiffCallback,
 ) {
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<Section>,
+        currentList: MutableList<Section>
+    ) {
+        super.onCurrentListChanged(previousList, currentList)
+        Log.e("SECTION_CHOOSE","ListChanged")
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder =
         SectionViewHolder(
@@ -46,20 +55,20 @@ class SectionChooseAdapter(
     }
 
     companion object {
-        private val RadioButtonAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
+        private val SectionChooseAdapterDiffCallback = object : DiffUtil.ItemCallback<Section>() {
             override fun areItemsTheSame(
                 oldItem: Section,
                 newItem: Section,
-            ): Boolean {
-                return oldItem.createdAt == newItem.createdAt && oldItem.editedAt == newItem.editedAt && oldItem.title == newItem.title
-            }
+            ): Boolean =
+                oldItem.createdAt == newItem.createdAt &&
+                        oldItem.editedAt == newItem.editedAt &&
+                        oldItem.title == newItem.title
 
             override fun areContentsTheSame(
                 oldItem: Section,
                 newItem: Section,
-            ): Boolean {
-                return oldItem == newItem
-            }
+            ): Boolean =
+                oldItem == newItem
         }
     }
 }

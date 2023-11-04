@@ -58,6 +58,8 @@ import com.entin.lighttasks.presentation.util.TWO
 import com.entin.lighttasks.presentation.util.BUNDLE_IS_PASSWORD_CREATION
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_VALUE
+import com.entin.lighttasks.presentation.util.BUNDLE_SECTION_CHOOSE
+import com.entin.lighttasks.presentation.util.SUCCESS_CHOOSE_SECTION_RESULT
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.checkForEmptyTitle
@@ -120,11 +122,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
 
     /** Section choose dialog */
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val sectionChooseDialog by lazy {
-        SectionChooseDialog().also {
-            it.setOnSelect(::onSectionSelect)
-        }
-    }
+    private val sectionChooseDialog by lazy { SectionChooseDialog() }
 
     /**
      * Creation of fragment
@@ -516,7 +514,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             }
             /** Choose section (category of task) */
             addEditTaskSectionSelection.setOnClickListener {
-                if (!sectionChooseDialog.isVisible) {
+                val dialog = sectionChooseDialog.newInstance()
+                if (!dialog.isVisible) {
                     sectionChooseDialog.show(
                         childFragmentManager,
                         SectionChooseDialog::class.simpleName
@@ -640,7 +639,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             addEditTaskIncludeSecurity.addEditTaskSecurityLabelArrow.isVisible = isPasswordSecurityTurnOn.not()
             // Code picker
             addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.isVisible = isPasswordSecurityTurnOn
-            if(isPasswordSecurityTurnOn) {
+            if(isPasswordSecurityTurnOn && (viewModel.hasPasswordOnStart || viewModel.taskNewPassword != EMPTY_STRING)) {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = getString(R.string.change_security_code)
             } else {
                 addEditTaskIncludeSecurity.addEditTaskSecurityCodePicker.text = resources.getString(R.string.set_security_code)
@@ -806,10 +805,14 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /**
-     * Listener fot Security dialog
+     * Listener fot [SecurityDialog] and [SectionChooseDialog]
      */
     private fun setFragmentResultListener() {
         Log.e("SECURITY_DIALOG", "setFragmentResultListener()")
+        setFragmentResultListener(SUCCESS_CHOOSE_SECTION_RESULT) { _, bundle ->
+            val section = bundle.get(BUNDLE_SECTION_CHOOSE) as Section
+            onSectionSelect(section)
+        }
         setFragmentResultListener(SUCCESS_ADD_PASSWORD_RESULT) { _, bundle ->
             val security = bundle.get(BUNDLE_PASSWORD_RESULT_SECURITY_TYPE) as Security
             // Task password should be create or update

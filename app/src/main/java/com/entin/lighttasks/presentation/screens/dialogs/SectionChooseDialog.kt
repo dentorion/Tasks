@@ -5,40 +5,49 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionChooseDialogBinding
 import com.entin.lighttasks.domain.entity.Section
+import com.entin.lighttasks.domain.repository.SectionsRepository
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SectionChooseAdapter
-import com.entin.lighttasks.presentation.screens.section.SectionViewModel
-import com.entin.lighttasks.presentation.screens.section.SectionsEventContract
+import com.entin.lighttasks.presentation.util.BUNDLE_SECTION_CHOOSE
+import com.entin.lighttasks.presentation.util.SUCCESS_CHOOSE_SECTION_RESULT
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SectionChooseDialog : DialogFragment() {
 
-    private var onSelect: ((Section) -> Unit)? = null
-
     private var _binding: SectionChooseDialogBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SectionViewModel by viewModels()
-    private var sectionChooseAdapter: SectionChooseAdapter? = SectionChooseAdapter { section ->
-        onSelect?.let { it(section) }
+    @Inject lateinit var sectionsRepository: SectionsRepository
+    private var sectionChooseAdapter: SectionChooseAdapter = SectionChooseAdapter { section ->
+        requireParentFragment().setFragmentResult(
+            SUCCESS_CHOOSE_SECTION_RESULT,
+            bundleOf(BUNDLE_SECTION_CHOOSE to section)
+        )
         dismiss()
     }
 
-    fun setOnSelect(action: (Section) -> Unit) {
-        onSelect = action
-    }
+    fun newInstance(): SectionChooseDialog =
+        SectionChooseDialog()
 
     private fun setDialogWidth(width: Double) {
         val newWidth = (resources.displayMetrics.widthPixels * width).toInt()
@@ -60,9 +69,6 @@ class SectionChooseDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-
-        setupSectionsRecyclerView()
-        stateObserver()
     }
 
     override fun onStart() {
@@ -83,6 +89,9 @@ class SectionChooseDialog : DialogFragment() {
     ): View {
         isCancelable = false
         _binding = SectionChooseDialogBinding.inflate(inflater, container, false)
+
+        setupSectionsRecyclerView()
+        stateObserver()
 
         binding.sectionChooseClose.setOnClickListener {
             dismiss()
@@ -105,33 +114,30 @@ class SectionChooseDialog : DialogFragment() {
     }
 
     private fun stateObserver() {
-        viewModel.sectionEvent.observe(viewLifecycleOwner) { event: SectionsEventContract ->
-            when (event) {
-                is SectionsEventContract.ShowAllSections -> {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                sectionsRepository.getAllSections().first().also { listSection ->
                     // Add first "No category" item to list
-                    val newListWithNoSection = event.sectionEntities.toMutableList()
+                    val newListWithNoSection = listSection.toMutableList()
                     newListWithNoSection.add(
                         Section(
-                            id = 0,
+                            id = ZERO,
                             title = requireContext().resources.getString(R.string.no_section),
-                            createdAt = 0,
-                            editedAt = 0,
-                            icon = 0,
+                            createdAt = ZERO_LONG,
+                            editedAt = ZERO_LONG,
+                            icon = ZERO,
                             isImportant = false,
-                            position = 0,
+                            position = ZERO,
                             hasPassword = false,
                         )
                     )
-                    sectionChooseAdapter?.submitList(newListWithNoSection)
+                    sectionChooseAdapter.submitList(newListWithNoSection)
                 }
-
-                else -> {}
             }
         }
     }
 
     override fun onDestroyView() {
-        sectionChooseAdapter = null
         binding.sectionChooseRecyclerView.adapter = null
         _binding = null
         super.onDestroyView()
