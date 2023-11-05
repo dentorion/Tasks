@@ -17,3 +17,5 @@ local.properties
 /buildSrc/.gradle
 app/release/app-release.aab
 /app/google-services.json
+/.fastRequest/
+/.idea/sonarlint/
