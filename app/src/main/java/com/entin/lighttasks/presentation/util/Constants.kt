@@ -6,6 +6,7 @@ package com.entin.lighttasks.presentation.util
 
 const val TASK_NEW: Int = 1
 const val TASK_EDIT: Int = 2
+const val EDIT_ADD_TASK_TO_ALL_TASKS_EVENT = "EDIT_ADD_TASK_TO_ALL_TASKS_EVENT"
 
 /**
  * Language block
@@ -59,8 +60,6 @@ const val PHOTO_ATTACHED = "photoAttached"
 const val VOICE_ATTACHED = "voiceAttached"
 
 const val SHOW_IMAGE_DIALOG_ARGUMENT = "showDialogArgument"
-
-const val SECURITY_DIALOG_TYPE_ARGUMENT = "showDialogArgument"
 
 /**
  * Photo

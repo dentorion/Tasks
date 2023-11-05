@@ -59,6 +59,7 @@ import com.entin.lighttasks.presentation.util.BUNDLE_IS_PASSWORD_CREATION
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_VALUE
 import com.entin.lighttasks.presentation.util.BUNDLE_SECTION_CHOOSE
+import com.entin.lighttasks.presentation.util.EDIT_ADD_TASK_TO_ALL_TASKS_EVENT
 import com.entin.lighttasks.presentation.util.SUCCESS_CHOOSE_SECTION_RESULT
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.ZERO_LONG
@@ -667,8 +668,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     private fun navigateToMainScreen(event: Int) {
         binding.addEditTaskTitle.clearFocus()
         findNavController().navigate(R.id.action_editTaskFragment_to_allTasksFragment2,
-            bundleOf("event" to event),
+            bundleOf(EDIT_ADD_TASK_TO_ALL_TASKS_EVENT to event),
             navOptions {
+                popUpTo(R.id.allTasksFragment) {
+                    inclusive = true
+                }
                 anim {
                     enter = android.R.animator.fade_in
                     exit = android.R.animator.fade_out

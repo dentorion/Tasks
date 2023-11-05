@@ -34,6 +34,7 @@ import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCal
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
+import com.entin.lighttasks.presentation.util.EDIT_ADD_TASK_TO_ALL_TASKS_EVENT
 import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD_RESULT
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
@@ -229,7 +230,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      */
     private fun setupResultListener() {
         arguments?.let {
-            val resultType = it.getInt("event")
+            val resultType = it.getInt(EDIT_ADD_TASK_TO_ALL_TASKS_EVENT)
             if (resultType != ZERO) {
                 when (resultType) {
                     TASK_NEW -> getSnackBar(
