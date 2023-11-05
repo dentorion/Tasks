@@ -381,6 +381,10 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                         is AllTasksEvent.CheckPasswordSection -> {
                             checkPasswordCodeForSection(allTasksEvent.sectionId)
                         }
+
+                        is AllTasksEvent.CanChangeBackgroundSelectedSection -> {
+                            sectionAdapter?.changeBackgroundForSelectedItem(allTasksEvent.sectionId)
+                        }
                     }
                 }
             }
@@ -515,6 +519,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private fun onSuccessPasswordCheckSection(sectionId: Int?) {
         sectionId?.let {
+            sectionAdapter?.changeBackgroundForSelectedItem(sectionId)
             viewModel.openSection(it)
         }
     }

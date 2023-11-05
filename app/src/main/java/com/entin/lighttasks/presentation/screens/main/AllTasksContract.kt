@@ -35,6 +35,9 @@ sealed class AllTasksEvent {
     // Navigate to section preferences
     object NavToSectionPreferences : AllTasksEvent()
 
+    // Can change background for section, that was selected (open without password)
+    data class  CanChangeBackgroundSelectedSection(val sectionId: Int): AllTasksEvent()
+
     // Check password code for security item by task id
     data class CheckPasswordTask(val task: Task): AllTasksEvent()
 

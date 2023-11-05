@@ -17,8 +17,9 @@ class SectionAdapter(
 ) : ListAdapter<Section, SectionAdapter.SectionViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
-    var selectedItem: Section? = null
-        private set
+    private var selectedItem: Section? = null
+
+    var allowChangeSelectedBackground = false
 
     override fun onCurrentListChanged(
         previousList: MutableList<Section>,
@@ -55,8 +56,9 @@ class SectionAdapter(
             binding.apply {
                 val context = root.context
                 sectionRoot.apply {
-                    if (selectedItem == section) {
+                    if (selectedItem == section && allowChangeSelectedBackground) {
                         setBackgroundResource(R.drawable.section_selected_background)
+                        allowChangeSelectedBackground = false
                     } else {
                         setBackgroundResource(R.drawable.section_background)
                     }
@@ -75,6 +77,13 @@ class SectionAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    fun changeBackgroundForSelectedItem(sectionId: Int?) {
+        selectedItem = currentList.firstOrNull { section -> section.id == sectionId }
+        allowChangeSelectedBackground = true
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun selectItem(value: Section, position: Int?) {
         when {
             value == selectedItem -> {
@@ -84,10 +93,8 @@ class SectionAdapter(
 
             value != selectedItem -> {
                 onClick(value)
-                selectedItem = value
             }
         }
-        notifyDataSetChanged()
     }
 
     companion object {

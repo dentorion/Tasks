@@ -73,8 +73,7 @@ class AllTasksAdapter(
                     openTaskDetailsDialog(task)
                     true
                 }
-                taskTitle.text =
-                    checkForEmptyTitle(task.title, this.root.resources, task.id)
+                taskTitle.text = checkForEmptyTitle(task.title, this.root.resources, task.id)
                 taskMessage.apply {
                     visibility = if (task.message.isNotEmpty()) View.VISIBLE else View.GONE
                     text = task.message

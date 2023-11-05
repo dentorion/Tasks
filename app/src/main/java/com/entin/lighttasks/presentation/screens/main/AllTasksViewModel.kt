@@ -232,13 +232,13 @@ class AllTasksViewModel @Inject constructor(
     fun onSectionClick(sectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             if (sectionId == ZERO) {
+                _tasksEvent.send(AllTasksEvent.CanChangeBackgroundSelectedSection(sectionId))
                 openSection(sectionId)
             } else {
                 securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
-                    _tasksEvent.send(
-                        AllTasksEvent.CheckPasswordSection(sectionId = sectionId)
-                    )
+                    _tasksEvent.send(AllTasksEvent.CheckPasswordSection(sectionId = sectionId))
                 } ?: kotlin.run {
+                    _tasksEvent.send(AllTasksEvent.CanChangeBackgroundSelectedSection(sectionId))
                     openSection(sectionId)
                 }
             }
