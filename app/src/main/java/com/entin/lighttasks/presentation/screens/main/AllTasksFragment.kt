@@ -34,6 +34,8 @@ import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCal
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
 import com.entin.lighttasks.presentation.screens.main.adapter.SectionAdapter
 import com.entin.lighttasks.presentation.util.BUNDLE_PASSWORD_RESULT_SECURITY_TYPE
+import com.entin.lighttasks.presentation.util.BUNDLE_TASK_DELETE
+import com.entin.lighttasks.presentation.util.DELETE_TASK_RESULT
 import com.entin.lighttasks.presentation.util.EDIT_ADD_TASK_TO_ALL_TASKS_EVENT
 import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD_RESULT
 import com.entin.lighttasks.presentation.util.TASK_EDIT
@@ -61,6 +63,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      * Security dialog
      */
     private val securityDialog by lazy { SecurityDialog() }
+
+    /** Deletion dialog */
+    private val deleteDialog by lazy { DeleteTaskDialog() }
 
     /**
      * All tasks adapter
@@ -410,20 +415,11 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         viewModel.onFinishedTaskClick(task, mode)
     }
 
-    // TODO: not working after rotation!
-    /**
-     * Delete task dialog
-     */
+    /** Delete task dialog */
     private fun openDeleteDialog(task: Task) {
-        val dialog = DeleteTaskDialog().newInstance(
-            task = task,
-            onDelete = { viewModel.onTaskSwipedDelete(task) }
-        )
+        val dialog = deleteDialog.newInstance(task = task)
         if (!dialog.isVisible) {
-            dialog.show(
-                childFragmentManager,
-                DeleteTaskDialog::class.simpleName
-            )
+            dialog.show(childFragmentManager, DeleteTaskDialog::class.simpleName)
         }
     }
 
@@ -457,7 +453,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     /**
-     * Listener fot Security dialog
+     * Listener for [SecurityDialog], [DeleteTaskDialog]
      */
     private fun setFragmentResultListener() {
         setFragmentResultListener(SUCCESS_CHECK_PASSWORD_RESULT) { _, bundle ->
@@ -474,6 +470,11 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
                     else -> { /** Check password only */ }
                 }
+            }
+        }
+        setFragmentResultListener(DELETE_TASK_RESULT) { _, bundle ->
+            bundle.getParcelable<Task>(BUNDLE_TASK_DELETE)?.let { task ->
+                viewModel.onTaskSwipedDelete(task)
             }
         }
     }
