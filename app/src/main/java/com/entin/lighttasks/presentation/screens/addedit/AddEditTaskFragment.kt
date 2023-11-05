@@ -808,7 +808,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
      * Listener fot [SecurityDialog] and [SectionChooseDialog]
      */
     private fun setFragmentResultListener() {
-        Log.e("SECURITY_DIALOG", "setFragmentResultListener()")
         setFragmentResultListener(SUCCESS_CHOOSE_SECTION_RESULT) { _, bundle ->
             val section = bundle.get(BUNDLE_SECTION_CHOOSE) as Section
             onSectionSelect(section)
@@ -819,7 +818,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             val isPasswordCreation = bundle.getBoolean(BUNDLE_IS_PASSWORD_CREATION)
             // Task new password
             val password = bundle.getString(BUNDLE_PASSWORD_VALUE) as String
-            Log.e("SECURITY_DIALOG", "setFragmentResultListener(). isPasswordCreation: $isPasswordCreation, password: $password")
 
             viewModel.isPasswordSecurityTurnOn = true
             viewModel.isPasswordCreation = isPasswordCreation

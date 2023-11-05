@@ -17,14 +17,6 @@ class SectionChooseAdapter(
     SectionChooseAdapterDiffCallback,
 ) {
 
-    override fun onCurrentListChanged(
-        previousList: MutableList<Section>,
-        currentList: MutableList<Section>
-    ) {
-        super.onCurrentListChanged(previousList, currentList)
-        Log.e("SECTION_CHOOSE","ListChanged")
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder =
         SectionViewHolder(
             SectionItemChooseBinding.inflate(LayoutInflater.from(parent.context), parent, false)

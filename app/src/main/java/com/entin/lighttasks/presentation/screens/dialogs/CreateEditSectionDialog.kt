@@ -119,7 +119,7 @@ class CreateEditSectionDialog : DialogFragment() {
 
             /** Important */
             dialogAddEditSectionImportantCheckbox.apply {
-                this.isChecked = sectionForSave?.isImportant ?: false
+                this.isChecked = sectionForSave.isImportant
                 this.jumpDrawablesToCurrentState()
                 setOnCheckedChangeListener { _, isCheck ->
                     sectionForSave = sectionForSave.copy(isImportant = isCheck)
@@ -154,7 +154,7 @@ class CreateEditSectionDialog : DialogFragment() {
      * Icon
      */
     private fun setupIconRecyclerView() {
-        iconAdapter = IconsTaskAdapter(sectionForSave?.icon ?: ZERO) { element, position ->
+        iconAdapter = IconsTaskAdapter(sectionForSave.icon) { element, position ->
             onGroupIconSelected(element, position)
         }
 

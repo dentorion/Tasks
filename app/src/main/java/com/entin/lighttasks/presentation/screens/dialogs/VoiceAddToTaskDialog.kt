@@ -120,7 +120,6 @@ class VoiceAddToTaskDialog : DialogFragment() {
         }
 
         commonState.observe(viewLifecycleOwner) { commonState ->
-            Log.e("STATE_COMMON", "commonState: ${commonState.toString()}")
             binding.apply {
                 /** Timer indicator */
                 dialogVoiceAttachedTimer.text = commonState.timer

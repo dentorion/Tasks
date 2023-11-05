@@ -491,7 +491,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
     }
 
     private fun onSuccessPasswordCheckTask(taskId: Int) {
-        Log.e("SECURITY_DIALOG", "taskId: $taskId")
         viewModel.openTaskAfterSuccessPasswordCheck(taskId)
     }
 

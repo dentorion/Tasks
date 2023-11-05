@@ -509,8 +509,6 @@ class AddEditTaskViewModel @Inject constructor(
 
     /** Set password for task */
     private suspend fun passwordForTask() {
-        Log.e("SECURITY_DIALOG", "passwordForTask()")
-
         // Was password and security switch off
         if (hasPasswordOnStart && !isPasswordSecurityTurnOn) {
             taskEntity?.id?.let { taskId ->
