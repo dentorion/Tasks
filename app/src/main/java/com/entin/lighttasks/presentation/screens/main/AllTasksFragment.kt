@@ -241,9 +241,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      * Set sections into recyclerview
      */
     private fun setSections(listSection: List<Section>) {
-        sectionAdapter?.let { adapter ->
-            adapter.submitList(listSection)
-        }
+        sectionAdapter?.submitList(listSection)
     }
 
     /**
