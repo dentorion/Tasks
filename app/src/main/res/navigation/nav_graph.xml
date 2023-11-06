@@ -42,12 +42,12 @@
     </fragment>
     <dialog
         android:id="@+id/deleteFinishedDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.DeleteFinishedTasksDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.deleteFinishedTasks.DeleteFinishedTasksDialog"
         android:label="DeleteFinishedDialog"
         tools:layout="@layout/clear_finished_dialog" />
     <dialog
         android:id="@+id/changeLanguageDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.ChangeLanguageDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.languageSelect.ChangeLanguageDialog"
         android:label="ChangeLanguageDialog"
         tools:layout="@layout/change_language_dialog" />
     <action
@@ -66,7 +66,7 @@
         app:destination="@id/preferencesFragment" />
     <dialog
         android:id="@+id/sortTasksByIconDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.SortTasksByIconDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.sortTaskByIcon.SortTasksByIconDialog"
         android:label="SortTasksByIconDialog"
         tools:layout="@layout/sort_task_dialog">
         <argument
@@ -78,7 +78,7 @@
         app:destination="@id/sortTasksByIconDialog" />
     <dialog
         android:id="@+id/taskDetailsDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.TaskDetailsDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.taskDetails.TaskDetailsDialog"
         android:label="TaskDetailsDialog"
         tools:layout="@layout/task_details_dialog">
         <argument
@@ -102,7 +102,7 @@
         app:popExitAnim="@anim/slide_out" />
     <dialog
         android:id="@+id/linkAddToTaskDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.linkAdd.LinkAddToTaskDialog"
         android:label="LinkAddToTaskDialog"
         tools:layout="@layout/link_attached_dialog" />
     <fragment
@@ -131,6 +131,6 @@
         app:destination="@id/sectionFragment" />
     <dialog
         android:id="@+id/createEditSectionDialog"
-        android:name="com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog"
+        android:name="com.entin.lighttasks.presentation.screens.dialogs.createEditSection.CreateEditSectionDialog"
         android:label="CreateEditSectionDialog" />
 </navigation>

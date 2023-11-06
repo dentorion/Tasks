@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.voiceRecord
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.showImages
 
 import android.net.Uri
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.linkAdd
 
 import android.os.Bundle
 import android.view.Gravity

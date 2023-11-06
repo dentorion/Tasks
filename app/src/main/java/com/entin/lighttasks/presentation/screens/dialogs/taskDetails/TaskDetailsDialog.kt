@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.taskDetails
 
 import android.os.Bundle
 import android.view.Gravity
@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.TaskDetailsDialogBinding
 import com.entin.lighttasks.domain.entity.Task
+import com.entin.lighttasks.presentation.screens.dialogs.sortTaskByIcon.SortTasksByIconDialogArgs
 import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import com.entin.lighttasks.presentation.util.toFormattedDateString
@@ -53,7 +54,9 @@ class TaskDetailsDialog : DialogFragment() {
             }
             dialogTaskDetailsOpenWebButton.setOnClickListener {
                 findNavController().navigate(
-                    TaskDetailsDialogDirections.actionGlobalUrlWebView(task.attachedLink)
+                    TaskDetailsDialogDirections.actionGlobalUrlWebView(
+                        task.attachedLink
+                    )
                 )
             }
             dialogTaskDetailsIconToShow.setImageResource(icon)

@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.photoAdd
 
 import android.content.Context
 import android.content.pm.PackageManager

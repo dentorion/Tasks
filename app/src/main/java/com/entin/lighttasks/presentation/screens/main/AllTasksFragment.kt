@@ -24,11 +24,11 @@ import com.entin.lighttasks.databinding.AllTasksBinding
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.domain.entity.Task
-import com.entin.lighttasks.presentation.screens.dialogs.DeleteTaskDialog
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.deleteTask.DeleteTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.Place
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose
 import com.entin.lighttasks.presentation.screens.dialogs.security.Security
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
+import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose
 import com.entin.lighttasks.presentation.screens.main.adapter.AllTasksAdapter
 import com.entin.lighttasks.presentation.screens.main.adapter.ItemTouchHelperCallback
 import com.entin.lighttasks.presentation.screens.main.adapter.OnClickOnEmpty
@@ -41,6 +41,7 @@ import com.entin.lighttasks.presentation.util.SUCCESS_CHECK_PASSWORD_RESULT
 import com.entin.lighttasks.presentation.util.TASK_EDIT
 import com.entin.lighttasks.presentation.util.TASK_NEW
 import com.entin.lighttasks.presentation.util.ZERO
+import com.entin.lighttasks.presentation.util.ZERO_LONG
 import com.entin.lighttasks.presentation.util.getSnackBar
 import com.entin.lighttasks.presentation.util.onSearchTextChanged
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -184,6 +185,7 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                 }
             }
 
+            sectionSelectionObserver()
             sectionsObserver()
         }
     }
@@ -198,12 +200,33 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
         }
     }
 
+    private fun sectionSelectionObserver() {
+        viewModel.currentSectionId.observe(viewLifecycleOwner) { sectionId ->
+            sectionAdapter?.changeBackgroundForSelectedItem(sectionId)
+        }
+    }
+
     /**
      * Observe sections from viewModel
      */
     private fun sectionsObserver() {
-        viewModel.sections.observe(viewLifecycleOwner) { listSections ->
-            setSections(listSections)
+        viewModel.sections.observe(viewLifecycleOwner) { listSections: List<Section> ->
+            setSections(
+                mutableListOf<Section>(
+                    Section(
+                        id = ZERO,
+                        title = getString(R.string.no_section),
+                        createdAt = ZERO_LONG,
+                        editedAt = ZERO_LONG,
+                        icon = ZERO,
+                        isImportant = false,
+                        position = ZERO,
+                        hasPassword = false
+                    )
+                ).also {
+                    it.addAll(listSections)
+                }
+            )
         }
     }
 
@@ -218,7 +241,9 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
      * Set sections into recyclerview
      */
     private fun setSections(listSection: List<Section>) {
-        sectionAdapter?.submitList(listSection)
+        sectionAdapter?.let { adapter ->
+            adapter.submitList(listSection)
+        }
     }
 
     /**
@@ -386,10 +411,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
                         is AllTasksEvent.CheckPasswordSection -> {
                             checkPasswordCodeForSection(allTasksEvent.sectionId)
                         }
-
-                        is AllTasksEvent.CanChangeBackgroundSelectedSection -> {
-                            sectionAdapter?.changeBackgroundForSelectedItem(allTasksEvent.sectionId)
-                        }
                     }
                 }
             }
@@ -520,7 +541,6 @@ class AllTasksFragment : Fragment(R.layout.all_tasks), OnClickOnEmpty {
 
     private fun onSuccessPasswordCheckSection(sectionId: Int?) {
         sectionId?.let {
-            sectionAdapter?.changeBackgroundForSelectedItem(sectionId)
             viewModel.openSection(it)
         }
     }

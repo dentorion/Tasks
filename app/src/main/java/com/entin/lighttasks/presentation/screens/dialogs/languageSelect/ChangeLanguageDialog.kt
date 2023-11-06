@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.languageSelect
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,6 @@ import com.entin.lighttasks.presentation.util.LANGUAGE_POLISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_SPANISH_SHOT
 import com.entin.lighttasks.presentation.util.LANGUAGE_UKRAINE_SHOT
 import com.entin.lighttasks.presentation.util.set
-import java.util.Locale
 
 class ChangeLanguageDialog : DialogFragment() {
 

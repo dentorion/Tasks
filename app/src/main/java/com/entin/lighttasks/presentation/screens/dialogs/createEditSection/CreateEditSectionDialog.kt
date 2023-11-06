@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.createEditSection
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder

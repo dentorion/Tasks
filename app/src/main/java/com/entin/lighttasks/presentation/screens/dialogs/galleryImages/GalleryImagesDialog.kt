@@ -15,7 +15,7 @@ import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.GalleryImagesAttachedDialogBinding
 import com.entin.lighttasks.presentation.screens.addedit.AddEditTaskViewModel
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
-import com.entin.lighttasks.presentation.screens.dialogs.ShowImageDialog
+import com.entin.lighttasks.presentation.screens.dialogs.showImages.ShowImageDialog
 import com.entin.lighttasks.presentation.util.isOrientationLandscape
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

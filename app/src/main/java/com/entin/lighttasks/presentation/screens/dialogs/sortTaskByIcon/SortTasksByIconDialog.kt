@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.sortTaskByIcon
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,17 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.entin.lighttasks.databinding.ClearFinishedDialogBinding
+import androidx.navigation.fragment.navArgs
+import com.entin.lighttasks.databinding.SortTaskDialogBinding
+import com.entin.lighttasks.domain.entity.Task
 import com.entin.lighttasks.presentation.screens.main.AllTasksViewModel
+import com.entin.lighttasks.presentation.util.getIconTaskDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class DeleteFinishedTasksDialog : DialogFragment() {
+class SortTasksByIconDialog : DialogFragment() {
 
-    private var _binding: ClearFinishedDialogBinding? = null
+    private var _binding: SortTaskDialogBinding? = null
     private val binding get() = _binding!!
+    private val args: SortTasksByIconDialogArgs by navArgs()
     private val viewModel: AllTasksViewModel by viewModels()
 
     override fun onCreateView(
@@ -25,17 +29,21 @@ class DeleteFinishedTasksDialog : DialogFragment() {
         savedInstanceState: Bundle?,
     ): View {
         isCancelable = false
-        _binding = ClearFinishedDialogBinding.inflate(inflater, container, false)
+        _binding = SortTaskDialogBinding.inflate(inflater, container, false)
+
+        val task: Task = args.task
+        val icon = getIconTaskDrawable(task)
 
         with(binding) {
-            dialogClearFinishedCancelButton.setOnClickListener {
+            dialogSortTaskIconToShow.setImageResource(icon)
+
+            dialogSortTaskCancelButton.setOnClickListener {
                 dismiss()
             }
 
-            dialogClearFinishedOkButton.setOnClickListener {
-                viewModel.deleteFinishedTasks() {
-                    dismiss()
-                }
+            dialogSortTaskOkButton.setOnClickListener {
+                viewModel.onTaskSortByIcon(task)
+                dismiss()
             }
         }
 

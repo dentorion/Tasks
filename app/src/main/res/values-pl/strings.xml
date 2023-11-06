@@ -122,4 +122,5 @@
     <string name="repeat_password">Powtórz hasło</string>
     <string name="change_security_code">Zmień kod ochronny</string>
     <string name="wrong_password">Nieprawidłowe hasło</string>
+    <string name="enter_security_code">Wprowadź swój kod</string>
 </resources>

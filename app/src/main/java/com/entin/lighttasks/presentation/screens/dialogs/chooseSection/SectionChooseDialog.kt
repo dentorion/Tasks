@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.chooseSection
 
 import android.os.Bundle
 import android.view.Gravity

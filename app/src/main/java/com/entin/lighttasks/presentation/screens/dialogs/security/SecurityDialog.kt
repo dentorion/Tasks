@@ -245,7 +245,7 @@ class SecurityDialog : DialogFragment() {
 
     companion object {
         const val FULL_SCREEN = 0.92
-        const val LANDSCAPE_MODE = 0.92
+        const val LANDSCAPE_MODE = 0.72
 
         const val ARG_SECURITY_TYPE = "ARG_SECURITY_TYPE"
     }

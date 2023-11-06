@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.entin.lighttasks.R
 import com.entin.lighttasks.databinding.SectionPreferencesBinding
 import com.entin.lighttasks.domain.entity.Section
-import com.entin.lighttasks.presentation.screens.dialogs.CreateEditSectionDialog
-import com.entin.lighttasks.presentation.screens.dialogs.DeleteSectionDialog
+import com.entin.lighttasks.presentation.screens.dialogs.createEditSection.CreateEditSectionDialog
+import com.entin.lighttasks.presentation.screens.dialogs.deleteSection.DeleteSectionDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.Place
 import com.entin.lighttasks.presentation.screens.dialogs.security.Security
 import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityPurpose

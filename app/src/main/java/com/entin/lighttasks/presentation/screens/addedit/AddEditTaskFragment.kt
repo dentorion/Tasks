@@ -37,11 +37,11 @@ import com.entin.lighttasks.databinding.FragmentEditTaskBinding
 import com.entin.lighttasks.domain.entity.Section
 import com.entin.lighttasks.presentation.screens.addedit.adapter.IconsTaskAdapter
 import com.entin.lighttasks.presentation.screens.addedit.adapter.SlowlyLinearLayoutManager
-import com.entin.lighttasks.presentation.screens.dialogs.LinkAddToTaskDialog
-import com.entin.lighttasks.presentation.screens.dialogs.PhotoAddToTaskDialog
-import com.entin.lighttasks.presentation.screens.dialogs.PhotoShowDialog
-import com.entin.lighttasks.presentation.screens.dialogs.SectionChooseDialog
-import com.entin.lighttasks.presentation.screens.dialogs.VoiceAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.linkAdd.LinkAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.photoAdd.PhotoAddToTaskDialog
+import com.entin.lighttasks.presentation.screens.dialogs.photoShow.PhotoShowDialog
+import com.entin.lighttasks.presentation.screens.dialogs.chooseSection.SectionChooseDialog
+import com.entin.lighttasks.presentation.screens.dialogs.voiceRecord.VoiceAddToTaskDialog
 import com.entin.lighttasks.presentation.screens.dialogs.galleryImages.GalleryImagesDialog
 import com.entin.lighttasks.presentation.screens.dialogs.linkUrl.LinkUrlChooseDialog
 import com.entin.lighttasks.presentation.screens.dialogs.security.Security
@@ -809,7 +809,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
     }
 
     /**
-     * Listener fot [SecurityDialog] and [SectionChooseDialog]
+     * Listener for [SecurityDialog], [SectionChooseDialog]
      */
     private fun setFragmentResultListener() {
         setFragmentResultListener(SUCCESS_CHOOSE_SECTION_RESULT) { _, bundle ->
@@ -817,15 +817,21 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_edit_task) {
             onSectionSelect(section)
         }
         setFragmentResultListener(SUCCESS_ADD_PASSWORD_RESULT) { _, bundle ->
-            val security = bundle.get(BUNDLE_PASSWORD_RESULT_SECURITY_TYPE) as Security
             // Task password should be create or update
-            val isPasswordCreation = bundle.getBoolean(BUNDLE_IS_PASSWORD_CREATION)
+            bundle.getBoolean(BUNDLE_IS_PASSWORD_CREATION).also { isPasswordCreation ->
+                viewModel.isPasswordCreation = isPasswordCreation
+            }
+
             // Task new password
-            val password = bundle.getString(BUNDLE_PASSWORD_VALUE) as String
+            val password = bundle.getString(BUNDLE_PASSWORD_VALUE).also { password ->
+                password?.let {
+                    viewModel.taskNewPassword = password
+                } ?: kotlin.run {
+                    Log.e("Error", "password after creation in security dialog get null")
+                }
+            }
 
             viewModel.isPasswordSecurityTurnOn = true
-            viewModel.isPasswordCreation = isPasswordCreation
-            viewModel.taskNewPassword = password
         }
     }
 

@@ -1,6 +1,7 @@
 package com.entin.lighttasks.presentation.screens.main.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -17,7 +18,8 @@ class SectionAdapter(
 ) : ListAdapter<Section, SectionAdapter.SectionViewHolder>(
     RadioButtonAdapterDiffCallback,
 ) {
-    private var selectedItem: Section? = null
+    var selectedItem: Section? = null
+        private set
 
     var allowChangeSelectedBackground = false
 

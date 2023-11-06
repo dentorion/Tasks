@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -20,19 +19,19 @@ import com.entin.lighttasks.presentation.util.LANGUAGE
 import com.entin.lighttasks.presentation.util.ZERO
 import com.entin.lighttasks.presentation.util.get
 import com.entin.lighttasks.presentation.util.hideKeyboard
-import com.entin.lighttasks.presentation.util.set
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+
     private val viewModel: MainActivityViewModel by viewModels()
 
     private var countWidget: Int = ZERO
@@ -50,13 +49,18 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         setContentView(binding.root)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun onStop() {
+        super.onStop()
+        // If user is in private section, that has password and app is not in foreground -
+        // change section to common
+        viewModel.openCommonSectionIfNecessary()
+    }
+
     private fun clearUnusedFiles() {
         viewModel.deleteUnusedPhotos()
         viewModel.deleteUnusedSoundRecords()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeState() {
         this.lifecycleScope.launch {
             viewModel.tasksEvent.collect { state: MainActivityEvent ->
@@ -122,7 +126,6 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onPause() {
         viewModel.updateCount()
         super.onPause()

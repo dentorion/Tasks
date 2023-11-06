@@ -123,5 +123,6 @@
     <string name="repeat_password">Repita la contraseña</string>
     <string name="change_security_code">Cambiar código de seguridad</string>
     <string name="wrong_password">Contraseña incorrecta</string>
+    <string name="enter_security_code">Ingrese su código</string>
 
 </resources>

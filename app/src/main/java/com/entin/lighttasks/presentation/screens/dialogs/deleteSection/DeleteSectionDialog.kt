@@ -1,4 +1,4 @@
-package com.entin.lighttasks.presentation.screens.dialogs
+package com.entin.lighttasks.presentation.screens.dialogs.deleteSection
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.entin.lighttasks.databinding.DeleteSectionDialogBinding
-import com.entin.lighttasks.presentation.screens.dialogs.security.Security
-import com.entin.lighttasks.presentation.screens.dialogs.security.SecurityDialog
 import com.entin.lighttasks.presentation.screens.section.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

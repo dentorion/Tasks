@@ -1,6 +1,8 @@
 package com.entin.lighttasks.presentation.screens.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
@@ -25,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -55,10 +58,15 @@ class AllTasksViewModel @Inject constructor(
     var isManualSorting = false
         private set
 
+    var currentSectionId = MutableLiveData(ZERO)
+
     init {
-        viewModelScope.launch {
-            flowSortingPreferences.collect{
-                isManualSorting = it.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
+        viewModelScope.launch(Dispatchers.IO) {
+            flowSortingPreferences.first().also { preferences ->
+                isManualSorting = preferences.sortByTitleDateImportantManual == OrderSort.SORT_BY_MANUAL
+            }
+            flowSortingPreferences.collect {
+                currentSectionId.postValue(it.sectionId)
             }
         }
     }
@@ -232,13 +240,11 @@ class AllTasksViewModel @Inject constructor(
     fun onSectionClick(sectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             if (sectionId == ZERO) {
-                _tasksEvent.send(AllTasksEvent.CanChangeBackgroundSelectedSection(sectionId))
                 openSection(sectionId)
             } else {
                 securityRepository.getSecurityItemBySectionId(sectionId).first()?.id?.let {
                     _tasksEvent.send(AllTasksEvent.CheckPasswordSection(sectionId = sectionId))
                 } ?: kotlin.run {
-                    _tasksEvent.send(AllTasksEvent.CanChangeBackgroundSelectedSection(sectionId))
                     openSection(sectionId)
                 }
             }
@@ -253,13 +259,5 @@ class AllTasksViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_VALUE = "searchValue"
-
-        data class MainFragmentState(
-            val isManualSorting: Boolean,
-            val isASCSorting: Boolean,
-            val sortType: OrderSort,
-            val hideDatePickedTasks: Boolean,
-            val sectionId: Int
-        )
     }
 }

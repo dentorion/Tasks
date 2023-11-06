@@ -123,4 +123,5 @@
     <string name="repeat_password">Повторіть пароль</string>
     <string name="change_security_code">Змінити код безпеки</string>
     <string name="wrong_password">Помилковий пароль</string>
+    <string name="enter_security_code">Введіть ваш код</string>
 </resources>
