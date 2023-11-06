@@ -19,8 +19,8 @@ android {
         applicationId = "com.entin.lighttasks"
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
-        versionCode = 24
-        versionName = "Changes for better user experience."
+        versionCode = 25
+        versionName = "Security section on close app."
     }
 
     buildTypes {
