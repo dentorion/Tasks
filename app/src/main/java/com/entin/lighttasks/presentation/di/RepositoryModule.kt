@@ -5,6 +5,7 @@ import com.entin.lighttasks.data.db.dao.SectionsDao
 import com.entin.lighttasks.data.db.dao.SecurityDao
 import com.entin.lighttasks.data.db.dao.TaskDao
 import com.entin.lighttasks.data.db.dao.TaskIconsDao
+import com.entin.lighttasks.data.network.api.TestApi
 import com.entin.lighttasks.data.repository.AlarmsRepositoryImpl
 import com.entin.lighttasks.data.repository.SectionsRepositoryImpl
 import com.entin.lighttasks.data.repository.SecurityRepositoryImpl
@@ -42,8 +43,9 @@ object RepositoryModule {
     fun provideTasksRepository(
         taskDao: TaskDao,
         taskIconsDao: TaskIconsDao,
+        testApi: TestApi,
     ): TasksRepository {
-        return TasksRepositoryImpl(taskDao, taskIconsDao)
+        return TasksRepositoryImpl(taskDao, taskIconsDao, testApi)
     }
 
     @Singleton

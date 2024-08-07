@@ -3,6 +3,8 @@ package com.entin.lighttasks.domain.repository
 import android.net.Uri
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
+import com.entin.lighttasks.data.network.entity.TestRetrofitResponse
+import com.entin.lighttasks.data.network.util.NetworkResult
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
@@ -56,4 +58,6 @@ interface TasksRepository {
     suspend fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>)
 
     fun getTaskById(taskId: Int): Flow<Task>
+
+    suspend fun getTestHttpResponse(numberCode: Int): NetworkResult<TestRetrofitResponse>
 }

@@ -1,11 +1,11 @@
 package com.entin.lighttasks.data.repository
 
 import android.net.Uri
-import android.util.Log
 import com.entin.lighttasks.data.db.dao.TaskDao
 import com.entin.lighttasks.data.db.dao.TaskIconsDao
 import com.entin.lighttasks.data.db.entity.IconTaskEntity
 import com.entin.lighttasks.data.db.entity.TaskEntity
+import com.entin.lighttasks.data.network.api.TestApi
 import com.entin.lighttasks.domain.entity.CalendarDatesConstraints
 import com.entin.lighttasks.domain.entity.OrderSort
 import com.entin.lighttasks.domain.entity.Task
@@ -33,6 +33,7 @@ import javax.inject.Singleton
 class TasksRepositoryImpl @Inject constructor(
     private val tasksDao: TaskDao,
     private val taskIconsDao: TaskIconsDao,
+    private val testApi: TestApi,
 ) : TasksRepository {
 
     /**
@@ -191,7 +192,9 @@ class TasksRepositoryImpl @Inject constructor(
 
     /** Update list of uri to gallery by task_id */
     override suspend fun updateAttachedGalleryImagesByTaskId(id: Int, listUri: List<Uri>) {
-        tasksDao.updateAttachedGalleryImagesByTaskId(id, listUri.joinToString(COMMA) { it.toString() })
+        tasksDao.updateAttachedGalleryImagesByTaskId(
+            id,
+            listUri.joinToString(COMMA) { it.toString() })
     }
 
     /**
@@ -199,6 +202,9 @@ class TasksRepositoryImpl @Inject constructor(
      */
     override fun getTaskById(taskId: Int): Flow<Task> =
         tasksDao.getTaskById(taskId)
+
+    override suspend fun getTestHttpResponse(numberCode: Int) =
+        testApi.getAllModules(numberCode)
 
     /** WIDGET */
     override fun getCountTasksForWidget(): Flow<Int> =

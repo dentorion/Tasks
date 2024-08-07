@@ -7,5 +7,9 @@ import com.entin.lighttasks.domain.entity.DayItem
  */
 
 sealed class CalendarEventContract {
-    data class UpdateCalendarAndMonth(val listOfDays: List<DayItem>, val monthSequenceNumber: Int) : CalendarEventContract()
+
+    data class UpdateCalendarAndMonth(
+        val listOfDays: List<DayItem>,
+        val monthSequenceNumber: Int
+    ) : CalendarEventContract()
 }

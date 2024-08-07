@@ -20,7 +20,7 @@ android {
         minSdk = Android.minSdk
         targetSdk = Android.targetSdk
         versionCode = 25
-        versionName = "Security section on close app."
+        versionName = "Update target SDK 34"
     }
 
     buildTypes {
@@ -133,6 +133,13 @@ dependencies {
     // Coil images
     Dependencies.coil.apply {
         api(coil)
+    }
+
+    // Retrofit
+    Dependencies.retrofit.apply {
+        implementation(retrofit)
+        implementation(gson)
+        implementation(loggingInterceptor)
     }
 
     // LeakCanary

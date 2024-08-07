@@ -7,8 +7,8 @@ object Android {
      */
     const val buildTools = "33.0.1"
     const val minSdk = 28
-    const val targetSdk = 33
-    const val compileSdk = 33
+    const val targetSdk = 34
+    const val compileSdk = 34
 
     /**
      * Build.Gradle.kts Project
